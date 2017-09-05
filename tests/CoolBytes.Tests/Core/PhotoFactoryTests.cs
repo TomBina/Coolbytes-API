@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using CoolBytes.Core;
+using CoolBytes.Core.Factories;
 using Microsoft.Win32.SafeHandles;
 using Xunit;
 using Xunit.Abstractions;
@@ -14,18 +15,19 @@ namespace CoolBytes.Tests.Core
         private readonly ITestOutputHelper _output;
         private readonly string _uploadPath = Environment.CurrentDirectory + "/uploads";
         private readonly PhotoFactoryOptions _photoFactoryOptions;
+        private readonly PhotoFactoryValidator _photoFactoryValidator;
 
         public PhotoFactoryTests(ITestOutputHelper output)
         {
             _output = output;
             _photoFactoryOptions = new PhotoFactoryOptions(_uploadPath);
+            _photoFactoryValidator = new PhotoFactoryValidator();
         }
 
         [Fact]
         public async Task PhotoFactory_Valid_CreatesPhoto()
         {
-            var photoValidator = new PhotoValidator();
-            var photoFactory = new PhotoFactory(_photoFactoryOptions, photoValidator);
+            var photoFactory = new PhotoFactory(_photoFactoryOptions, _photoFactoryValidator);
 
             using (var fileStream = File.Open("assets/testimage.png", FileMode.Open))
             {
@@ -38,20 +40,18 @@ namespace CoolBytes.Tests.Core
         [Fact]
         public async Task PhotoFactory_InvalidContentType_ThrowsException()
         {
-            var photoValidator = new PhotoValidator();
-            var photoFactory = new PhotoFactory(_photoFactoryOptions, photoValidator);
+            var photoFactory = new PhotoFactory(_photoFactoryOptions, _photoFactoryValidator);
 
             using (var fileStream = File.Open("assets/iisexpress.exe", FileMode.Open))
             {
-                await Assert.ThrowsAsync<ArgumentException>(async () => await photoFactory.Create(fileStream, "evil.exe", "application/octet-stream"));
+                await Assert.ThrowsAsync<ArgumentException>(async () => await photoFactory.Create(fileStream, "iisexpress.exe", "application/octet-stream"));
             }
         }
 
         [Fact]
         public async Task PhotoFactory_Empty_ThrowsException()
         {
-            var photoValidator = new PhotoValidator();
-            var photoFactory = new PhotoFactory(_photoFactoryOptions, photoValidator);
+            var photoFactory = new PhotoFactory(_photoFactoryOptions, _photoFactoryValidator);
 
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {

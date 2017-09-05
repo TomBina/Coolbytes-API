@@ -6,7 +6,7 @@ namespace CoolBytes.Core.Models
 {
     public class BlogPost
     {
-        private readonly List<Tag> _tags = new List<Tag>();
+        private readonly List<BlogPostTag> _tags = new List<BlogPostTag>();
 
         public int Id { get; private set; }
         public DateTime Date { get; private set; }
@@ -14,7 +14,7 @@ namespace CoolBytes.Core.Models
         public string Subject { get; private set; }
         public string Content { get; private set; }
         public Author Author { get; private set; }
-        public IEnumerable<Tag> Tags { get => _tags; private set { } }
+        public IEnumerable<BlogPostTag> Tags { get => _tags; private set { } }
 
         public BlogPost(string subject, string content, Author author)
         {
@@ -40,12 +40,12 @@ namespace CoolBytes.Core.Models
             Content = content;
         }
 
-        public void AddTag(Tag tag)
+        public void AddTag(BlogPostTag blogPostTag)
         {
-            _tags.Add(tag);
+            _tags.Add(blogPostTag);
         }
 
-        public void AddTags(IEnumerable<Tag> tags)
+        public void AddTags(IEnumerable<BlogPostTag> tags)
         {
             _tags.AddRange(tags);
         }

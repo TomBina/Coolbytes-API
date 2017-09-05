@@ -1,15 +1,16 @@
 ﻿namespace CoolBytes.Core.Models
 {
-    public class Tag
+    public class BlogPostTag
     {
+        public int Id { get; private set; }
         public string Name { get; private set; }
 
-        public Tag(string name)
+        public BlogPostTag(string name)
         {
             Name = name;
         }
 
-        private Tag()
+        private BlogPostTag()
         {
         }
     }

@@ -10,7 +10,7 @@ namespace CoolBytes.Core.Models
         public string LastName { get; private set; }
         public Photo Photo { get; private set; }
         public string About { get; private set; }
-
+        
         public Author(string firstName, string lastName, string about)
         {
             firstName.IsNotNullOrWhiteSpace();

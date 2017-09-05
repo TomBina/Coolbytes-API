@@ -1,6 +1,7 @@
 ﻿using System;
+using CoolBytes.Core.Extensions;
 
-namespace CoolBytes.Core
+namespace CoolBytes.Core.Factories
 {
     public class PhotoFactoryOptions
     {
@@ -10,11 +11,16 @@ namespace CoolBytes.Core
 
         public PhotoFactoryOptions(string uploadPath)
         {
+            uploadPath.IsNotNullOrWhiteSpace();
+
             UploadPath = uploadPath;
         }
 
         public PhotoFactoryOptions(string uploadPath, Func<string, string> getFileName)
         {
+            uploadPath.IsNotNullOrWhiteSpace();
+            getFileName.IsNotNull();
+
             UploadPath = uploadPath;
             GetFileName = getFileName;
         }

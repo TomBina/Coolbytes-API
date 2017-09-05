@@ -1,17 +1,18 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using CoolBytes.Core.Extensions;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 
-namespace CoolBytes.Core
+namespace CoolBytes.Core.Factories
 {
     public class PhotoFactory : IPhotoFactory
     {
         private readonly PhotoFactoryOptions _options;
-        private readonly IPhotoValidator _validator;
+        private readonly IPhotoFactoryValidator _validator;
 
-        public PhotoFactory(PhotoFactoryOptions options, IPhotoValidator validator)
+        public PhotoFactory(PhotoFactoryOptions options, IPhotoFactoryValidator validator)
         {
             _options = options;
             _validator = validator;
@@ -19,9 +20,9 @@ namespace CoolBytes.Core
 
         public async Task<Photo> Create(Stream stream, string currentFileName, string contentType)
         {
-            if (stream == null) throw new ArgumentNullException(nameof(stream));
-            if (contentType == null) throw new ArgumentNullException(nameof(contentType));
-            if (currentFileName == null) throw new ArgumentNullException(nameof(currentFileName));
+            stream.IsNotNull();
+            currentFileName.IsNotNullOrWhiteSpace();
+            contentType.IsNotNull();
 
             if (!_validator.Validate(stream, contentType)) throw new ArgumentException("Image is not valid");
 
