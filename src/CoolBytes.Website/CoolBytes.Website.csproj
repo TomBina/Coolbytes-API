@@ -2,7 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Angular\**" />
+    <Content Remove="Angular\**" />
+    <EmbeddedResource Remove="Angular\**" />
+    <None Remove="Angular\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Views\Home\" />
