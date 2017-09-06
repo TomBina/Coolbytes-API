@@ -8,14 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.Data
 {
-    public class AppContext : DbContext
+    public class AppDbContext : DbContext
     {
         public DbSet<BlogPost> BlogPosts { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public AppDbContext(DbContextOptions options) : base(options)
         {
-            // TODO: temporary, has to be moved to UI project.
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=CoolBytes;Trusted_Connection=True");
+            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,6 +24,7 @@ namespace CoolBytes.Data
                 {
                     entity.Property(e => e.Date).IsRequired();
                     entity.Property(e => e.Subject).HasMaxLength(100).IsRequired();
+                    entity.Property(e => e.ContentIntro).HasMaxLength(100).IsRequired();
                     entity.Property(e => e.Content).HasMaxLength(4000).IsRequired();
                 })
                 .Entity<Author>(entity =>
