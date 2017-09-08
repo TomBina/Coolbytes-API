@@ -45,18 +45,49 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task AddBlogPostCommandHandler_AddsCourse()
         {
-            var blogPostCommand = new AddBlogPostCommand()
+            var addBlogPostCommand = new AddBlogPostCommand()
             {
                 Subject = "Test",
                 ContentIntro = "Test",
                 Content = "Test",
                 AuthorId = _appDbContext.Authors.First().Id
             };
-            var blogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext);
+            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext);
 
-            var result = await blogPostCommandHandler.Handle(blogPostCommand);
+            var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand);
 
             Assert.NotNull(result.Id);
+        }
+
+        [Fact]
+        public async Task UpdateBlogPostCommandHandler_UpdatesCourse()
+        {
+            var blogPost = _appDbContext.BlogPosts.First();
+            var updateBlogPostCommand = new UpdateBlogPostCommand()
+            {
+                Id = blogPost.Id,
+                Subject = "Test new",
+                ContentIntro = "Test",
+                Content = "Test",
+                AuthorId = blogPost.AuthorId
+            };
+            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(_appDbContext);
+
+            await updateBlogPostCommandHandler.Handle(updateBlogPostCommand);
+
+            Assert.Equal("Test new", blogPost.Subject);
+        }
+
+        [Fact]
+        public async Task DeleteBlogPostCommandHandler_DeletesCourse()
+        {
+            var blogPost = _appDbContext.BlogPosts.First();
+            var deleteBlogPostCommand = new DeleteBlogPostCommand() {Id = blogPost.Id };
+            var deleteBlogPostCommandHandler = new DeleteBlogPostCommandHandler(_appDbContext);
+
+            await deleteBlogPostCommandHandler.Handle(deleteBlogPostCommand);
+
+            Assert.Null(await _appDbContext.BlogPosts.FindAsync(blogPost.Id));
         }
 
         private void SeedDb()

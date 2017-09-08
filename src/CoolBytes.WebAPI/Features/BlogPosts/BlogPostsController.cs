@@ -29,5 +29,25 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
             return Ok(await _mediator.Send(command));
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Put(UpdateBlogPostCommand command)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(await _mediator.Send(command));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(DeleteBlogPostCommand command)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            await _mediator.Send(command);
+
+            return NoContent();
+        }
     }
 }

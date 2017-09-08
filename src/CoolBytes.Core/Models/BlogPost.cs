@@ -15,6 +15,7 @@ namespace CoolBytes.Core.Models
         public string ContentIntro { get; private set; }
         public string Content { get; private set; }
         public Author Author { get; private set; }
+        public int AuthorId { get; private set; }
         public IEnumerable<BlogPostTag> Tags { get => _tags; private set { } }
 
         public BlogPost(string subject, string contentInro, string content, Author author)
