@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -21,7 +22,9 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         public async Task<IEnumerable<BlogPostViewModel>> Handle(GetBlogPostsQuery message)
         {
-            return Mapper.Map<IEnumerable<BlogPostViewModel>>(await _appDbContext.BlogPosts.Include(b => b.Author).ToListAsync());
+            var blogPosts = await _appDbContext.BlogPosts.Include(b => b.Author).ToListAsync();
+
+            return Mapper.Map<IEnumerable<BlogPostViewModel>>(blogPosts);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace CoolBytes.Data
     public class AppDbContext : DbContext
     {
         public DbSet<BlogPost> BlogPosts { get; set; }
+        public DbSet<Author> Authors { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {

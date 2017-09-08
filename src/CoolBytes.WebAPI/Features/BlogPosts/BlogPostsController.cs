@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CoolBytes.WebAPI.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -19,6 +16,18 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(GetBlogPostsQuery query) => Ok(await _mediator.Send(query));
+        public async Task<IActionResult> Get(GetBlogPostsQuery query) => this.OkOrNotFound(await _mediator.Send(query));
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(GetBlogPostQuery query) => this.OkOrNotFound(await _mediator.Send(query));
+
+        [HttpPost]
+        public async Task<IActionResult> Post(AddBlogPostCommand command)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(await _mediator.Send(command));
+        }
     }
 }
