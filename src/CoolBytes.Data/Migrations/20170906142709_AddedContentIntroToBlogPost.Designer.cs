@@ -11,8 +11,8 @@ using System;
 namespace CoolBytes.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20170905105018_Initial")]
-    partial class Initial
+    [Migration("20170906142709_AddedContentIntroToBlogPost")]
+    partial class AddedContentIntroToBlogPost
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,6 +59,10 @@ namespace CoolBytes.Data.Migrations
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(4000);
+
+                    b.Property<string>("ContentIntro")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<DateTime>("Date");
 

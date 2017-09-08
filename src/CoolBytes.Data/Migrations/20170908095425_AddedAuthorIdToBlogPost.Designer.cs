@@ -11,8 +11,8 @@ using System;
 namespace CoolBytes.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20170905105018_Initial")]
-    partial class Initial
+    [Migration("20170908095425_AddedAuthorIdToBlogPost")]
+    partial class AddedAuthorIdToBlogPost
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,11 +54,15 @@ namespace CoolBytes.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("AuthorId");
+                    b.Property<int>("AuthorId");
 
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(4000);
+
+                    b.Property<string>("ContentIntro")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<DateTime>("Date");
 
@@ -128,7 +132,8 @@ namespace CoolBytes.Data.Migrations
                 {
                     b.HasOne("CoolBytes.Core.Models.Author", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("CoolBytes.Core.Models.BlogPostTag", b =>
