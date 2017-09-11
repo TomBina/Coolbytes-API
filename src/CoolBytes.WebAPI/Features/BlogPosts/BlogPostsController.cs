@@ -22,7 +22,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         public async Task<IActionResult> Get(GetBlogPostQuery query) => this.OkOrNotFound(await _mediator.Send(query));
 
         [HttpPost]
-        public async Task<IActionResult> Post(AddBlogPostCommand command)
+        public async Task<IActionResult> Post([FromBody] AddBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -31,7 +31,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [HttpPut]
-        public async Task<IActionResult> Put(UpdateBlogPostCommand command)
+        public async Task<IActionResult> Put([FromBody] UpdateBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -40,7 +40,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(DeleteBlogPostCommand command)
+        public async Task<IActionResult> Delete([FromBody] DeleteBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
