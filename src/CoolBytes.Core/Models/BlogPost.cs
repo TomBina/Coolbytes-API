@@ -10,12 +10,14 @@ namespace CoolBytes.Core.Models
 
         public int Id { get; private set; }
         public DateTime Date { get; private set; }
-        public DateTime Updated { get; private set; }
+        public DateTime? Updated { get; private set; }
         public string Subject { get; private set; }
         public string ContentIntro { get; private set; }
         public string Content { get; private set; }
         public Author Author { get; private set; }
         public int AuthorId { get; private set; }
+        public Photo Photo { get; private set; }
+        public int? PhotoId { get; private set; }
         public IEnumerable<BlogPostTag> Tags { get => _tags; private set { } }
 
         public BlogPost(string subject, string contentInro, string content, Author author)
@@ -46,14 +48,28 @@ namespace CoolBytes.Core.Models
             Content = content;
         }
 
-        public void AddTag(BlogPostTag blogPostTag)
+        public BlogPost AddTag(BlogPostTag blogPostTag)
         {
+            blogPostTag.IsNotNull();
             _tags.Add(blogPostTag);
+
+            return this;
         }
 
-        public void AddTags(IEnumerable<BlogPostTag> tags)
+        public BlogPost AddTags(IEnumerable<BlogPostTag> blogPostTags)
         {
-            _tags.AddRange(tags);
+            blogPostTags.IsNotNull();
+            _tags.AddRange(blogPostTags);
+
+            return this;
+        }
+
+        public BlogPost ChangePhoto(Photo photo)
+        {
+            photo.IsNotNull();
+            Photo = photo;
+
+            return this;
         }
     }
 }

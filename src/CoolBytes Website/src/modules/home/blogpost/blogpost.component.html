@@ -1,12 +1,10 @@
 <div class="post">
     <div class="info">
-        6 SEP 2017 by <a>Tom</a>
+        {{blogPost.date | date}} by <a>{{blogPost.authorName}}</a>
     </div>
     <div class="image"></div>
     <div class="text">
-        <a>Big subject title and more stuff</a>
-        <p>
-            Short intro message here. Short intro message here. Short intro message
-            here. Short intro message here. Short intro message here. Short intro message here. </p>
+        <a>{{blogPost.subject}}</a>
+        <p>{{blogPost.contentIntro}}</p>
     </div>
 </div>

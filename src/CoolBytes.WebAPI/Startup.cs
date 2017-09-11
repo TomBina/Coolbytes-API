@@ -21,6 +21,7 @@ namespace CoolBytes.WebAPI
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
             services.AddMvc()
                         .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
@@ -34,6 +35,8 @@ namespace CoolBytes.WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(o => o.AllowAnyOrigin());
+
                 Mapper.AssertConfigurationIsValid();
             }
 
