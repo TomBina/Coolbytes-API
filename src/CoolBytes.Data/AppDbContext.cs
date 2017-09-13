@@ -10,8 +10,10 @@ namespace CoolBytes.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<BlogPost> BlogPosts { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Author> Authors { get; set; }
+        public DbSet<BlogPost> BlogPosts { get; set; }
+        
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -21,12 +23,10 @@ namespace CoolBytes.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Entity<BlogPost>(entity =>
+                .Entity<User>(entity =>
                 {
-                    entity.Property(e => e.Date).IsRequired();
-                    entity.Property(e => e.Subject).HasMaxLength(100).IsRequired();
-                    entity.Property(e => e.ContentIntro).HasMaxLength(100).IsRequired();
-                    entity.Property(e => e.Content).HasMaxLength(4000).IsRequired();
+                    entity.Property(e => e.Identifier).HasMaxLength(200).IsRequired();
+                    entity.ToTable("Users");
                 })
                 .Entity<Author>(entity =>
                 {
@@ -34,6 +34,13 @@ namespace CoolBytes.Data
                     entity.Property(e => e.LastName).HasMaxLength(50).IsRequired();
                     entity.Property(e => e.About).HasMaxLength(500).IsRequired();
                     entity.ToTable("Authors");
+                })
+                .Entity<BlogPost>(entity =>
+                {
+                    entity.Property(e => e.Date).IsRequired();
+                    entity.Property(e => e.Subject).HasMaxLength(100).IsRequired();
+                    entity.Property(e => e.ContentIntro).HasMaxLength(100).IsRequired();
+                    entity.Property(e => e.Content).HasMaxLength(4000).IsRequired();
                 })
                 .Entity<Photo>(entity =>
                 {

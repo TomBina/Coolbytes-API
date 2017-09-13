@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts;
+using CoolBytes.WebAPI.Services;
+using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -52,7 +54,11 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 Content = "Test",
                 AuthorId = _appDbContext.Authors.First().Id
             };
-            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext);
+
+            var userService = new Mock<IUserService>();
+            userService.Setup(exp => exp.GetUser()).ReturnsAsync(new User("Test"));
+
+            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext, userService.Object);
 
             var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand);
 
@@ -92,7 +98,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
         private void SeedDb()
         {
-            var author = new Author("Tom", "Bina", "About me");
+            var author = new Author(new User("Test"), "Tom", "Bina", "About me");
             var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
             _appDbContext.BlogPosts.Add(blogPost);
             _appDbContext.SaveChanges();

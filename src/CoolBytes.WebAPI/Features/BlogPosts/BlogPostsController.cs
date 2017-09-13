@@ -1,7 +1,9 @@
-﻿using CoolBytes.WebAPI.Extensions;
+﻿using System.Security.Claims;
+using CoolBytes.WebAPI.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -21,6 +23,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(GetBlogPostQuery query) => this.OkOrNotFound(await _mediator.Send(query));
 
+        [Authorize("admin")]
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddBlogPostCommand command)
         {
@@ -30,6 +33,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             return Ok(await _mediator.Send(command));
         }
 
+        [Authorize("admin")]
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] UpdateBlogPostCommand command)
         {
@@ -39,6 +43,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             return Ok(await _mediator.Send(command));
         }
 
+        [Authorize("admin")]
         [HttpDelete]
         public async Task<IActionResult> Delete([FromBody] DeleteBlogPostCommand command)
         {

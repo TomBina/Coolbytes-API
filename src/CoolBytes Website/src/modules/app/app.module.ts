@@ -3,6 +3,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 import { HomeModule } from "../home/home.module";
+import { AdminModule } from "../admin/admin.module";
 
 import { AppComponent } from "./app/app.component";
 import { HeaderComponent } from "./header/header.component";
@@ -11,7 +12,8 @@ import { HeaderComponent } from "./header/header.component";
   imports: [
     BrowserModule,
     RouterModule.forRoot([]),
-    HomeModule
+    HomeModule,
+    AdminModule
   ],
   declarations: [
     AppComponent,

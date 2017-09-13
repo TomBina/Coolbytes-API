@@ -4,5 +4,7 @@
         <a routerLink="/home">home</a>
         <a routerLink="/about" class="main">about</a>
         <a routerLink="/contact">contact</a>
+        <a routerLink="/admin">admin</a>
+        <a (click)="_authService.logout()" *ngIf="_authService.isAuthenticated()">logout</a>
     </nav>
 </header>

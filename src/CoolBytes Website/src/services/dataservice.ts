@@ -1,4 +1,4 @@
-import { Http, Response } from "@angular/http";
+import { Http, Response, Headers, RequestOptions } from "@angular/http";
 import { Injectable } from "@angular/core"
 import { Observable } from "rxjs/Observable";
 import { BlogPost } from "./blogpost";
@@ -12,7 +12,11 @@ export class DataService {
     }
 
     getBlogPosts() : Observable<BlogPost[]> {
-        let observable = this._http.get("http://localhost:5000/api/blogposts/");
+        let headers = new Headers();
+        headers.append("Authorization","Bearer "+localStorage.getItem("access_token"));
+        let options = new RequestOptions({headers: headers});
+
+        let observable = this._http.get("http://localhost:5000/api/blogposts/", options);
         return observable.map((response: Response) => <BlogPost[]>response.json());
     }
 

@@ -11,20 +11,25 @@ namespace CoolBytes.Core.Models
         public Photo Photo { get; private set; }
         public int? PhotoId { get; private set; }
         public string About { get; private set; }
-        
-        public Author(string firstName, string lastName, string about)
+        public User User { get; private set; }
+        public int UserId { get; private set; }
+
+        public Author(User user, string firstName, string lastName, string about)
         {
+            user.IsNotNull();
             firstName.IsNotNullOrWhiteSpace();
             lastName.IsNotNullOrWhiteSpace();
             about.IsNotNullOrWhiteSpace();
 
+            User = user;
             FirstName = firstName;
             LastName = lastName;
             About = about;
         }
 
-        public Author(string firstName, string lastName, string about, Photo photo)
+        public Author(User user, string firstName, string lastName, string about, Photo photo)
         {
+            user.IsNotNull();
             firstName.IsNotNullOrWhiteSpace();
             lastName.IsNotNullOrWhiteSpace();
             about.IsNotNullOrWhiteSpace();

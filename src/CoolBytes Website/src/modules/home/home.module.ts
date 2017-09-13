@@ -12,7 +12,7 @@ import { DataService } from "../../services/dataservice";
         BrowserModule,
         RouterModule.forChild([
             {
-                path:"**",
+                path:"",
                 component:BlogComponent
             },
             {

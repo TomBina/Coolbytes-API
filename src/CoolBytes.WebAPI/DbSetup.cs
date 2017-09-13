@@ -18,7 +18,7 @@ namespace CoolBytes.WebAPI
             using (serviceProvider.CreateScope())
             {
                 var context = serviceProvider.GetService<AppDbContext>();
-                var author = new Author("Tom", "Bina", "About me");
+                var author = new Author(new User("Test"),"Tom", "Bina", "About me");
                 var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
                 context.BlogPosts.Add(blogPost);
                 context.SaveChanges();
