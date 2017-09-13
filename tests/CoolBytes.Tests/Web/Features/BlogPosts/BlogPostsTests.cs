@@ -15,11 +15,14 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
     public class BlogPostsTests : IClassFixture<Fixture>
     {
         private readonly AppDbContext _appDbContext;
+        private readonly IUserService _userService;
 
         public BlogPostsTests(Fixture fixture)
         {
             _appDbContext = fixture.Context;
             _appDbContext.BlogPosts.RemoveRange(_appDbContext.BlogPosts.ToArray());
+            _userService = fixture.UserService;
+
             SeedDb();
         }
 
@@ -55,10 +58,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 AuthorId = _appDbContext.Authors.First().Id
             };
 
-            var userService = new Mock<IUserService>();
-            userService.Setup(exp => exp.GetUser()).ReturnsAsync(new User("Test"));
-
-            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext, userService.Object);
+            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext, _userService);
 
             var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand);
 

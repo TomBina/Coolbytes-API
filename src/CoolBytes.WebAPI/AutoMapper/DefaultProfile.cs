@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Models;
+using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Features.BlogPosts;
 
 namespace CoolBytes.WebAPI.AutoMapper
@@ -15,6 +16,8 @@ namespace CoolBytes.WebAPI.AutoMapper
         {
             CreateMap<BlogPost, BlogPostViewModel>()
                 .ForMember(b => b.AuthorName, exp => exp.MapFrom(b => b.Author.FirstName));
+            CreateMap<Author, AuthorViewModel>();
         }
     }
 }
+

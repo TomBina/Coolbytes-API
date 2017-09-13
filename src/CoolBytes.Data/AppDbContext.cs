@@ -33,6 +33,7 @@ namespace CoolBytes.Data
                     entity.Property(e => e.FirstName).HasMaxLength(50).IsRequired();
                     entity.Property(e => e.LastName).HasMaxLength(50).IsRequired();
                     entity.Property(e => e.About).HasMaxLength(500).IsRequired();
+                    entity.HasIndex(a => a.UserId).IsUnique();
                     entity.ToTable("Authors");
                 })
                 .Entity<BlogPost>(entity =>

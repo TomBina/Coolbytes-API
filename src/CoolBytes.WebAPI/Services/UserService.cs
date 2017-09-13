@@ -21,7 +21,13 @@ namespace CoolBytes.WebAPI.Services
             var identifier = ClaimsPrincipal.Current.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             identifier.IsNotNullOrWhiteSpace();
 
-            var user = await _appDbContext.Users.SingleOrDefaultAsync(u => u.Identifier == identifier) ?? new User(identifier);
+            var user = await _appDbContext.Users.SingleOrDefaultAsync(u => u.Identifier == identifier);
+            if (user != null)
+                return user;
+
+            user = new User(identifier);
+            await _appDbContext.SaveChangesAsync();
+
             return user;
         }
     }
