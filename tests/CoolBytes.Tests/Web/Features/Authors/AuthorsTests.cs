@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Services;
-using Moq;
+using System.Threading.Tasks;
+using CoolBytes.Core.Models;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
@@ -21,6 +18,28 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             _appDbContext = fixture.Context;
             _userService = fixture.UserService;
+
+            _appDbContext.Authors.RemoveRange(_appDbContext.Authors.ToArray());
+            _appDbContext.SaveChanges();
+        }
+
+        [Fact]
+        public async Task GetAuthorQueryHandler_ReturnsAuthor()
+        {
+            var user = await _userService.GetUser();
+            var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
+            var authorData = new AuthorData(_appDbContext);
+            var author = await Author.Create(user, authorProfile, authorData);
+
+            _appDbContext.Authors.Add(author);
+            await _appDbContext.SaveChangesAsync();
+
+            var getAuthorQueryHandler = new GetAuthorQueryHandler(_appDbContext, _userService);
+            var message = new GetAuthorQuery();
+
+            var result = await getAuthorQueryHandler.Handle(message);
+
+            Assert.Equal(author.Id, result.Id);
         }
 
         [Fact]
@@ -32,6 +51,20 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var result = await addAuthorCommandHandler.Handle(message);
 
             Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task AddAuthorCommandHandler_AddingSecondTime_ThrowsException()
+        {
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(_appDbContext, _userService);
+            var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
+
+            var result1 = await addAuthorCommandHandler.Handle(message);
+
+            await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            {
+                await addAuthorCommandHandler.Handle(message);
+            });
         }
     }
 }

@@ -4,14 +4,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
 namespace CoolBytes.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppContextModelSnapshot : ModelSnapshot
+    [Migration("20170914134858_SplitAuthorsInAuthorsAndAuthorsProfile")]
+    partial class SplitAuthorsInAuthorsAndAuthorsProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +32,7 @@ namespace CoolBytes.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorProfileId")
-                        .IsUnique()
-                        .HasFilter("[AuthorProfileId] IS NOT NULL");
+                    b.HasIndex("AuthorProfileId");
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -162,9 +163,8 @@ namespace CoolBytes.Data.Migrations
             modelBuilder.Entity("CoolBytes.Core.Models.Author", b =>
                 {
                     b.HasOne("CoolBytes.Core.Models.AuthorProfile", "AuthorProfile")
-                        .WithOne("Author")
-                        .HasForeignKey("CoolBytes.Core.Models.Author", "AuthorProfileId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("AuthorProfileId");
 
                     b.HasOne("CoolBytes.Core.Models.User", "User")
                         .WithMany()

@@ -5,3 +5,15 @@ body {
     padding: 0px;
     margin: 0px;
 }
+
+.admin-content {
+    margin-top:132px;
+    padding:20px;
+}
+
+a.button {
+    background-color: #1e243d;  
+    color:#fff;
+    font-size:14px;
+    padding:8px; 
+}

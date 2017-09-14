@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoolBytes.Core.Models;
+﻿using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts;
 using CoolBytes.WebAPI.Services;
-using Moq;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -42,7 +38,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var blogPostId = _appDbContext.BlogPosts.First().Id;
             var blogPostQueryHandler = new GetBlogPostQueryHandler(_appDbContext);
 
-            var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() {Id = blogPostId});
+            var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId });
 
             Assert.NotNull(result);
         }
@@ -88,7 +84,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task DeleteBlogPostCommandHandler_DeletesCourse()
         {
             var blogPost = _appDbContext.BlogPosts.First();
-            var deleteBlogPostCommand = new DeleteBlogPostCommand() {Id = blogPost.Id };
+            var deleteBlogPostCommand = new DeleteBlogPostCommand() { Id = blogPost.Id };
             var deleteBlogPostCommandHandler = new DeleteBlogPostCommandHandler(_appDbContext);
 
             await deleteBlogPostCommandHandler.Handle(deleteBlogPostCommand);
@@ -98,8 +94,12 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
         private void SeedDb()
         {
-            var author = new Author(new User("Test"), "Tom", "Bina", "About me");
+            var user = new User("Test");
+            var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
+            var authorData = new AuthorData(_appDbContext);
+            var author = Author.Create(user, authorProfile, authorData).Result;
             var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
+
             _appDbContext.BlogPosts.Add(blogPost);
             _appDbContext.SaveChanges();
         }

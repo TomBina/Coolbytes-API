@@ -23,11 +23,10 @@ namespace CoolBytes.WebAPI.Features.Authors
         public async Task<AuthorViewModel> Handle(AddAuthorCommand message)
         {
             var user = await _userService.GetUser();
+            var authorData = new AuthorData(_appDbContext);
+            var authorProfile = new AuthorProfile(message.FirstName, message.LastName, message.About);
+            var author = await Author.Create(user, authorProfile, authorData);
 
-            if (await _appDbContext.Authors.AnyAsync(a => a.UserId == user.UserId))
-                throw new InvalidOperationException("Only one author is allowed per user");
-
-            var author = new Author(user, message.FirstName, message.LastName, message.About);
             _appDbContext.Authors.Add(author);
             await _appDbContext.SaveChangesAsync();
 

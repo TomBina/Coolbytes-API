@@ -15,8 +15,11 @@ namespace CoolBytes.WebAPI.AutoMapper
         public DefaultProfile()
         {
             CreateMap<BlogPost, BlogPostViewModel>()
-                .ForMember(b => b.AuthorName, exp => exp.MapFrom(b => b.Author.FirstName));
-            CreateMap<Author, AuthorViewModel>();
+                .ForMember(b => b.AuthorName, exp => exp.MapFrom(b => b.Author.AuthorProfile.FirstName));
+            CreateMap<Author, AuthorViewModel>()
+                .ForMember(a => a.FirstName, exp => exp.MapFrom(a => a.AuthorProfile.FirstName))
+                .ForMember(a => a.LastName, exp => exp.MapFrom(a => a.AuthorProfile.LastName))
+                .ForMember(a => a.About, exp => exp.MapFrom(a => a.AuthorProfile.About));
         }
     }
 }

@@ -30,11 +30,16 @@ namespace CoolBytes.Data
                 })
                 .Entity<Author>(entity =>
                 {
+                    entity.HasIndex(a => a.UserId).IsUnique();
+                    entity.HasOne(a => a.AuthorProfile).WithOne(a => a.Author).OnDelete(DeleteBehavior.Cascade);
+                    entity.ToTable("Authors");
+                })
+                .Entity<AuthorProfile>(entity =>
+                {
                     entity.Property(e => e.FirstName).HasMaxLength(50).IsRequired();
                     entity.Property(e => e.LastName).HasMaxLength(50).IsRequired();
                     entity.Property(e => e.About).HasMaxLength(500).IsRequired();
-                    entity.HasIndex(a => a.UserId).IsUnique();
-                    entity.ToTable("Authors");
+                    entity.ToTable("AuthorsProfile");
                 })
                 .Entity<BlogPost>(entity =>
                 {

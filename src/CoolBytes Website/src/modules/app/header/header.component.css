@@ -1,6 +1,6 @@
 header {
     width:100%;
-    height:70px;
+    height:82px;
     background-color: #1e243d;
     position: fixed;
     display: flex;
@@ -9,6 +9,7 @@ header {
     top:0;
     padding:6px 8px 6px 8px;
     opacity:0.9;
+    box-sizing:border-box;
 }
 
 img {
@@ -19,7 +20,17 @@ nav {
     margin-left:20px;
 }
 
-nav > a {
+ul {
+    margin:0;
+    padding:0;
+}
+
+li {
+    display: inline-block;
+    margin-right:5px;
+}
+
+a {
     font-size: 15px;
     color: #fff;
     text-transform: uppercase;
@@ -27,23 +38,9 @@ nav > a {
     transition:border-top ease 500ms;
     border-top:1px solid #1e243d;
     padding:3px 0 12px 0;
+    cursor:pointer;
 }
 
-nav > a:hover {
+a:hover {
     border-top:1px solid #fff;
-}
-
-nav > a:hover::before {
-    border-top:1px solid #1e243d;
-}
-
-nav > a::before {
-    content: "\2022";
-    border-top:1px solid #1e243d;
-    padding:3px 5px 0 5px;
-}
-
-nav > a:first-child::before {
-    content: "";
-    padding: 0;
 }
