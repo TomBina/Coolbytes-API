@@ -5,8 +5,8 @@ import { RouterModule } from "@angular/router";
 import { HomeModule } from "../home/home.module";
 import { AdminModule } from "../admin/admin.module";
 
-import { AppComponent } from "./app/app.component";
-import { HeaderComponent } from "./header/header.component";
+import { AppComponent } from "./app.component";
+import { HeaderComponent } from "./header.component";
 
 @NgModule({
   imports: [

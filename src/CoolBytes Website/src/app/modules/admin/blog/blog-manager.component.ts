@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { AuthService } from "../../../services/authservice";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
-    templateUrl: "./blogmanager.component.html",
-    styleUrls: ["./blogmanager.component.css"]
+    templateUrl: "./blog-manager.component.html",
+    styleUrls: ["./blog-manager.component.css"]
 })
 export class BlogManagerComponent implements OnInit {
 

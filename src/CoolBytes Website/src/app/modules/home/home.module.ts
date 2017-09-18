@@ -3,9 +3,9 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { HttpModule } from "@angular/http";
 
-import { BlogComponent } from "./blog/blog.component";
-import { BlogPostComponent } from "./blogpost/blogpost.component";
-import { DataService } from "../../services/dataservice";
+import { BlogComponent } from "./blog.component";
+import { BlogPostComponent } from "./blog-post.component";
+import { BlogPostsService } from "../../services/blog-posts.service";
 
 @NgModule({
     imports: [
@@ -27,7 +27,7 @@ import { DataService } from "../../services/dataservice";
         BlogPostComponent
     ],
     providers: [
-        DataService
+        BlogPostsService
     ]
 })
 export class HomeModule {

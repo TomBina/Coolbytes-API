@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { AuthService } from "../../../services/authservice";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
-    templateUrl: "./processauth.component.html",
-    styleUrls: ["./processauth.component.css"]
+    templateUrl: "./process-auth.component.html",
+    styleUrls: ["./process-auth.component.css"]
 })
 export class ProcessAuthComponent implements OnInit {
 

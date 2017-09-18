@@ -4,21 +4,24 @@ using CoolBytes.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Services
 {
     public class UserService : IUserService
     {
         private readonly AppDbContext _appDbContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(AppDbContext appDbContext)
+        public UserService(AppDbContext appDbContext, IHttpContextAccessor httpContextAccessor)
         {
             _appDbContext = appDbContext;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<User> GetUser()
         {
-            var identifier = ClaimsPrincipal.Current.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var identifier = _httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             identifier.IsNotNullOrWhiteSpace();
 
             var user = await _appDbContext.Users.SingleOrDefaultAsync(u => u.Identifier == identifier);

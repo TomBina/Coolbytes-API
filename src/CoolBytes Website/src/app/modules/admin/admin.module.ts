@@ -4,10 +4,11 @@ import { RouterModule } from "@angular/router";
 import { Http, RequestOptions } from "@angular/http";
 
 import { MenuComponent } from "./menu/menu.component";
-import { ProcessAuthComponent } from "./processauth/processauth.component";
-import { BlogManagerComponent } from "./blog/blogmanager.component";
+import { ProcessAuthComponent } from "./processauth/process-auth.component";
+import { BlogManagerComponent } from "./blog/blog-manager.component";
 
-import { AuthService } from "../../services/authservice";
+import { AuthService } from "../../services/auth.service";
+import { AdminGuardService } from '../../services/admin-guard.service';
 
 @NgModule({
     imports: [
@@ -19,11 +20,13 @@ import { AuthService } from "../../services/authservice";
             },
             {
                 path: "admin",
-                component: BlogManagerComponent
+                component: BlogManagerComponent,
+                canActivate: [AdminGuardService]
             },
             {
                 path: "admin/blogs",
-                component: BlogManagerComponent
+                component: BlogManagerComponent,
+                canActivate: [AdminGuardService]
             }
         ])
     ],
@@ -33,7 +36,8 @@ import { AuthService } from "../../services/authservice";
         BlogManagerComponent
     ],
     providers: [
-        AuthService
+        AuthService,
+        AdminGuardService
     ]
 })
 export class AdminModule {

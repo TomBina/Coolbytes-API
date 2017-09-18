@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { DataService } from "../../../services/dataservice";
-import { BlogPost } from "../../../services/blogpost";
+import { BlogPostsService } from "../../services/blog-posts.service";
+import { BlogPost } from "../../services/blog-post";
 
 @Component({
     templateUrl: "./blog.component.html",
@@ -9,12 +9,12 @@ import { BlogPost } from "../../../services/blogpost";
 export class BlogComponent implements OnInit {
     blogPosts: BlogPost[];
 
-    constructor(private _dataService: DataService) {
+    constructor(private _blogpostsService: BlogPostsService) {
         
     }
 
     ngOnInit(): void {
-        this._dataService.getBlogPosts().subscribe(blogPosts => {
+        this._blogpostsService.getAll().subscribe(blogPosts => {
             this.blogPosts = blogPosts;
         })
     }
