@@ -6,9 +6,10 @@ body {
     margin: 0px;
 }
 
-.admin-content {
-    margin-top:132px;
-    padding:20px;
+h1 {
+    font-size:28px;
+    color:#1e243d;
+    font-weight:700;
 }
 
 a.button {
@@ -16,4 +17,49 @@ a.button {
     color:#fff;
     font-size:14px;
     padding:8px; 
+}
+
+label {
+    text-transform: uppercase;
+    font-size:14px;
+    color:#7B808F;
+}
+
+input {
+    width:100%;
+    padding:6px;
+    font-size:14px;
+    font-family: 'Open Sans', sans-serif;
+    border:1px solid #a0a0a0;
+    box-sizing: border-box;
+}
+
+input.error {
+    border-color:#B60E0E;
+}
+
+input[type="submit"] {
+    width:auto;
+    background-color: #1e243d;  
+    color:#fff;
+    font-size:14px;
+    padding:8px; 
+}
+
+textarea {
+    width:100%;
+    padding:6px;
+    font-size:14px;
+    font-family: 'Open Sans', sans-serif;
+    min-height: 200px;
+    border:1px solid #a0a0a0;
+    box-sizing: border-box;
+}
+
+textarea.error {
+    border-color:#B60E0E;
+}
+
+.admin-content {
+    margin:152px 20px 20px 20px;
 }

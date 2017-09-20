@@ -12,11 +12,7 @@ export class BlogPostsService {
     }
 
     getAll() : Observable<BlogPost[]> {
-        let headers = new Headers();
-        headers.append("Authorization","Bearer "+localStorage.getItem("access_token"));
-        let options = new RequestOptions({headers: headers});
-
-        let observable = this._http.get("http://localhost:5000/api/blogposts/", options);
+        let observable = this._http.get("http://localhost:5000/api/blogposts/");
         return observable.map((response: Response) => <BlogPost[]>response.json());
     }
 }

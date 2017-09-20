@@ -1,4 +1,5 @@
-﻿using CoolBytes.Core.Models;
+﻿using System;
+using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts;
 using CoolBytes.WebAPI.Services;
@@ -8,15 +9,16 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
 {
-    public class BlogPostsTests : IClassFixture<Fixture>
+    public class BlogPostsTests : IClassFixture<Fixture>, IDisposable
     {
         private readonly AppDbContext _appDbContext;
         private readonly IUserService _userService;
+        private readonly Fixture _fixture;
 
         public BlogPostsTests(Fixture fixture)
         {
-            _appDbContext = fixture.Context;
-            _appDbContext.BlogPosts.RemoveRange(_appDbContext.BlogPosts.ToArray());
+            _fixture = fixture;
+            _appDbContext = fixture.GetContext();
             _userService = fixture.UserService;
 
             SeedDb();
@@ -94,14 +96,26 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
         private void SeedDb()
         {
-            var user = new User("Test");
-            var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-            var authorData = new AuthorData(_appDbContext);
-            var author = Author.Create(user, authorProfile, authorData).Result;
-            var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
+            using (var context = _fixture.GetContext())
+            {
+                var user = new User("Test");
+                var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
+                var authorData = new AuthorData(_appDbContext);
+                var author = Author.Create(user, authorProfile, authorData).Result;
+                var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
 
-            _appDbContext.BlogPosts.Add(blogPost);
+                context.BlogPosts.Add(blogPost);
+                context.SaveChanges();
+            }
+        }
+
+        public void Dispose()
+        {
+            _appDbContext.BlogPosts.RemoveRange(_appDbContext.BlogPosts.ToArray());
+            _appDbContext.Authors.RemoveRange(_appDbContext.Authors.ToArray());
+            _appDbContext.Users.RemoveRange(_appDbContext.Users.ToArray());
             _appDbContext.SaveChanges();
+            _appDbContext.Dispose();
         }
     }
 }

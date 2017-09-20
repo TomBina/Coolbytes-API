@@ -9,18 +9,17 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
 {
-    public class AuthorsTests : IClassFixture<Fixture>
+    public class AuthorsTests : IClassFixture<Fixture>, IDisposable
     {
         private readonly AppDbContext _appDbContext;
         private readonly IUserService _userService;
+        private readonly Fixture _fixture;
 
         public AuthorsTests(Fixture fixture)
         {
-            _appDbContext = fixture.Context;
+            _fixture = fixture;
+            _appDbContext = fixture.GetContext();
             _userService = fixture.UserService;
-
-            _appDbContext.Authors.RemoveRange(_appDbContext.Authors.ToArray());
-            _appDbContext.SaveChanges();
         }
 
         [Fact]
@@ -31,22 +30,25 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var authorData = new AuthorData(_appDbContext);
             var author = await Author.Create(user, authorProfile, authorData);
 
-            _appDbContext.Authors.Add(author);
-            await _appDbContext.SaveChangesAsync();
+            using (var context = _fixture.GetContext())
+            {
+                context.Authors.Add(author);
+                await context.SaveChangesAsync();
+            }
 
             var getAuthorQueryHandler = new GetAuthorQueryHandler(_appDbContext, _userService);
             var message = new GetAuthorQuery();
 
             var result = await getAuthorQueryHandler.Handle(message);
 
-            Assert.Equal(author.Id, result.Id);
+            Assert.Equal(author.AuthorProfile.FirstName, result.FirstName);
         }
 
         [Fact]
         public async Task AddAuthorCommandHandler_ReturnsAuthor()
         {
             var addAuthorCommandHandler = new AddAuthorCommandHandler(_appDbContext, _userService);
-            var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me"};
+            var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             var result = await addAuthorCommandHandler.Handle(message);
 
@@ -65,6 +67,15 @@ namespace CoolBytes.Tests.Web.Features.Authors
             {
                 await addAuthorCommandHandler.Handle(message);
             });
+        }
+
+        public void Dispose()
+        {
+            _appDbContext.Authors.RemoveRange(_appDbContext.Authors.ToArray());
+            _appDbContext.Users.RemoveRange(_appDbContext.Users.ToArray());
+
+            _appDbContext.SaveChanges();
+            _appDbContext.Dispose();
         }
     }
 }

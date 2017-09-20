@@ -10,13 +10,13 @@ export class BlogComponent implements OnInit {
     blogPosts: BlogPost[];
 
     constructor(private _blogpostsService: BlogPostsService) {
-        
+
     }
 
     ngOnInit(): void {
-        this._blogpostsService.getAll().subscribe(blogPosts => {
-            this.blogPosts = blogPosts;
-        })
+        this._blogpostsService.getAll().subscribe(
+            blogPosts => { this.blogPosts = blogPosts; },
+            error => { });
     }
 
 }
