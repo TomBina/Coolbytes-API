@@ -21,7 +21,7 @@ namespace CoolBytes.WebAPI.Features.Authors
         public async Task<AuthorViewModel> Handle(GetAuthorQuery message)
         {
             var user = await _userService.GetUser();
-            var author = await _appDbContext.Authors.Include(a => a.AuthorProfile).SingleOrDefaultAsync(a => a.UserId == user.Id);
+            var author = await _appDbContext.Authors.AsNoTracking().Include(a => a.AuthorProfile).SingleOrDefaultAsync(a => a.UserId == user.Id);
 
             return Mapper.Map<AuthorViewModel>(author);
         }
