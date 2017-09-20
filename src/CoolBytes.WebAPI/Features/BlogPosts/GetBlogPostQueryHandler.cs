@@ -2,6 +2,7 @@
 using AutoMapper;
 using CoolBytes.Data;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -16,7 +17,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         public async Task<BlogPostViewModel> Handle(GetBlogPostQuery message)
         {
-            var blogPost = await _appDbContext.BlogPosts.FindAsync(message.Id);
+            var blogPost = await _appDbContext.BlogPosts.AsNoTracking().SingleAsync(b => b.Id == message.Id);
 
             return Mapper.Map<BlogPostViewModel>(blogPost);
         }

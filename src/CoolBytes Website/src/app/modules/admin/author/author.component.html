@@ -1,0 +1,19 @@
+<app-admin-menu></app-admin-menu>
+<div class="admin-content">
+    <h1>Author profile</h1>
+    <form [formGroup]="authorForm" (ngSubmit)="onSubmit()">
+        <label for="firstName">First name:</label>
+        <p>
+            <input formControlName="firstName" id="firstName" [ngClass]="inputCssClass('firstName')" />
+        </p>
+        <label for="lastName">Last name:</label>
+        <p>
+            <input formControlName="lastName" id="lastName" [ngClass]="inputCssClass('lastName')" />
+        </p>
+        <label for="aboutMe">About me:</label>
+        <p>
+            <textarea formControlName="aboutMe" id="aboutMe" [ngClass]="inputCssClass('aboutMe')"></textarea>
+        </p>
+        <input type="submit" value="save" />
+    </form>
+</div>

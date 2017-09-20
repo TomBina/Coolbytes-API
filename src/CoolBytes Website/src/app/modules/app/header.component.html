@@ -1,0 +1,12 @@
+<header>
+    <img src="assets/logo.svg" />
+    <nav>
+        <ul>
+            <li><a routerLink="/home">home</a></li>
+            <li><a routerLink="/about" class="main">about</a></li>
+            <li><a routerLink="/contact">contact</a></li>
+            <li><a routerLink="/admin">admin</a></li>
+            <li><a (click)="_authService.logout()" *ngIf="_authService.isAuthenticated()">logout</a></li>
+        </ul>
+    </nav>
+</header>

@@ -1,23 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts;
+using CoolBytes.WebAPI.Services;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
 {
-    public class BlogPostsTests : IClassFixture<Fixture>
+    public class BlogPostsTests : IClassFixture<Fixture>, IDisposable
     {
         private readonly AppDbContext _appDbContext;
+        private readonly IUserService _userService;
+        private readonly Fixture _fixture;
 
         public BlogPostsTests(Fixture fixture)
         {
-            _appDbContext = fixture.Context;
-            _appDbContext.BlogPosts.RemoveRange(_appDbContext.BlogPosts.ToArray());
+            _fixture = fixture;
+            _appDbContext = fixture.GetContext();
+            _userService = fixture.UserService;
+
             SeedDb();
         }
 
@@ -37,7 +40,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var blogPostId = _appDbContext.BlogPosts.First().Id;
             var blogPostQueryHandler = new GetBlogPostQueryHandler(_appDbContext);
 
-            var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() {Id = blogPostId});
+            var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId });
 
             Assert.NotNull(result);
         }
@@ -52,7 +55,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 Content = "Test",
                 AuthorId = _appDbContext.Authors.First().Id
             };
-            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext);
+
+            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext, _userService);
 
             var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand);
 
@@ -82,7 +86,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task DeleteBlogPostCommandHandler_DeletesCourse()
         {
             var blogPost = _appDbContext.BlogPosts.First();
-            var deleteBlogPostCommand = new DeleteBlogPostCommand() {Id = blogPost.Id };
+            var deleteBlogPostCommand = new DeleteBlogPostCommand() { Id = blogPost.Id };
             var deleteBlogPostCommandHandler = new DeleteBlogPostCommandHandler(_appDbContext);
 
             await deleteBlogPostCommandHandler.Handle(deleteBlogPostCommand);
@@ -92,10 +96,26 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
         private void SeedDb()
         {
-            var author = new Author("Tom", "Bina", "About me");
-            var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
-            _appDbContext.BlogPosts.Add(blogPost);
+            using (var context = _fixture.GetContext())
+            {
+                var user = new User("Test");
+                var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
+                var authorData = new AuthorData(_appDbContext);
+                var author = Author.Create(user, authorProfile, authorData).Result;
+                var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
+
+                context.BlogPosts.Add(blogPost);
+                context.SaveChanges();
+            }
+        }
+
+        public void Dispose()
+        {
+            _appDbContext.BlogPosts.RemoveRange(_appDbContext.BlogPosts.ToArray());
+            _appDbContext.Authors.RemoveRange(_appDbContext.Authors.ToArray());
+            _appDbContext.Users.RemoveRange(_appDbContext.Users.ToArray());
             _appDbContext.SaveChanges();
+            _appDbContext.Dispose();
         }
     }
 }

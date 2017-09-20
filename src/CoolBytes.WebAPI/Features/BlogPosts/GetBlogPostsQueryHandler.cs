@@ -22,7 +22,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         public async Task<IEnumerable<BlogPostViewModel>> Handle(GetBlogPostsQuery message)
         {
-            var blogPosts = await _appDbContext.BlogPosts.Include(b => b.Author).ToListAsync();
+            var blogPosts = await _appDbContext.BlogPosts.AsNoTracking().Include(b => b.Author).ToListAsync();
 
             return Mapper.Map<IEnumerable<BlogPostViewModel>>(blogPosts);
         }
