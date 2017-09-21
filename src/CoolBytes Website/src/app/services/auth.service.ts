@@ -1,13 +1,14 @@
+import { AuthorsService } from './authors.service';
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import "rxjs/add/operator/filter";
-import * as auth0 from "auth0-js";
+import 'rxjs/add/operator/filter';
+import * as auth0 from 'auth0-js';
 
 @Injectable()
 export class AuthService {
     private auth0;
 
-    constructor(private router: Router) {
+    constructor(private _router: Router, private _authorsService: AuthorsService) {
         this.auth0 = new auth0.WebAuth({
             clientID: "1172o11AfEVrHK8QTiqwixHdlTD2nwvA",
             domain: "coolbytes.auth0.com",
@@ -25,12 +26,11 @@ export class AuthService {
     public handleAuthentication(): void {
         this.auth0.parseHash((err, authResult) => {
             if (authResult && authResult.accessToken && authResult.idToken) {
-                window.location.hash = "";
                 this.setSession(authResult);
-                this.router.navigate(["/admin"]);
-            } else if (err) {
-                this.router.navigate(["/"]);
-                console.log(err);
+                this._router.navigateByUrl("admin");
+            }
+            else if (err) {
+                this._router.navigateByUrl("");
             }
         });
     }
@@ -46,8 +46,9 @@ export class AuthService {
         localStorage.removeItem("access_token");
         localStorage.removeItem("id_token");
         localStorage.removeItem("expires_at");
-
-        this.router.navigate(["/home"]);
+        this._authorsService.clearCache();
+        
+        this._router.navigate(["/home"]);
     }
 
     public isAuthenticated(): boolean {

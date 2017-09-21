@@ -18,7 +18,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         public AuthorsTests(Fixture fixture)
         {
             _fixture = fixture;
-            _appDbContext = fixture.GetContext();
+            _appDbContext = fixture.GetNewContext();
             _userService = fixture.UserService;
         }
 
@@ -30,7 +30,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var authorData = new AuthorData(_appDbContext);
             var author = await Author.Create(user, authorProfile, authorData);
 
-            using (var context = _fixture.GetContext())
+            using (var context = _fixture.GetNewContext())
             {
                 context.Authors.Add(author);
                 await context.SaveChangesAsync();

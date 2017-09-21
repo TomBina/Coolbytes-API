@@ -18,7 +18,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public BlogPostsTests(Fixture fixture)
         {
             _fixture = fixture;
-            _appDbContext = fixture.GetContext();
+            _appDbContext = fixture.GetNewContext();
             _userService = fixture.UserService;
 
             SeedDb();
@@ -96,7 +96,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
         private void SeedDb()
         {
-            using (var context = _fixture.GetContext())
+            using (var context = _fixture.GetNewContext())
             {
                 var user = new User("Test");
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");

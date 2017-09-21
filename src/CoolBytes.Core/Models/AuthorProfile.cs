@@ -23,16 +23,9 @@ namespace CoolBytes.Core.Models
             About = about;
         }
 
-        public AuthorProfile(string firstName, string lastName, string about, Photo photo)
+        public AuthorProfile(string firstName, string lastName, string about, Photo photo) : this(firstName, lastName, about)
         {
-            firstName.IsNotNullOrWhiteSpace();
-            lastName.IsNotNullOrWhiteSpace();
-            about.IsNotNullOrWhiteSpace();
             photo.IsNotNull();
-
-            FirstName = firstName;
-            LastName = lastName;
-            About = about;
             Photo = photo;
         }
 

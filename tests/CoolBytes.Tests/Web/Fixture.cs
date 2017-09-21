@@ -29,7 +29,7 @@ namespace CoolBytes.Tests.Web
             _options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("Test" + Random.Next()).Options;
         }
 
-        public AppDbContext GetContext() => new AppDbContext(_options);
+        public AppDbContext GetNewContext() => new AppDbContext(_options);
 
         public IUserService UserService { get; }
 

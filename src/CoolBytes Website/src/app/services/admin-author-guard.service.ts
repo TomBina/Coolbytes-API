@@ -9,14 +9,17 @@ export class AdminAuthorGuardService implements CanActivate {
 
   constructor(private _router: Router, private _authorsService: AuthorsService) { }
 
-  private isAuthorFound: boolean;
+  private _hasAuthor: boolean;
 
-  public canActivate(): Observable<boolean> {
-    if (this.isAuthorFound)
-      return Observable.of(true);
+  public canActivate(): Observable<boolean> | true {
+    if (this._hasAuthor)
+      return true;
 
-    return this._authorsService.get()
-                               .map(author => { this.isAuthorFound = true; return true; })
-                               .catch(err => { this._router.navigate(["admin/author"]); return Observable.of(false); });
+    return Observable.create(observer => {
+      this._authorsService.get().subscribe(
+        a => { observer.next(true); this._hasAuthor = true; },
+        e => { observer.next(false); this._router.navigateByUrl("admin/author"); },
+        () => observer.complete());
+    });
   }
 }
