@@ -44,8 +44,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [Authorize("admin")]
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] DeleteBlogPostCommand command)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(DeleteBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
@@ -23,12 +24,14 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             var user = await _userService.GetUser();
             var author = _appDbContext.Authors.Find(message.AuthorId);
             var blogPost = new BlogPost(message.Subject, message.ContentIntro, message.Content, author);
+            var blogPostTags = message.Tags?.Select(b => new BlogPostTag(b));
 
-            if (message.BlogPostTags != null)
+            if (message.Tags != null)
             {
-                blogPost.AddTags(message.BlogPostTags);
+                blogPost.AddTags(blogPostTags);
             }
 
+            _appDbContext.BlogPosts.Add(blogPost);
             await _appDbContext.SaveChangesAsync();
 
             return Mapper.Map<BlogPostViewModel>(blogPost);

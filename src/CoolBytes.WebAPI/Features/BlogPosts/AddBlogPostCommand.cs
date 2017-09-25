@@ -14,6 +14,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         public string ContentIntro { get; set; }
         public string Content { get; set; }
         public int AuthorId { get; set; }
-        public IEnumerable<string> BlogPostTags { get; set; }
+        public IEnumerable<string> Tags { get; set; }
     }
 }

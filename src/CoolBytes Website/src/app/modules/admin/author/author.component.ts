@@ -57,7 +57,7 @@ export class AuthorComponent implements OnInit {
     author.lastName = this._lastName.value;
     author.about = this._aboutMe.value;
 
-    this._authorsService.save(author).subscribe(author => {
+    this._authorsService.add(author).subscribe(author => {
       this._router.navigate(["admin"]);
     });
   }

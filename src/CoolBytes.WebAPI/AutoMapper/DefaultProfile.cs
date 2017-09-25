@@ -16,6 +16,7 @@ namespace CoolBytes.WebAPI.AutoMapper
         {
             CreateMap<BlogPost, BlogPostViewModel>()
                 .ForMember(b => b.AuthorName, exp => exp.MapFrom(b => b.Author.AuthorProfile.FirstName));
+            CreateMap<BlogPostTag, BlogPostTagViewModel>();
             CreateMap<Author, AuthorViewModel>()
                 .ForMember(a => a.FirstName, exp => exp.MapFrom(a => a.AuthorProfile.FirstName))
                 .ForMember(a => a.LastName, exp => exp.MapFrom(a => a.AuthorProfile.LastName))

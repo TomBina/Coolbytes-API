@@ -1,3 +1,4 @@
+import { EditBlogComponent } from './blog/editblog/edit-blog.component';
 import { AddBlogComponent } from './blog/addblog/add-blog.component';
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
@@ -39,6 +40,11 @@ import { AdminAuthorGuardService } from "../../services/admin-author-guard.servi
                 canActivate: [AdminGuardService, AdminAuthorGuardService]
             },
             {
+                path: "admin/blogs/edit/:id",
+                component: EditBlogComponent,
+                canActivate: [AdminGuardService, AdminAuthorGuardService]
+            },
+            {
                 path: "admin/author",
                 component: AuthorComponent,
                 canActivate: [AdminGuardService]
@@ -51,6 +57,7 @@ import { AdminAuthorGuardService } from "../../services/admin-author-guard.servi
         ProcessAuthComponent,
         BlogManagerComponent,
         AddBlogComponent,
+        EditBlogComponent,
         AuthorComponent
     ],
     providers: [

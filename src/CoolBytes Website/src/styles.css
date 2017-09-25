@@ -16,7 +16,14 @@ a.button {
     background-color: #1e243d;  
     color:#fff;
     font-size:14px;
-    padding:8px; 
+    padding:8px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.button.small {
+    padding:4px;
+    font-size:13px;
 }
 
 label {
@@ -43,7 +50,8 @@ input[type="submit"] {
     background-color: #1e243d;  
     color:#fff;
     font-size:14px;
-    padding:8px; 
+    padding:8px;
+    cursor: pointer;
 }
 
 textarea {
@@ -51,7 +59,7 @@ textarea {
     padding:6px;
     font-size:14px;
     font-family: 'Open Sans', sans-serif;
-    min-height: 200px;
+    min-height: 100px;
     border:1px solid #a0a0a0;
     box-sizing: border-box;
 }
@@ -62,4 +70,5 @@ textarea.error {
 
 .admin-content {
     margin:152px 20px 20px 20px;
+    font-size:15px;
 }

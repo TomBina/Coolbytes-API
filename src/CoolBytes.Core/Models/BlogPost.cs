@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CoolBytes.Core.Extensions;
 
 namespace CoolBytes.Core.Models
 {
     public class BlogPost
     {
-        private readonly List<BlogPostTag> _tags = new List<BlogPostTag>();
+        private readonly HashSet<BlogPostTag> _tags = new HashSet<BlogPostTag>(BlogPostTag.EqualityComparer);
 
         public int Id { get; private set; }
         public DateTime Date { get; private set; }
@@ -59,7 +60,11 @@ namespace CoolBytes.Core.Models
         public BlogPost AddTags(IEnumerable<BlogPostTag> blogPostTags)
         {
             blogPostTags.IsNotNull();
-            _tags.AddRange(blogPostTags);
+
+            foreach (var blogPostTag in blogPostTags)
+            {
+                _tags.Add(blogPostTag);
+            }
 
             return this;
         }
