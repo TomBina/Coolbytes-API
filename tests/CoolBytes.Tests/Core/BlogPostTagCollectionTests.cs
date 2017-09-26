@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using CoolBytes.Core.Models;
 using Xunit;
 
-namespace CoolBytes.Tests.Web.Features.BlogPosts
+namespace CoolBytes.Tests.Core
 {
     public class BlogPostTagCollectionTests
     {
@@ -50,7 +45,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             _collection.Update(newItem);
 
             Assert.Equal(1, _collection.Count);
-            Assert.Equal("Test1", _collection.First().Name);
+            Assert.Equal("Test1", Enumerable.First<BlogPostTag>(_collection).Name);
         }
 
         [Fact]
@@ -65,7 +60,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
             _collection.Update(newItem);
 
-            Assert.Equal(1, _collection.First().Id);
+            Assert.Equal(1, Enumerable.First<BlogPostTag>(_collection).Id);
         }
 
         private static void SetId(BlogPostTag item, int id) =>

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using CoolBytes.Core.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
@@ -15,5 +16,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         public string Content { get; set; }
         public int AuthorId { get; set; }
         public IEnumerable<string> Tags { get; set; }
+        public IFormFile File { get; set; }
     }
 }

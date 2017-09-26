@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CoolBytes.Core.Factories;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Authorization;
 using CoolBytes.WebAPI.Services;
@@ -27,6 +29,10 @@ namespace CoolBytes.WebAPI
             ConfigureSecurity(services);
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPhotoFactory, PhotoFactory>();
+            services.AddScoped<PhotoFactoryOptions>(sp => new PhotoFactoryOptions(_configuration["uploadPath"]));
+            services.AddScoped<IPhotoFactoryValidator, PhotoFactoryValidator>();
+
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
             services.AddMvc()
                         .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)

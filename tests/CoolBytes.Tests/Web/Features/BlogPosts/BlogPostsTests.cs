@@ -1,10 +1,16 @@
 ﻿using System;
+using System.IO;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts;
 using CoolBytes.WebAPI.Services;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Factories;
+using CoolBytes.Core.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -35,7 +41,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
-        public async Task GetBlogPostQueryHandler_ReturnsCourse()
+        public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
             var blogPostId = _appDbContext.BlogPosts.First().Id;
             var blogPostQueryHandler = new GetBlogPostQueryHandler(_appDbContext);
@@ -46,7 +52,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
-        public async Task AddBlogPostCommandHandler_AddsCourse()
+        public async Task AddBlogPostCommandHandler_AddsBlog()
         {
             var addBlogPostCommand = new AddBlogPostCommand()
             {
@@ -64,7 +70,41 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
-        public async Task UpdateBlogPostCommandHandler_UpdatesCourse()
+        public async Task AddBlogPostCommandHandler_WithFile_AddsBlog()
+        {
+            var options = new PhotoFactoryOptions(Environment.CurrentDirectory);
+            var validator = new PhotoFactoryValidator();
+            var photoFactory = new PhotoFactory(options, validator);
+
+            var handler = new AddBlogPostCommandHandler(_appDbContext, _userService, photoFactory);
+            var fileMock = CreateFileMock();
+            var file = fileMock.Object;
+
+            var message = new AddBlogPostCommand()
+            {
+                Subject = "Test",
+                Content = "Test",
+                ContentIntro = "Test",
+                File = file,
+                AuthorId = _appDbContext.Authors.First().Id
+            };
+
+            var result = await handler.Handle(message);
+
+            Assert.NotNull(result.Photo);
+        }
+
+        private Mock<IFormFile> CreateFileMock()
+        {
+            var mock = new Mock<IFormFile>();
+            mock.Setup(e => e.FileName).Returns("testimage.png");
+            mock.Setup(e => e.ContentType).Returns("image/png");
+            mock.Setup(e => e.OpenReadStream()).Returns(() => File.Open("assets/testimage.png", FileMode.Open));
+            return mock;
+        }
+
+        [Fact]
+        public async Task UpdateBlogPostCommandHandler_UpdatesBlog()
         {
             var blogPost = _appDbContext.BlogPosts.First();
             var updateBlogPostCommand = new UpdateBlogPostCommand()
@@ -83,7 +123,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
-        public async Task DeleteBlogPostCommandHandler_DeletesCourse()
+        public async Task DeleteBlogPostCommandHandler_DeletesBlog()
         {
             var blogPost = _appDbContext.BlogPosts.First();
             var deleteBlogPostCommand = new DeleteBlogPostCommand() { Id = blogPost.Id };

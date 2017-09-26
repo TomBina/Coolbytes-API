@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using CoolBytes.Core.Extensions;
+using CoolBytes.Core.Factories;
 
 namespace CoolBytes.Core.Models
 {
@@ -73,12 +76,11 @@ namespace CoolBytes.Core.Models
             return this;
         }
 
-        public BlogPost ChangePhoto(Photo photo)
+        public void SetPhoto(Photo photo)
         {
             photo.IsNotNull();
-            Photo = photo;
 
-            return this;
+            Photo = photo;
         }
     }
 }

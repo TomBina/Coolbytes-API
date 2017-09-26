@@ -13,6 +13,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         public string ContentIntro { get; set; }
         public string Content { get; set; }
         public IEnumerable<BlogPostTagViewModel> Tags { get; set; }
+        public string Photo { get; set; }
         public string AuthorName { get; set; }
     }
 }
