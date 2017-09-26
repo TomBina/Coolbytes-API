@@ -1,3 +1,4 @@
+import { BlogPostUpdate } from './blog-post-update';
 import 'rxjs/add/operator/map';
 
 import { Injectable } from '@angular/core';
@@ -31,6 +32,11 @@ export class BlogPostsService {
     add(blogPostAdd: BlogPostAdd): Observable<BlogPostAdd> {
         let observable = this._http.post(this._url, blogPostAdd, this.getAuthRequestOptions(new Headers()));
         return observable.map((response: Response) => <BlogPostAdd>response.json());
+    }
+
+    update(blogPostUpdate: BlogPostUpdate): Observable<BlogPostAdd> {
+        let observable = this._http.put(this._url, blogPostUpdate, this.getAuthRequestOptions(new Headers()));
+        return observable.map((response: Response) => <BlogPostUpdate>response.json());
     }
 
     delete(blogPostId: number): Observable<Response> {

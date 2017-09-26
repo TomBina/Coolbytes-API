@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthorsService } from '../../../../services/authors.service';
 import { BlogPost } from '../../../../services/blog-post';
-import { BlogPostAdd } from '../../../../services/blog-post-add';
+import { BlogPostUpdate } from '../../../../services/blog-post-update';
 import { BlogPostsService } from '../../../../services/blog-posts.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class EditBlogComponent implements OnInit {
 
     blogForm: FormGroup;
 
+    private _id: number;
     private _blogPost: BlogPost;
     private _subject: FormControl;
     private _contentIntro: FormControl;
@@ -46,9 +47,17 @@ export class EditBlogComponent implements OnInit {
     }
 
     updateForm(blogPost: BlogPost) {
+        this._id = blogPost.id;
         this._subject.setValue(blogPost.subject);
         this._contentIntro.setValue(blogPost.contentIntro);
         this._content.setValue(blogPost.content);
+
+        let blogPostTags: string[] = [];
+        blogPost.tags.forEach(t => {
+            blogPostTags.push(t.name);
+        });
+
+        this._tags.setValue(blogPostTags.join(","))
     }
 
     inputCssClass(name: string) {
@@ -66,22 +75,23 @@ export class EditBlogComponent implements OnInit {
             return;
         }
 
-        let blogPostAdd = new BlogPostAdd();
+        let blogPostUpdate = new BlogPostUpdate();
 
-        blogPostAdd.subject = this._subject.value;
-        blogPostAdd.content = this._content.value;
-        blogPostAdd.contentIntro = this._contentIntro.value;
+        blogPostUpdate.id = this._id;
+        blogPostUpdate.subject = this._subject.value;
+        blogPostUpdate.content = this._content.value;
+        blogPostUpdate.contentIntro = this._contentIntro.value;
 
         let tags: string = this._tags.value;
 
         if (tags.indexOf(",") !== -1 || tags.length > 0) {
-            blogPostAdd.tags = tags.split(",");
+            blogPostUpdate.tags = tags.split(",");
         }
 
         this._authorsService.get().subscribe(author => {
-            blogPostAdd.authorId = author.id
+            blogPostUpdate.authorId = author.id
 
-            this._blogPostsService.add(blogPostAdd).subscribe(blogpost => {
+            this._blogPostsService.update(blogPostUpdate).subscribe(blogpost => {
                 this._router.navigateByUrl("admin/blogs")
             });
         });

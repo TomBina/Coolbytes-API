@@ -15,10 +15,4 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         public IEnumerable<BlogPostTagViewModel> Tags { get; set; }
         public string AuthorName { get; set; }
     }
-
-    public class BlogPostTagViewModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
 }

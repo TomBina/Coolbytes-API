@@ -5,7 +5,7 @@ namespace CoolBytes.Core.Models
 {
     public class BlogPostTag
     {
-        private sealed class BlogPostTagEqualityComparer : IEqualityComparer<BlogPostTag>
+        private sealed class NameEqualityComparer : IEqualityComparer<BlogPostTag>
         {
             public bool Equals(BlogPostTag x, BlogPostTag y)
             {
@@ -13,16 +13,16 @@ namespace CoolBytes.Core.Models
                 if (ReferenceEquals(x, null)) return false;
                 if (ReferenceEquals(y, null)) return false;
                 if (x.GetType() != y.GetType()) return false;
-                return string.Equals(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
+                return string.Equals(x.Name, y.Name);
             }
 
             public int GetHashCode(BlogPostTag obj)
             {
-                return StringComparer.OrdinalIgnoreCase.GetHashCode(obj.Name);
+                return obj.Name.GetHashCode();
             }
         }
 
-        public static IEqualityComparer<BlogPostTag> EqualityComparer { get; } = new BlogPostTagEqualityComparer();
+        public static IEqualityComparer<BlogPostTag> NameComparer { get; } = new NameEqualityComparer();
 
         public int Id { get; private set; }
         public string Name { get; private set; }
