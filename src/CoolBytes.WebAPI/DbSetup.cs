@@ -1,5 +1,6 @@
 ﻿using CoolBytes.Core.Models;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,8 +21,8 @@ namespace CoolBytes.WebAPI
                 var context = serviceProvider.GetService<AppDbContext>();
                 var user = new User("Test");
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorData = new AuthorData(context);
-                var author = Author.Create(user, authorProfile, authorData).Result;
+                var authorValidator = new AuthorValidator(context);
+                var author = Author.Create(user, authorProfile, authorValidator).Result;
                 var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
                 context.BlogPosts.Add(blogPost);
                 context.SaveChanges();

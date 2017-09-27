@@ -12,13 +12,13 @@ namespace CoolBytes.Core.Models
         public int UserId { get; private set; }
         public AuthorProfile AuthorProfile { get; private set; }
 
-        public static async Task<Author> Create(User user, AuthorProfile authorProfile, IAuthorData authorData)
+        public static async Task<Author> Create(User user, AuthorProfile authorProfile, IAuthorValidator authorValidator)
         {
             user.IsNotNull();
             authorProfile.IsNotNull();
-            authorData.IsNotNull();
+            authorValidator.IsNotNull();
 
-            if (await authorData.AuthorExists(user))
+            if (await authorValidator.Exists(user))
                 throw new InvalidOperationException("Only one author can be created per user.");
 
             return new Author(user, authorProfile);

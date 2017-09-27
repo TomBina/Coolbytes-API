@@ -15,19 +15,16 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
 {
-    public class BlogPostsTests : IClassFixture<Fixture>, IDisposable
+    public class BlogPostsTests : IClassFixture<Fixture>, IAsyncLifetime
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IUserService _userService;
+        private IUserService _userService;
         private readonly Fixture _fixture;
 
         public BlogPostsTests(Fixture fixture)
         {
             _fixture = fixture;
             _appDbContext = fixture.GetNewContext();
-            _userService = fixture.UserService;
-
-            SeedDb();
         }
 
         [Fact]
@@ -58,8 +55,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             {
                 Subject = "Test",
                 ContentIntro = "Test",
-                Content = "Test",
-                AuthorId = _appDbContext.Authors.First().Id
+                Content = "Test"
             };
 
             var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext, _userService);
@@ -85,8 +81,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 Subject = "Test",
                 Content = "Test",
                 ContentIntro = "Test",
-                File = file,
-                AuthorId = _appDbContext.Authors.First().Id
+                File = file
             };
 
             var result = await handler.Handle(message);
@@ -112,8 +107,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 Id = blogPost.Id,
                 Subject = "Test new",
                 ContentIntro = "Test",
-                Content = "Test",
-                AuthorId = blogPost.AuthorId
+                Content = "Test"
             };
             var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(_appDbContext);
 
@@ -134,27 +128,34 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             Assert.Null(await _appDbContext.BlogPosts.FindAsync(blogPost.Id));
         }
 
-        private void SeedDb()
+        public async Task InitializeAsync() => await SeedDb();
+
+        private async Task SeedDb()
         {
             using (var context = _fixture.GetNewContext())
             {
                 var user = new User("Test");
+
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorData = new AuthorData(_appDbContext);
-                var author = Author.Create(user, authorProfile, authorData).Result;
+                var authorValidator = new AuthorValidator(_appDbContext);
+                var author = Author.Create(user, authorProfile, authorValidator).Result;
                 var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
 
                 context.BlogPosts.Add(blogPost);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
+
+                var userService = new Mock<IUserService>();
+                userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
+                _userService = userService.Object;
             }
         }
 
-        public void Dispose()
+        public async Task DisposeAsync()
         {
             _appDbContext.BlogPosts.RemoveRange(_appDbContext.BlogPosts.ToArray());
             _appDbContext.Authors.RemoveRange(_appDbContext.Authors.ToArray());
             _appDbContext.Users.RemoveRange(_appDbContext.Users.ToArray());
-            _appDbContext.SaveChanges();
+            await _appDbContext.SaveChangesAsync();
             _appDbContext.Dispose();
         }
     }

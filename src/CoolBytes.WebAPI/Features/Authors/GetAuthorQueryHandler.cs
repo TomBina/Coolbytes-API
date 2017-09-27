@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Services;
 using MediatR;

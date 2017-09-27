@@ -12,7 +12,7 @@ import { BlogPostsService } from '../../../../services/blog-posts.service';
 })
 export class AddBlogComponent implements OnInit {
 
-    constructor(private _authorsService : AuthorsService, private _blogPostsService : BlogPostsService, private _router: Router ) { }
+    constructor(private _authorsService: AuthorsService, private _blogPostsService: BlogPostsService, private _router: Router) { }
 
     blogForm: FormGroup;
 
@@ -20,6 +20,7 @@ export class AddBlogComponent implements OnInit {
     private _contentIntro: FormControl;
     private _content: FormControl;
     private _tags: FormControl;
+    private _files: FileList;
 
     ngOnInit(): void {
         this._subject = new FormControl(null, [Validators.required, Validators.maxLength(100)]);
@@ -42,6 +43,10 @@ export class AddBlogComponent implements OnInit {
             return "error";
     }
 
+    setFile(element: HTMLInputElement) {
+        this._files = element.files;
+    }
+
     onSubmit(): void {
         if (!this.blogForm.valid) {
             for (let controlName in this.blogForm.controls) {
@@ -55,19 +60,13 @@ export class AddBlogComponent implements OnInit {
         blogPostAdd.subject = this._subject.value;
         blogPostAdd.content = this._content.value;
         blogPostAdd.contentIntro = this._contentIntro.value;
-        
-        let tags : string = this._tags.value;
 
-        if (tags.indexOf(",") !== -1 || tags.length > 0) {
+        let tags: string = this._tags.value;
+        if (tags.indexOf(",") !== -1 || tags.length > 0)
             blogPostAdd.tags = tags.split(",");
-        }
-  
-        this._authorsService.get().subscribe(author => {
-            blogPostAdd.authorId = author.id
 
-            this._blogPostsService.add(blogPostAdd).subscribe(blogpost => {
-                this._router.navigateByUrl("admin/blogs")
-            });
+        this._blogPostsService.add(blogPostAdd, this._files[0]).subscribe(blogpost => {
+            this._router.navigateByUrl("admin/blogs")
         });
     }
 }

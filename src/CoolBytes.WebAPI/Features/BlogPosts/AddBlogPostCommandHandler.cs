@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -30,7 +31,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         public async Task<BlogPostViewModel> Handle(AddBlogPostCommand message)
         {
             var user = await _userService.GetUser();
-            var author = _appDbContext.Authors.Find(message.AuthorId);
+            var author = await _appDbContext.Authors.FirstOrDefaultAsync(a => a.UserId == user.Id);
             var blogPost = new BlogPost(message.Subject, message.ContentIntro, message.Content, author);
 
             if (message.Tags != null)

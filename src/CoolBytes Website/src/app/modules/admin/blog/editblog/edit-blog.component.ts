@@ -88,12 +88,8 @@ export class EditBlogComponent implements OnInit {
             blogPostUpdate.tags = tags.split(",");
         }
 
-        this._authorsService.get().subscribe(author => {
-            blogPostUpdate.authorId = author.id
-
-            this._blogPostsService.update(blogPostUpdate).subscribe(blogpost => {
-                this._router.navigateByUrl("admin/blogs")
-            });
+        this._blogPostsService.update(blogPostUpdate).subscribe(blogpost => {
+            this._router.navigateByUrl("admin/blogs")
         });
     }
 }

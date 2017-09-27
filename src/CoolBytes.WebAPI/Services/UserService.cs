@@ -4,6 +4,7 @@ using CoolBytes.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CoolBytes.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Services

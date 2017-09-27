@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Models;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Services;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
     public class AddBlogPostCommandValidator : AbstractValidator<AddBlogPostCommand>
     {
-        public AddBlogPostCommandValidator(AppDbContext appDbContext)
+        public AddBlogPostCommandValidator(AppDbContext appDbContext, IUserService userService, IAuthorValidator authorValidator)
         {
             RuleFor(b => b.Subject).NotEmpty().MaximumLength(100);
             RuleFor(b => b.ContentIntro).NotEmpty().MaximumLength(100);
@@ -27,11 +31,10 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                     context.AddFailure(nameof(tags), "Empty tag not allowed.");
                 }
             });
-            RuleFor(b => b.AuthorId).CustomAsync(async (authorId, context, cancellationToken) =>
+            RuleFor(b => b).CustomAsync(async (command, context, cancellationToken) =>
             {
-                var author = await appDbContext.Authors.FindAsync(keyValues: new object[] { authorId }, cancellationToken: cancellationToken);
-                if (author == null)
-                    context.AddFailure(nameof(authorId), "Not found.");
+                if (!await authorValidator.Exists(userService))
+                    context.AddFailure("No author registered.");
             });
         }
     }

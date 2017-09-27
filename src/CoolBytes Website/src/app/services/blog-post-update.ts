@@ -4,5 +4,4 @@ export class BlogPostUpdate {
     contentIntro: string;
     content: string;
     tags: string[];
-    authorId: number;
 }

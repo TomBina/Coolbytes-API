@@ -1,16 +1,20 @@
-﻿using System.Linq;
-using CoolBytes.Data;
+﻿using CoolBytes.Data;
+using CoolBytes.WebAPI.Services;
 using FluentValidation;
+using System.Linq;
+using CoolBytes.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
     public class UpdateBlogPostCommandValidator : AbstractValidator<UpdateBlogPostCommand>
     {
-        public UpdateBlogPostCommandValidator(AppDbContext appDbContext)
+        public UpdateBlogPostCommandValidator(AppDbContext appDbContext, IUserService userService, IAuthorValidator authorValidator)
         {
             RuleFor(b => b.Id).NotEmpty().CustomAsync(async (id, context, cancellationToken) =>
             {
-                var blogPost = await appDbContext.BlogPosts.FindAsync(keyValues: new object[] {id}, cancellationToken: cancellationToken);
+                var user = await userService.GetUser();
+                var blogPost = await appDbContext.BlogPosts.FirstOrDefaultAsync(b => b.Author.User.Id == user.Id);
                 if (blogPost == null)
                     context.AddFailure(nameof(id), "BlogPost not found");
             });
@@ -28,12 +32,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                 {
                     context.AddFailure(nameof(tags), "Empty tag not allowed.");
                 }
-            });
-            RuleFor(b => b.AuthorId).NotEmpty().CustomAsync(async (authorId, context, cancellationToken) =>
-            {
-                var author = await appDbContext.Authors.FindAsync(keyValues: new object[] { authorId }, cancellationToken: cancellationToken);
-                if (author == null)
-                    context.AddFailure(nameof(authorId), "Author not found");
             });
         }
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI;
@@ -25,6 +26,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {            
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContextPool<AppDbContext>(builder => builder.UseInMemoryDatabase("Test"));
+            serviceCollection.AddScoped<IAuthorValidator, AuthorValidator>();
 
             var userService = new Mock<IUserService>();
             var user = new User("test");

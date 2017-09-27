@@ -18,21 +18,13 @@ namespace CoolBytes.Tests.Web
         private static readonly Random Random = new Random();
 
         public Fixture()
-        {           
+        {
             Mapper.Initialize(config => config.AddProfile(new DefaultProfile()));
 
-            var userService = new Mock<IUserService>();
-            var user = new User("test");
-
-            userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
-            UserService = userService.Object;
             _options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("Test" + Random.Next()).Options;
         }
 
         public AppDbContext GetNewContext() => new AppDbContext(_options);
-
-        public IUserService UserService { get; }
-
         private readonly DbContextOptions<AppDbContext> _options;
     }
 }

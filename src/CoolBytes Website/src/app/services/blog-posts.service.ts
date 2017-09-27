@@ -29,12 +29,22 @@ export class BlogPostsService {
         return observable.map((response: Response) => <BlogPost[]>response.json());
     }
 
-    add(blogPostAdd: BlogPostAdd): Observable<BlogPostAdd> {
-        let observable = this._http.post(this._url, blogPostAdd, this.getAuthRequestOptions(new Headers()));
+    add(blogPostAdd: BlogPostAdd, file: File): Observable<BlogPostAdd> {
+        let formData = new FormData();
+        formData.append("subject", blogPostAdd.subject);
+        formData.append("contentIntro", blogPostAdd.contentIntro);
+        formData.append("content", blogPostAdd.content);
+        blogPostAdd.tags.forEach(t => {
+            formData.append("tags", t);    
+        });
+        formData.append("file", file, file.name);        
+
+        let observable = this._http.post(this._url, formData, this.getAuthRequestOptions(new Headers()));
+
         return observable.map((response: Response) => <BlogPostAdd>response.json());
     }
 
-    update(blogPostUpdate: BlogPostUpdate): Observable<BlogPostAdd> {
+    update(blogPostUpdate: BlogPostUpdate): Observable<BlogPostUpdate> {
         let observable = this._http.put(this._url, blogPostUpdate, this.getAuthRequestOptions(new Headers()));
         return observable.map((response: Response) => <BlogPostUpdate>response.json());
     }

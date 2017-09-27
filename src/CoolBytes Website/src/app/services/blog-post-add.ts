@@ -3,5 +3,4 @@ export class BlogPostAdd {
     contentIntro: string;
     content: string;
     tags: string[];
-    authorId: number;
 }

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -25,7 +26,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddBlogPostCommand command)
+        public async Task<IActionResult> Post([FromForm] AddBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
