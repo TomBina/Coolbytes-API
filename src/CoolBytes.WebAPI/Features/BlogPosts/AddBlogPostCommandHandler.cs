@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -18,27 +19,26 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         private readonly AppDbContext _appDbContext;
         private readonly IUserService _userService;
         private readonly IPhotoFactory _photoFactory;
+        private readonly IConfiguration _configuration;
 
-        public AddBlogPostCommandHandler(AppDbContext appDbContext, IUserService userService)
+        public AddBlogPostCommandHandler(AppDbContext appDbContext, IUserService userService, IPhotoFactory photoFactory, IConfiguration configuration) 
         {
             _appDbContext = appDbContext;
             _userService = userService;
-        }
-
-        public AddBlogPostCommandHandler(AppDbContext appDbContext, IUserService userService, IPhotoFactory photoFactory) : this(appDbContext, userService)
-        {
             _photoFactory = photoFactory;
+            _configuration = configuration;
         }
 
         public async Task<BlogPostViewModel> Handle(AddBlogPostCommand message)
         {
-            var blogPost = await CreateBlogPost(message);
+            var blogPost = await AddBlogPost(message);
+
             await SaveBlogPost(message, blogPost);
-            
-            return Mapper.Map<BlogPostViewModel>(blogPost);
+
+            return CreateViewModel(blogPost);
         }
 
-        private async Task<BlogPost> CreateBlogPost(AddBlogPostCommand message)
+        private async Task<BlogPost> AddBlogPost(AddBlogPostCommand message)
         {
             var user = await _userService.GetUser();
             var author = await _appDbContext.Authors.FirstOrDefaultAsync(a => a.UserId == user.Id);
@@ -68,7 +68,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                 {
                     await _appDbContext.SaveChangesAsync();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     File.Delete(blogPost.Photo.Path);
                     throw;
@@ -86,6 +86,13 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             {
                 return await _photoFactory.Create(stream, file.FileName, file.ContentType);
             }
+        }
+
+        private BlogPostViewModel CreateViewModel(BlogPost blogPost)
+        {
+            var viewModel = Mapper.Map<BlogPostViewModel>(blogPost);
+            viewModel.Photo?.FormatPhotoUri(_configuration);
+            return viewModel;
         }
     }
 }

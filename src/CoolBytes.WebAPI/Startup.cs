@@ -31,7 +31,7 @@ namespace CoolBytes.WebAPI
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorValidator, AuthorValidator>();
             services.AddScoped<IPhotoFactory, PhotoFactory>();
-            services.AddScoped<PhotoFactoryOptions>(sp => new PhotoFactoryOptions(_configuration["UploadPath"]));
+            services.AddScoped<PhotoFactoryOptions>(sp => new PhotoFactoryOptions(_configuration["PhotosUploadPath"]));
             services.AddScoped<IPhotoFactoryValidator, PhotoFactoryValidator>();
 
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
@@ -65,6 +65,7 @@ namespace CoolBytes.WebAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseAuthentication();
+            app.UseStaticFiles();
 
             if (env.IsDevelopment())
             {

@@ -30,7 +30,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsCourses()
         {
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(_appDbContext);
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(_appDbContext, _fixture.Configuration);
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery());
 
@@ -41,7 +41,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
             var blogPostId = _appDbContext.BlogPosts.First().Id;
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(_appDbContext);
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(_appDbContext, _fixture.Configuration);
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId });
 
@@ -51,14 +51,14 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task AddBlogPostCommandHandler_AddsBlog()
         {
+            var photoFactory = GetPhotoFactory();
+            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext, _userService, photoFactory, _fixture.Configuration);
             var addBlogPostCommand = new AddBlogPostCommand()
             {
                 Subject = "Test",
                 ContentIntro = "Test",
                 Content = "Test"
             };
-
-            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext, _userService);
 
             var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand);
 
@@ -68,11 +68,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task AddBlogPostCommandHandler_WithFile_AddsBlog()
         {
-            var options = new PhotoFactoryOptions(Environment.CurrentDirectory);
-            var validator = new PhotoFactoryValidator();
-            var photoFactory = new PhotoFactory(options, validator);
-
-            var handler = new AddBlogPostCommandHandler(_appDbContext, _userService, photoFactory);
+            var photoFactory = GetPhotoFactory();
+            var handler = new AddBlogPostCommandHandler(_appDbContext, _userService, photoFactory, _fixture.Configuration);
             var fileMock = CreateFileMock();
             var file = fileMock.Object;
 
@@ -86,7 +83,15 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
             var result = await handler.Handle(message);
 
-            Assert.NotNull(result.Photo);
+            Assert.NotNull(result.Photo.PhotoUri);
+        }
+
+        private static PhotoFactory GetPhotoFactory()
+        {
+            var options = new PhotoFactoryOptions(Environment.CurrentDirectory);
+            var validator = new PhotoFactoryValidator();
+            var photoFactory = new PhotoFactory(options, validator);
+            return photoFactory;
         }
 
         private Mock<IFormFile> CreateFileMock()
@@ -109,7 +114,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 ContentIntro = "Test",
                 Content = "Test"
             };
-            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(_appDbContext);
+            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(_appDbContext, _fixture.Configuration);
 
             await updateBlogPostCommandHandler.Handle(updateBlogPostCommand);
 

@@ -7,6 +7,8 @@ using AutoMapper;
 using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Features.BlogPosts;
+using Microsoft.Extensions.Configuration;
+using Photo = CoolBytes.WebAPI.ViewModels.Photo;
 
 namespace CoolBytes.WebAPI.AutoMapper
 {
@@ -16,7 +18,8 @@ namespace CoolBytes.WebAPI.AutoMapper
         {
             CreateMap<BlogPost, BlogPostViewModel>()
                 .ForMember(v => v.AuthorName, exp => exp.MapFrom(b => b.Author.AuthorProfile.FirstName))
-                .ForMember(v => v.Photo, exp => exp.MapFrom(b => b.Photo.FileName));
+                .ForMember(v => v.Photo,
+                    exp => exp.ResolveUsing((blogPost, viewModel, photo) => blogPost.Photo == null ? null : new Photo() {PhotoUriPath = blogPost.Photo.UriPath}));
             CreateMap<BlogPostTag, BlogPostTagViewModel>();
             CreateMap<Author, AuthorViewModel>()
                 .ForMember(v => v.FirstName, exp => exp.MapFrom(a => a.AuthorProfile.FirstName))
