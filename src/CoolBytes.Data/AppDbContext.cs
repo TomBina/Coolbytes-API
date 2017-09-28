@@ -53,6 +53,7 @@ namespace CoolBytes.Data
                 {
                     entity.Property(e => e.FileName).HasMaxLength(255).IsRequired();
                     entity.Property(e => e.Path).HasMaxLength(500).IsRequired();
+                    entity.Property(e => e.UriPath).HasMaxLength(500).IsRequired();
                     entity.Property(e => e.Length).IsRequired();
                     entity.Property(e => e.ContentType).HasMaxLength(30).IsRequired();
                     entity.ToTable("Photos");

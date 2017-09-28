@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System;
+using System.IO;
+using AutoMapper;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
@@ -30,6 +32,14 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         public async Task<BlogPostViewModel> Handle(AddBlogPostCommand message)
         {
+            var blogPost = await CreateBlogPost(message);
+            await SaveBlogPost(message, blogPost);
+            
+            return Mapper.Map<BlogPostViewModel>(blogPost);
+        }
+
+        private async Task<BlogPost> CreateBlogPost(AddBlogPostCommand message)
+        {
             var user = await _userService.GetUser();
             var author = await _appDbContext.Authors.FirstOrDefaultAsync(a => a.UserId == user.Id);
             var blogPost = new BlogPost(message.Subject, message.ContentIntro, message.Content, author);
@@ -40,16 +50,34 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                 blogPost.AddTags(blogPostTags);
             }
 
+            if (message.File == null)
+                return blogPost;
+
+            var photo = await CreatePhoto(message.File);
+            blogPost.SetPhoto(photo);
+            return blogPost;
+        }
+
+        private async Task SaveBlogPost(AddBlogPostCommand message, BlogPost blogPost)
+        {
+            _appDbContext.BlogPosts.Add(blogPost);
+
             if (message.File != null)
             {
-                var photo = await CreatePhoto(message.File);
-                blogPost.SetPhoto(photo);
+                try
+                {
+                    await _appDbContext.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    File.Delete(blogPost.Photo.Path);
+                    throw;
+                }
             }
-            
-            _appDbContext.BlogPosts.Add(blogPost);
-            await _appDbContext.SaveChangesAsync();
-
-            return Mapper.Map<BlogPostViewModel>(blogPost);
+            else
+            {
+                await _appDbContext.SaveChangesAsync();
+            }
         }
 
         private async Task<Photo> CreatePhoto(IFormFile file)

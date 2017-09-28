@@ -27,15 +27,22 @@ namespace CoolBytes.Core.Factories
             if (!_validator.Validate(stream, contentType)) throw new ArgumentException("Image is not valid");
 
             var extension = Path.GetExtension(currentFileName) ?? throw new ArgumentNullException(nameof(currentFileName));
-            var newFileName = Path.Combine(_options.UploadPath, _options.GetFileName(extension));
+            var fileName = _options.FileName(extension);
+            var directory = _options.Directory(_options.UploadPath, fileName);
+            var path = Path.Combine(directory, fileName);
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
             var length = stream.Length;
             
-            using (var fileStream = File.Create(newFileName))
+            using (var fileStream = File.Create(path))
             {
                 await stream.CopyToAsync(fileStream);
             }
 
-            return new Photo(newFileName, _options.UploadPath, length, contentType);
+            var uriPath = _options.UriPath(fileName);
+            return new Photo(fileName, path, uriPath, length, contentType);
         }
     }
 }
