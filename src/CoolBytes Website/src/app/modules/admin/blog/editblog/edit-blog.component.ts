@@ -1,3 +1,4 @@
+import { Photo } from '../../../../services/photo';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,21 +13,21 @@ import { BlogPostsService } from '../../../../services/blog-posts.service';
     styleUrls: ["./edit-blog.component.css"]
 })
 export class EditBlogComponent implements OnInit {
-
     constructor(
         private _route: ActivatedRoute,
         private _authorsService: AuthorsService,
         private _blogPostsService: BlogPostsService,
         private _router: Router) { }
 
-    blogForm: FormGroup;
-
+    public blogForm: FormGroup;
     private _id: number;
     private _blogPost: BlogPost;
     private _subject: FormControl;
     private _contentIntro: FormControl;
     private _content: FormControl;
     private _tags: FormControl;
+    private _photo: Photo;
+    private _files: FileList;
 
     ngOnInit(): void {
         this._subject = new FormControl(null, [Validators.required, Validators.maxLength(100)]);
@@ -51,6 +52,7 @@ export class EditBlogComponent implements OnInit {
         this._subject.setValue(blogPost.subject);
         this._contentIntro.setValue(blogPost.contentIntro);
         this._content.setValue(blogPost.content);
+        this._photo = blogPost.photo;
 
         let blogPostTags: string[] = [];
         blogPost.tags.forEach(t => {
@@ -65,6 +67,10 @@ export class EditBlogComponent implements OnInit {
 
         if (!formControl.valid && formControl.touched)
             return "error";
+    }
+    
+    onFileChanged(element: HTMLInputElement) {
+        this._files = element.files;
     }
 
     onSubmit(): void {
@@ -88,7 +94,7 @@ export class EditBlogComponent implements OnInit {
             blogPostUpdate.tags = tags.split(",");
         }
 
-        this._blogPostsService.update(blogPostUpdate).subscribe(blogpost => {
+        this._blogPostsService.update(blogPostUpdate, this._files).subscribe(blogpost => {
             this._router.navigateByUrl("admin/blogs")
         });
     }

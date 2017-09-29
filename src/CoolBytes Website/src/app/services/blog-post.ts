@@ -1,3 +1,4 @@
+import { Photo } from './photo';
 export class BlogPost {
     id: number;
     date: Date;
@@ -7,6 +8,7 @@ export class BlogPost {
     content: string;
     authorName: string;
     tags: BlogPostTag[];
+    photo: Photo;
 }
 
 export class BlogPostTag {

@@ -1,4 +1,3 @@
-import { BlogPostUpdate } from './blog-post-update';
 import 'rxjs/add/operator/map';
 
 import { Injectable } from '@angular/core';
@@ -8,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { AuthService } from './auth.service';
 import { BlogPost } from './blog-post';
 import { BlogPostAdd } from './blog-post-add';
+import { BlogPostUpdate } from './blog-post-update';
 
 @Injectable()
 export class BlogPostsService {
@@ -29,24 +29,35 @@ export class BlogPostsService {
         return observable.map((response: Response) => <BlogPost[]>response.json());
     }
 
-    add(blogPostAdd: BlogPostAdd, file: File): Observable<BlogPostAdd> {
-        let formData = new FormData();
-        formData.append("subject", blogPostAdd.subject);
-        formData.append("contentIntro", blogPostAdd.contentIntro);
-        formData.append("content", blogPostAdd.content);
-        blogPostAdd.tags.forEach(t => {
-            formData.append("tags", t);    
-        });
-        formData.append("file", file, file.name);        
-
+    add(blogPostAdd: BlogPostAdd, files: FileList): Observable<BlogPostAdd> {
+        let formData = this.createFormData(blogPostAdd, files);
         let observable = this._http.post(this._url, formData, this.getAuthRequestOptions(new Headers()));
-
         return observable.map((response: Response) => <BlogPostAdd>response.json());
     }
 
-    update(blogPostUpdate: BlogPostUpdate): Observable<BlogPostUpdate> {
-        let observable = this._http.put(this._url, blogPostUpdate, this.getAuthRequestOptions(new Headers()));
+    update(blogPostUpdate: BlogPostUpdate, files: FileList): Observable<BlogPostUpdate> {
+        let formData = this.createFormData(blogPostUpdate, files);
+        formData.append("id", blogPostUpdate.id.toString());
+
+        let observable = this._http.put(this._url, formData, this.getAuthRequestOptions(new Headers()));
         return observable.map((response: Response) => <BlogPostUpdate>response.json());
+    }
+
+    private createFormData(model, files: FileList): FormData {
+        let formData = new FormData();
+        let file = files && files.length > 0 ? files[0] : null;
+
+        formData.append("subject", model.subject);
+        formData.append("contentIntro", model.contentIntro);
+        formData.append("content", model.content);
+        model.tags.forEach(t => {
+            formData.append("tags", t);
+        });
+
+        if (file)
+            formData.append("file", file, file.name);
+
+        return formData;
     }
 
     delete(blogPostId: number): Observable<Response> {

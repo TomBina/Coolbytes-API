@@ -107,18 +107,41 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task UpdateBlogPostCommandHandler_UpdatesBlog()
         {
             var blogPost = _appDbContext.BlogPosts.First();
-            var updateBlogPostCommand = new UpdateBlogPostCommand()
+            var message = new UpdateBlogPostCommand()
             {
                 Id = blogPost.Id,
                 Subject = "Test new",
                 ContentIntro = "Test",
                 Content = "Test"
             };
-            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(_appDbContext, _fixture.Configuration);
+            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(_appDbContext, _userService, null, _fixture.Configuration);
 
-            await updateBlogPostCommandHandler.Handle(updateBlogPostCommand);
+            await updateBlogPostCommandHandler.Handle(message);
 
             Assert.Equal("Test new", blogPost.Subject);
+        }
+
+        [Fact]
+        public async Task UpdateBlogPostCommandHandler_WithFile_UpdatesBlog()
+        {
+            var photoFactory = GetPhotoFactory();
+            var handler = new UpdateBlogPostCommandHandler(_appDbContext, _userService, photoFactory, _fixture.Configuration);
+            var fileMock = CreateFileMock();
+            var file = fileMock.Object;
+
+            var blogPost = _appDbContext.BlogPosts.First();
+            var message = new UpdateBlogPostCommand()
+            {
+                Id = blogPost.Id,
+                Subject = "Test new",
+                ContentIntro = "Test",
+                Content = "Test",
+                File = file
+            };
+
+            var result = await handler.Handle(message);
+
+            Assert.NotNull(result.Photo.PhotoUri);
         }
 
         [Fact]

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CoolBytes.Core.Models;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -14,5 +15,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         public string ContentIntro { get; set; }
         public string Content { get; set; }
         public IEnumerable<string> Tags { get; set; }
+        public IFormFile File { get; set; }
     }
 }

@@ -20,7 +20,7 @@
         </p>
         <label for="photo">Photo</label>
         <p>
-            <input type="file" id="file" (change)="setFile($event.target)" />
+            <input type="file" id="file" (change)="onFileChanged($event.target)" />
         </p>
         <input type="submit" value="save" />
     </form>

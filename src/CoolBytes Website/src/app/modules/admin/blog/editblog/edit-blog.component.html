@@ -18,6 +18,13 @@
         <p>
             <textarea formControlName="tags" id="tags" [ngClass]="inputCssClass('tags')"></textarea>
         </p>
+        <label for="photo">Photo</label>
+        <p *ngIf="_photo">
+            <img [src]="_photo.photoUri" width="200" />
+        </p>
+        <p>
+            <input type="file" id="file" (change)="onFileChanged($event.target)" />
+        </p>
         <input type="submit" value="save" />
     </form>
 </div>

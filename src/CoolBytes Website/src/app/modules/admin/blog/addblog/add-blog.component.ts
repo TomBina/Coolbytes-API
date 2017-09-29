@@ -43,7 +43,7 @@ export class AddBlogComponent implements OnInit {
             return "error";
     }
 
-    setFile(element: HTMLInputElement) {
+    onFileChanged(element: HTMLInputElement) {
         this._files = element.files;
     }
 
@@ -65,7 +65,7 @@ export class AddBlogComponent implements OnInit {
         if (tags.indexOf(",") !== -1 || tags.length > 0)
             blogPostAdd.tags = tags.split(",");
 
-        this._blogPostsService.add(blogPostAdd, this._files[0]).subscribe(blogpost => {
+        this._blogPostsService.add(blogPostAdd, this._files).subscribe(blogpost => {
             this._router.navigateByUrl("admin/blogs")
         });
     }

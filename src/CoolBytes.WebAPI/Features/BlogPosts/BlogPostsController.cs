@@ -36,7 +36,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] UpdateBlogPostCommand command)
+        public async Task<IActionResult> Put([FromForm] UpdateBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
