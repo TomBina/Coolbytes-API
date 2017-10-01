@@ -12,7 +12,16 @@ namespace CoolBytes.Core.Models
         public string About { get; private set; }
         public Author Author { get; set; }
 
-        public AuthorProfile(string firstName, string lastName, string about)
+        public AuthorProfile(string firstName, string lastName, string about) => Init(firstName, lastName, about);
+
+        private AuthorProfile()
+        {
+            
+        }
+
+        public void Update(string firstName, string lastName, string about) => Init(firstName, lastName, about);
+
+        private void Init(string firstName, string lastName, string about)
         {
             firstName.IsNotNullOrWhiteSpace();
             lastName.IsNotNullOrWhiteSpace();
@@ -23,15 +32,11 @@ namespace CoolBytes.Core.Models
             About = about;
         }
 
-        public AuthorProfile(string firstName, string lastName, string about, Photo photo) : this(firstName, lastName, about)
+        public void SetPhoto(Photo photo)
         {
             photo.IsNotNull();
-            Photo = photo;
-        }
 
-        private AuthorProfile()
-        {
-            
+            Photo = photo;
         }
     }
 }

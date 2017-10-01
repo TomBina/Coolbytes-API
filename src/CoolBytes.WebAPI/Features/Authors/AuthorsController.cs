@@ -27,7 +27,7 @@ namespace CoolBytes.WebAPI.Features.Authors
 
         [Authorize("admin")]
         [HttpPost]
-        public async Task<IActionResult> AddAuthor([FromBody] AddAuthorCommand command)
+        public async Task<IActionResult> AddAuthor([FromForm] AddAuthorCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -40,6 +40,16 @@ namespace CoolBytes.WebAPI.Features.Authors
             {
                 return BadRequest("Operation not allowed, only one author can be created per user.");
             }
+        }
+
+        [Authorize("admin")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateAuthor([FromForm] UpdateAuthorCommand command)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(await _mediator.Send(command));
         }
     }
 }

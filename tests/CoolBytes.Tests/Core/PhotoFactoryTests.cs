@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace CoolBytes.Tests.Core
 {
-    public class PhotoFactoryTests
+    public class PhotoFactoryTests : IDisposable
     {
         private readonly ITestOutputHelper _output;
         private readonly string _uploadPath = Environment.CurrentDirectory + "/uploads";
@@ -57,6 +57,12 @@ namespace CoolBytes.Tests.Core
             {
                 await photoFactory.Create(Stream.Null, "test.png", "image/png");
             });
+        }
+
+        public void Dispose()
+        {
+            if (Directory.Exists(_uploadPath))
+                Directory.Delete(_uploadPath, recursive: true);
         }
     }
 }

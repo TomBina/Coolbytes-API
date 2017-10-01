@@ -1,62 +1,57 @@
 ﻿using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
-using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Services;
 using Moq;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
 {
-    public class AuthorsTests : IClassFixture<Fixture>, IAsyncLifetime
+    public class AuthorsTests : TestBase, IClassFixture<Fixture>, IAsyncLifetime
     {
-        private readonly AppDbContext _appDbContext;
-        private IUserService _userService;
-        private readonly Fixture _fixture;
-
-        public AuthorsTests(Fixture fixture)
+        public AuthorsTests(Fixture fixture) : base(fixture)
         {
-            _fixture = fixture;
-            _appDbContext = fixture.GetNewContext();
+            InitUserService();
         }
+
+        public async Task InitializeAsync() => await Task.CompletedTask;
 
         [Fact]
         public async Task GetAuthorQueryHandler_ReturnsAuthor()
         {
-            var author = await AddAuthor();
-            var getAuthorQueryHandler = new GetAuthorQueryHandler(_appDbContext, _userService);
+            await AddAuthor();
+            var getAuthorQueryHandler = new GetAuthorQueryHandler(Context, UserService, Fixture.Configuration);
             var message = new GetAuthorQuery();
 
             var result = await getAuthorQueryHandler.Handle(message);
 
-            Assert.Equal(author.AuthorProfile.FirstName, result.FirstName);
+            Assert.Equal("Tom", result.FirstName);
         }
 
-        private async Task<Author> AddAuthor()
+        private async Task AddAuthor()
         {
-            var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-            var authorValidator = new AuthorValidator(_appDbContext);
-            var user = await _userService.GetUser();
-
-            var author = await Author.Create(user, authorProfile, authorValidator);
-
-            using (var context = _fixture.GetNewContext())
+           using (var context = Fixture.CreateNewContext())
             {
-                context.Add(author);
+                var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
+                var authorValidator = new AuthorValidator(context);
+                var user = await UserService.GetUser();
+
+                var author = await Author.Create(user, authorProfile, authorValidator);
+                context.Authors.Add(author);
                 await context.SaveChangesAsync();
             }
-
-            return author;
         }
 
         [Fact]
         public async Task AddAuthorCommandHandler_ReturnsAuthor()
         {
-            var authorValidator = new AuthorValidator(_appDbContext);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(_appDbContext, _userService, authorValidator);
+            var authorValidator = new AuthorValidator(Context);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, Fixture.Configuration, null);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             var result = await addAuthorCommandHandler.Handle(message);
@@ -65,13 +60,35 @@ namespace CoolBytes.Tests.Web.Features.Authors
         }
 
         [Fact]
+        public async Task AddAuthorCommandHandler_WithPhoto_ReturnsAuthor()
+        {
+            var photoFactory = CreatePhotoFactory();
+            var authorValidator = new AuthorValidator(Context);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, Fixture.Configuration, photoFactory);
+            var fileMock = CreateFileMock();
+            var file = fileMock.Object;
+
+            var message = new AddAuthorCommand()
+            {
+                FirstName = "Tom",
+                LastName = "Bina",
+                About = "About me",
+                File = file
+            };
+
+            var result = await addAuthorCommandHandler.Handle(message);
+
+            Assert.NotNull(result.Photo.PhotoUri);
+        }
+
+        [Fact]
         public async Task AddAuthorCommandHandler_AddingSecondTime_ThrowsException()
         {
-            var authorValidator = new AuthorValidator(_appDbContext);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(_appDbContext, _userService, authorValidator);
+            var authorValidator = new AuthorValidator(Context);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, Fixture.Configuration, null);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
-            var result1 = await addAuthorCommandHandler.Handle(message);
+            await addAuthorCommandHandler.Handle(message);
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
@@ -79,28 +96,48 @@ namespace CoolBytes.Tests.Web.Features.Authors
             });
         }
 
-        public async Task InitializeAsync()
+        [Fact]
+        public async Task UpdateAuthorCommandHandler_UpdatesAuthor()
         {
-            var user = new User("Test");
+            await AddAuthor();
 
-            using (var context = _fixture.GetNewContext())
+            var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test" };
+            var handler = new UpdateAuthorCommandHandler(Context, UserService, Fixture.Configuration, CreatePhotoFactory());
+
+            var result = await handler.Handle(message);
+
+            Assert.Equal("Test", result.FirstName);
+        }
+
+        [Fact]
+        public async Task UpdateAuthorCommandHandler_WithPhoto_ReturnsAuthor()
+        {
+            await AddAuthor();
+
+            var photoFactory = CreatePhotoFactory();
+            var handler = new UpdateAuthorCommandHandler(Context, UserService, Fixture.Configuration, photoFactory);
+
+            var file = CreateFileMock().Object;
+            var message = new UpdateAuthorCommand()
             {
-                _appDbContext.Add(user);
-                await context.SaveChangesAsync();
-            }
+                FirstName = "Tom",
+                LastName = "Bina",
+                About = "About me",
+                File = file
+            };
 
-            var userService = new Mock<IUserService>();
-            userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
-            _userService = userService.Object;
+            var result = await handler.Handle(message);
+
+            Assert.NotNull(result.Photo);
         }
 
         public async Task DisposeAsync()
         {
-            _appDbContext.Users.RemoveRange(_appDbContext.Users.ToArray());
-            _appDbContext.Authors.RemoveRange(_appDbContext.Authors.ToArray());
+            Context.Users.RemoveRange(Context.Users.ToArray());
+            Context.Authors.RemoveRange(Context.Authors.ToArray());
 
-            await _appDbContext.SaveChangesAsync();
-            _appDbContext.Dispose();
+            await Context.SaveChangesAsync();
+            Context.Dispose();
         }
     }
 }

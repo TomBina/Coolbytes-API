@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
-    public class AddAuthorCommand : IRequest<AuthorViewModel>
+    public class UpdateAuthorCommand : IRequest<AuthorViewModel>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

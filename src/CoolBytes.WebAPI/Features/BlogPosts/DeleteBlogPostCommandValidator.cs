@@ -16,7 +16,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                 var blogPost = await appDbContext.BlogPosts.FindAsync(keyValues: new object[] {id},
                     cancellationToken: cancellationToken);
                 if (blogPost == null)
-                    context.AddFailure(nameof(id), "BlogPost not found");
+                    context.AddFailure(nameof(id), "Deleting blogpost can only be done by the author.");
             });
         }
     }

@@ -1,4 +1,6 @@
-﻿namespace CoolBytes.WebAPI.Features.Authors
+﻿using CoolBytes.WebAPI.ViewModels;
+
+namespace CoolBytes.WebAPI.Features.Authors
 {
     public class AuthorViewModel
     {
@@ -6,5 +8,6 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string About { get; set; }
+        public Photo Photo { get; set; }
     }
 }

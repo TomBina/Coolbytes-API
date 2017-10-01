@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
@@ -12,50 +10,50 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.Authors
 {
-    public class UpdateBlogPostCommandHandler : IAsyncRequestHandler<UpdateBlogPostCommand, BlogPostViewModel>
+    public class UpdateAuthorCommandHandler : IAsyncRequestHandler<UpdateAuthorCommand, AuthorViewModel>
     {
         private readonly AppDbContext _appDbContext;
+        private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
         private readonly IPhotoFactory _photoFactory;
         private bool _isPhotoCreated;
 
-        public UpdateBlogPostCommandHandler(AppDbContext appDbContext, IPhotoFactory photoFactory, IConfiguration configuration)
+        public UpdateAuthorCommandHandler(AppDbContext appDbContext, IUserService userService, IConfiguration configuration, IPhotoFactory photoFactory)
         {
             _appDbContext = appDbContext;
-            _photoFactory = photoFactory;
+            _userService = userService;
             _configuration = configuration;
+            _photoFactory = photoFactory;
         }
 
-        public async Task<BlogPostViewModel> Handle(UpdateBlogPostCommand message)
+        public async Task<AuthorViewModel> Handle(UpdateAuthorCommand message)
         {
-            var blogPost = await GetBlogPost(message);
+            var author = await GetAuthor();
 
-            await UpdateBlogPost(message, blogPost);
-            await SaveBlogPost(blogPost);
+            await UpdateAuthor(author, message);
+            await SaveAuthor(author);
 
-            return CreateViewModel(blogPost);
+            return CreateViewModel(author);
         }
 
-        private async Task<BlogPost> GetBlogPost(UpdateBlogPostCommand message)
+        private async Task<Author> GetAuthor()
         {
-            var blogPost = await _appDbContext.BlogPosts.Include(b => b.Tags).SingleOrDefaultAsync(b => b.Id == message.Id);
-            return blogPost;
+            var user = await _userService.GetUser();
+            var author = await _appDbContext.Authors.Include(a => a.AuthorProfile).FirstOrDefaultAsync(a => a.UserId == user.Id);
+            return author;
         }
 
-        private async Task UpdateBlogPost(UpdateBlogPostCommand message, BlogPost blogPost)
+        private async Task UpdateAuthor(Author author, UpdateAuthorCommand message)
         {
-            blogPost.Update(message.Subject, message.ContentIntro, message.Content);
-
-            if (message.Tags != null)
-                blogPost.UpdateTags(message.Tags.Select(s => new BlogPostTag(s)));
+            author.AuthorProfile.Update(message.FirstName, message.LastName, message.About);
 
             if (message.File == null)
                 return;
 
             var photo = await CreatePhoto(message.File);
-            blogPost.SetPhoto(photo);
+            author.AuthorProfile.SetPhoto(photo);
         }
 
         private async Task<Photo> CreatePhoto(IFormFile file)
@@ -68,17 +66,18 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             }
         }
 
-        private async Task SaveBlogPost(BlogPost blogPost)
+        private async Task SaveAuthor(Author author)
         {
             if (_isPhotoCreated)
             {
                 try
                 {
+                    _appDbContext.Authors.Update(author);
                     await _appDbContext.SaveChangesAsync();
                 }
                 catch (Exception)
                 {
-                    File.Delete(blogPost.Photo.Path);
+                    File.Delete(author.AuthorProfile.Photo.Path);
                     throw;
                 }
             }
@@ -88,13 +87,11 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             }
         }
 
-        private BlogPostViewModel CreateViewModel(BlogPost blogPost)
+        private AuthorViewModel CreateViewModel(Author author)
         {
-            var viewModel = Mapper.Map<BlogPostViewModel>(blogPost);
+            var viewModel = Mapper.Map<AuthorViewModel>(author);
             viewModel.Photo?.FormatPhotoUri(_configuration);
-
             return viewModel;
         }
-
     }
 }

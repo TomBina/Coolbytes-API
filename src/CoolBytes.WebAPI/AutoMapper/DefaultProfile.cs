@@ -19,12 +19,16 @@ namespace CoolBytes.WebAPI.AutoMapper
             CreateMap<BlogPost, BlogPostViewModel>()
                 .ForMember(v => v.AuthorName, exp => exp.MapFrom(b => b.Author.AuthorProfile.FirstName))
                 .ForMember(v => v.Photo,
-                    exp => exp.ResolveUsing((blogPost, viewModel, photo) => blogPost.Photo == null ? null : new Photo() {PhotoUriPath = blogPost.Photo.UriPath}));
+                    exp => exp.ResolveUsing((blogPost, viewModel, photo) => 
+                                                blogPost.Photo == null ? null : new Photo() { PhotoUriPath = blogPost.Photo.UriPath }));
             CreateMap<BlogPostTag, BlogPostTagViewModel>();
             CreateMap<Author, AuthorViewModel>()
                 .ForMember(v => v.FirstName, exp => exp.MapFrom(a => a.AuthorProfile.FirstName))
                 .ForMember(v => v.LastName, exp => exp.MapFrom(a => a.AuthorProfile.LastName))
-                .ForMember(v => v.About, exp => exp.MapFrom(a => a.AuthorProfile.About));
+                .ForMember(v => v.About, exp => exp.MapFrom(a => a.AuthorProfile.About))
+                .ForMember(v => v.Photo, 
+                    exp => exp.ResolveUsing((author, viewModel, photo) => 
+                                                author.AuthorProfile.Photo == null ? null : new Photo() { PhotoUriPath = author.AuthorProfile.Photo.UriPath }));
         }
     }
 }

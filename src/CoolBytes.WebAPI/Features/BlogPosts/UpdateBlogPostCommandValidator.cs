@@ -16,7 +16,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                 var user = await userService.GetUser();
                 var blogPost = await appDbContext.BlogPosts.FirstOrDefaultAsync(b => b.Author.User.Id == user.Id);
                 if (blogPost == null)
-                    context.AddFailure(nameof(id), "BlogPost not found");
+                    context.AddFailure(nameof(id), "Updating blogpost can only be done by the author.");
             });
             RuleFor(b => b.Subject).NotEmpty().MaximumLength(100);
             RuleFor(b => b.ContentIntro).NotEmpty().MaximumLength(100);
