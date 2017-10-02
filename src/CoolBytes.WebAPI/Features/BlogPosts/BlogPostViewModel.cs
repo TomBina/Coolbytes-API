@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using CoolBytes.Core.Models;
+using CoolBytes.WebAPI.ViewModels;
 using Microsoft.Extensions.Configuration;
-using Photo = CoolBytes.WebAPI.ViewModels.Photo;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -17,6 +17,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         public string Content { get; set; }
         public IEnumerable<BlogPostTagViewModel> Tags { get; set; }
         public string AuthorName { get; set; }
-        public Photo Photo { get; set; }
+        public PhotoViewModel Photo { get; set; }
     }
 }

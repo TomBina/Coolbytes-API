@@ -1,3 +1,4 @@
+import { SharedModule } from '../shared/shared.module';
 import { BlogPostComponent } from './blog-post.component';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
@@ -25,7 +26,8 @@ import { BlogComponent } from './blog.component';
                 component:BlogPostComponent
             }
         ]),
-        HttpModule
+        HttpModule,
+        SharedModule
     ],
     declarations: [
         BlogComponent,

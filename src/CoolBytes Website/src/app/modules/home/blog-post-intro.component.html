@@ -5,6 +5,6 @@
     <div class="image"></div>
     <div class="text">
         <a routerLink="/post/{{blogPost.id}}/{{blogPost.subjectUrl}}">{{blogPost.subject}}</a>
-        <p>{{blogPost.contentIntro}}</p>
+        <p><md [value]="blogPost.contentIntro"></md></p>
     </div>
 </div>

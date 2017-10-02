@@ -37,6 +37,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)
                 .Include(b => b.Photo)
+                .OrderByDescending(b => b.Id)
                 .ToListAsync();
             return blogPosts;
         }

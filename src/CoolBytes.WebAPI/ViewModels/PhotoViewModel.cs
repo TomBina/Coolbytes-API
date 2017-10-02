@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.ViewModels
 {
-    public class Photo
+    public class PhotoViewModel
     {
         public string PhotoUriPath { get; set; }
         public string PhotoUri { get; set; }

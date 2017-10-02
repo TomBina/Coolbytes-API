@@ -50,9 +50,11 @@ export class BlogPostsService {
         formData.append("subject", model.subject);
         formData.append("contentIntro", model.contentIntro);
         formData.append("content", model.content);
-        model.tags.forEach(t => {
-            formData.append("tags", t);
-        });
+
+        if (model.tags)
+            model.tags.forEach(t => {
+                formData.append("tags", t);
+            });
 
         if (file)
             formData.append("file", file, file.name);

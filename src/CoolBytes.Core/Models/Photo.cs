@@ -10,7 +10,6 @@ namespace CoolBytes.Core.Models
         public string Path { get; private set; }
         public long Length { get; private set; }
         public string ContentType { get; private set; }
-        public Author Author { get; private set; }
 
         public Photo(string fileName, string path, string uriPath, long length, string contentType)
         {

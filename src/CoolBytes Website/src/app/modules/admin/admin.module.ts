@@ -1,4 +1,4 @@
-import { MdPreviewComponent } from './mdpreview/md-preview.component';
+import { SharedModule } from '../shared/shared.module';
 import { EditBlogComponent } from './blog/editblog/edit-blog.component';
 import { AddBlogComponent } from './blog/addblog/add-blog.component';
 import { NgModule } from "@angular/core";
@@ -51,7 +51,8 @@ import { AdminAuthorGuardService } from "../../services/admin-author-guard.servi
                 canActivate: [AdminGuardService]
             }
         ]),
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        SharedModule
     ],
     declarations: [
         MenuComponent,
@@ -59,8 +60,7 @@ import { AdminAuthorGuardService } from "../../services/admin-author-guard.servi
         BlogManagerComponent,
         AddBlogComponent,
         EditBlogComponent,
-        AuthorComponent,
-        MdPreviewComponent
+        AuthorComponent
     ],
     providers: [
         AuthService,

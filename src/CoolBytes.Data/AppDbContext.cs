@@ -13,11 +13,11 @@ namespace CoolBytes.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
-        
+        public DbSet<Photo> Photos { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
-            
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -64,6 +64,19 @@ namespace CoolBytes.Data
                     entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
                     entity.ToTable("BlogPostTags");
                 });
+        }
+
+        public async Task<int> SaveChangesAsync(Action onFailure)
+        {
+            try
+            {
+                return await SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                onFailure();
+                throw;
+            }
         }
     }
 }
