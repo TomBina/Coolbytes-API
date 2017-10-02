@@ -9,10 +9,12 @@
         <label for="contentIntro">Content intro:</label>
         <p>
             <textarea formControlName="contentIntro" id="contentIntro" [ngClass]="inputCssClass('contentIntro')"></textarea>
+            <admin-md-preview text="{{_contentIntro.value}}"></admin-md-preview>
         </p>
         <label for="content">Content:</label>
         <p>
             <textarea formControlName="content" id="content" [ngClass]="inputCssClass('content')"></textarea>
+            <admin-md-preview text="{{_content.value}}"></admin-md-preview>
         </p>
         <label for="tag">Tags</label>
         <p>

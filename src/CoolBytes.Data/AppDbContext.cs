@@ -47,6 +47,7 @@ namespace CoolBytes.Data
                     entity.Property(e => e.Subject).HasMaxLength(100).IsRequired();
                     entity.Property(e => e.ContentIntro).HasMaxLength(100).IsRequired();
                     entity.Property(e => e.Content).HasMaxLength(4000).IsRequired();
+                    entity.Property(e => e.SubjectUrl).HasMaxLength(100).IsRequired();
                     entity.HasMany(b => b.Tags).WithOne(bt => bt.BlogPost).OnDelete(DeleteBehavior.Cascade);
                 })
                 .Entity<Photo>(entity =>

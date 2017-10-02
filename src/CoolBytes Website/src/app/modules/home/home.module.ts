@@ -1,11 +1,12 @@
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { RouterModule } from "@angular/router";
-import { HttpModule } from "@angular/http";
+import { BlogPostComponent } from './blog-post.component';
+import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
-import { BlogComponent } from "./blog.component";
-import { BlogPostComponent } from "./blog-post.component";
-import { BlogPostsService } from "../../services/blog-posts.service";
+import { BlogPostsService } from '../../services/blog-posts.service';
+import { BlogPostIntroComponent } from './blog-post-intro.component';
+import { BlogComponent } from './blog.component';
 
 @NgModule({
     imports: [
@@ -18,12 +19,17 @@ import { BlogPostsService } from "../../services/blog-posts.service";
             {
                 path:"home",
                 component:BlogComponent
+            },
+            {
+                path:"post/:id/:title",
+                component:BlogPostComponent
             }
         ]),
         HttpModule
     ],
     declarations: [
         BlogComponent,
+        BlogPostIntroComponent,
         BlogPostComponent
     ],
     providers: [

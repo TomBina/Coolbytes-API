@@ -12,6 +12,11 @@ h1 {
     font-weight:700;
 }
 
+a {
+    color:#1e243d;
+    cursor:pointer;
+}
+
 a.button {
     background-color: #1e243d;  
     color:#fff;

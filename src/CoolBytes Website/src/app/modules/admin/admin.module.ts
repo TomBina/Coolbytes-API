@@ -1,3 +1,4 @@
+import { MdPreviewComponent } from './mdpreview/md-preview.component';
 import { EditBlogComponent } from './blog/editblog/edit-blog.component';
 import { AddBlogComponent } from './blog/addblog/add-blog.component';
 import { NgModule } from "@angular/core";
@@ -58,7 +59,8 @@ import { AdminAuthorGuardService } from "../../services/admin-author-guard.servi
         BlogManagerComponent,
         AddBlogComponent,
         EditBlogComponent,
-        AuthorComponent
+        AuthorComponent,
+        MdPreviewComponent
     ],
     providers: [
         AuthService,

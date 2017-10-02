@@ -1,0 +1,3 @@
+<a (click)="togglePreview()" *ngIf="!_previewOn">show preview</a>
+<a (click)="togglePreview()" *ngIf="_previewOn">hide preview</a>
+<p [innerHtml]="text" *ngIf="_previewOn"></p>

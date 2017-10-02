@@ -1,3 +1,3 @@
-<div class="posts" *ngFor="let blog of blogPosts">
-    <home-blog-post [blogPost]="blog"></home-blog-post>
+<div class="posts">
+    <home-blog-post-intro [blogPost]="blog" *ngFor="let blog of blogPosts"></home-blog-post-intro>
 </div>

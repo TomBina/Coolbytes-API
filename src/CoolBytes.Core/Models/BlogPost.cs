@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CoolBytes.Core.Extensions;
 using CoolBytes.Core.Factories;
@@ -15,6 +16,16 @@ namespace CoolBytes.Core.Models
         public DateTime Date { get; private set; }
         public DateTime? Updated { get; private set; }
         public string Subject { get; private set; }
+        private string _subjectUrl;
+        public string SubjectUrl
+        {
+            get => _subjectUrl;
+            private set
+            {
+                _subjectUrl = value.Replace(' ', '-').ToLower();
+                _subjectUrl = Regex.Replace(_subjectUrl, @"[^\w-]", string.Empty);
+            }
+        }
         public string ContentIntro { get; private set; }
         public string Content { get; private set; }
         public Author Author { get; private set; }
@@ -35,6 +46,7 @@ namespace CoolBytes.Core.Models
             ContentIntro = contentInro;
             Content = content;
             Author = author;
+            SubjectUrl = Subject;
         }
 
         private BlogPost() { }

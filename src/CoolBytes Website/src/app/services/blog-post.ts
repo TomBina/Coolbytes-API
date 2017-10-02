@@ -4,6 +4,7 @@ export class BlogPost {
     date: Date;
     updated: Date;
     subject: string;
+    subjectUrl: string;
     contentIntro: string;
     content: string;
     authorName: string;

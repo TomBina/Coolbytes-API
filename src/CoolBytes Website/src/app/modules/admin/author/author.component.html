@@ -13,6 +13,7 @@
         <label for="about">About me:</label>
         <p>
             <textarea formControlName="about" id="about" [ngClass]="inputCssClass('about')"></textarea>
+            <admin-md-preview text="{{_about.value}}"></admin-md-preview>
         </p>
         <p *ngIf="_photo">
             <img [src]="_photo.photoUri" width="200" />
