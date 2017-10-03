@@ -1,9 +1,9 @@
-import { AuthorsService } from './authors.service';
+import { AuthorsService } from "./authors.service";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Headers } from "@angular/http";
-import 'rxjs/add/operator/filter';
-import * as auth0 from 'auth0-js';
+import "rxjs/add/operator/filter";
+import * as auth0 from "auth0-js";
 
 @Injectable()
 export class AuthService {

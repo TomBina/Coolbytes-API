@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 
-import { AuthorAddUpdate } from '../../../services/author-add-update';
-import { AuthorsService } from '../../../services/authors.service';
-import { Photo } from '../../../services/photo';
+import { AuthorAddUpdate } from "../../../services/author-add-update";
+import { AuthorsService } from "../../../services/authors.service";
+import { Photo } from "../../../services/photo";
 
 @Component({
   templateUrl: "./author.component.html"

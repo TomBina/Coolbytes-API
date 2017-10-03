@@ -1,13 +1,13 @@
-import 'rxjs/add/operator/map';
+import "rxjs/add/operator/map";
 
-import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Injectable } from "@angular/core";
+import { Headers, Http, RequestOptions, Response } from "@angular/http";
+import { Observable } from "rxjs/Observable";
 
-import { AuthService } from './auth.service';
-import { BlogPost } from './blog-post';
-import { BlogPostAdd } from './blog-post-add';
-import { BlogPostUpdate } from './blog-post-update';
+import { AuthService } from "./auth.service";
+import { BlogPost } from "./blog-post";
+import { BlogPostAdd } from "./blog-post-add";
+import { BlogPostUpdate } from "./blog-post-update";
 
 @Injectable()
 export class BlogPostsService {

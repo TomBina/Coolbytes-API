@@ -1,4 +1,4 @@
-import { Photo } from './photo';
+import { Photo } from "./photo";
 export class BlogPost {
     id: number;
     date: Date;

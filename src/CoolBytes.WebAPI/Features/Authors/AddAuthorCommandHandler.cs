@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.IO;
+using AutoMapper;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
@@ -59,7 +60,11 @@ namespace CoolBytes.WebAPI.Features.Authors
         private async Task SaveAuthor(Author author)
         {
             _appDbContext.Authors.Add(author);
-            await _appDbContext.SaveChangesAsync();
+
+            if (author.AuthorProfile.Photo != null)
+                await _appDbContext.SaveChangesAsync(() => File.Delete(author.AuthorProfile.Photo.Path));
+            else
+                await _appDbContext.SaveChangesAsync();
         }
 
         private AuthorViewModel CreateViewModel(Author author)

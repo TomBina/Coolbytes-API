@@ -49,7 +49,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var mock = new Mock<IFormFile>();
             mock.Setup(e => e.FileName).Returns("testimage.png");
             mock.Setup(e => e.ContentType).Returns("image/png");
-            mock.Setup(e => e.OpenReadStream()).Returns(() => File.Open("assets/testimage.png", FileMode.Open));
+            mock.Setup(e => e.OpenReadStream()).Returns(() => File.OpenRead("assets/testimage.png"));
             return mock;
         }
     }

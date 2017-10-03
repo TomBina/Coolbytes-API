@@ -1,12 +1,12 @@
-import { Photo } from '../../../../services/photo';
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Photo } from "../../../../services/photo";
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 
-import { AuthorsService } from '../../../../services/authors.service';
-import { BlogPost } from '../../../../services/blog-post';
-import { BlogPostUpdate } from '../../../../services/blog-post-update';
-import { BlogPostsService } from '../../../../services/blog-posts.service';
+import { AuthorsService } from "../../../../services/authors.service";
+import { BlogPost } from "../../../../services/blog-post";
+import { BlogPostUpdate } from "../../../../services/blog-post-update";
+import { BlogPostsService } from "../../../../services/blog-posts.service";
 
 @Component({
     templateUrl: "./edit-blog.component.html",

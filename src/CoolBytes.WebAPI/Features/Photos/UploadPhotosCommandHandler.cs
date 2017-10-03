@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Interfaces;
@@ -11,24 +12,31 @@ using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.Features.Photos
 {
-    public class UploadPhotoCommandHandler : IAsyncRequestHandler<UploadPhotoCommand, PhotoViewModel>
+    public class UploadPhotosCommandHandler : IAsyncRequestHandler<UploadPhotosCommand, IEnumerable<PhotoViewModel>>
     {
         private readonly IPhotoFactory _photoFactory;
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
 
-        public UploadPhotoCommandHandler(AppDbContext context, IPhotoFactory photoFactory, IConfiguration configuration)
+        public UploadPhotosCommandHandler(AppDbContext context, IPhotoFactory photoFactory, IConfiguration configuration)
         {
             _context = context;
             _photoFactory = photoFactory;
             _configuration = configuration;
         }
 
-        public async Task<PhotoViewModel> Handle(UploadPhotoCommand message)
+        public async Task<IEnumerable<PhotoViewModel>> Handle(UploadPhotosCommand message)
         {
-            var photo = await CreatePhoto(message.File);
-            await SavePhoto(photo);
-            var viewModel = CreateViewModel(photo);
+            var viewModel = new List<PhotoViewModel>();
+
+            foreach (var file in message.Files)
+            {
+                var photo = await CreatePhoto(file);
+                await SavePhoto(photo);
+                var viewModelItem = CreateViewModel(photo);
+
+                viewModel.Add(viewModelItem);
+            }
 
             return viewModel;
         }

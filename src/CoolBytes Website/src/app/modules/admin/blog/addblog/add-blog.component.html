@@ -15,6 +15,7 @@
         <p>
             <textarea formControlName="content" id="content" [ngClass]="inputCssClass('content')"></textarea>
             <admin-md-preview text="{{_content.value}}"></admin-md-preview>
+            <admin-photos-manager [control]="_content"></admin-photos-manager>
         </p>
         <label for="tag">Tags</label>
         <p>

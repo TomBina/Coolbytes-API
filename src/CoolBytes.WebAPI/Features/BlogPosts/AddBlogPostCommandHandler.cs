@@ -62,30 +62,16 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         {
             _appDbContext.BlogPosts.Add(blogPost);
 
-            if (message.File != null)
-            {
-                try
-                {
-                    await _appDbContext.SaveChangesAsync();
-                }
-                catch (Exception)
-                {
-                    File.Delete(blogPost.Photo.Path);
-                    throw;
-                }
-            }
+            if (blogPost.Photo != null)
+                await _appDbContext.SaveChangesAsync(() => File.Delete(blogPost.Photo.Path));
             else
-            {
                 await _appDbContext.SaveChangesAsync();
-            }
         }
 
         private async Task<Photo> CreatePhoto(IFormFile file)
         {
             using (var stream = file.OpenReadStream())
-            {
                 return await _photoFactory.Create(stream, file.FileName, file.ContentType);
-            }
         }
 
         private BlogPostViewModel CreateViewModel(BlogPost blogPost)

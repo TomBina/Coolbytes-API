@@ -1,12 +1,12 @@
-import { AuthorAddUpdate } from './author-add-update';
-import 'rxjs/add/operator/map';
+import { AuthorAddUpdate } from "./author-add-update";
+import "rxjs/add/operator/map";
 
-import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Injectable } from "@angular/core";
+import { Headers, Http, RequestOptions, Response } from "@angular/http";
+import { Observable } from "rxjs/Observable";
 
-import { AuthService } from './auth.service';
-import { Author } from './author';
+import { AuthService } from "./auth.service";
+import { Author } from "./author";
 
 @Injectable()
 export class AuthorsService {

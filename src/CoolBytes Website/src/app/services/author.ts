@@ -1,4 +1,4 @@
-import { Photo } from './photo';
+import { Photo } from "./photo";
 export class Author {
     id: number;
     firstName: string;

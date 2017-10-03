@@ -1,7 +1,7 @@
-import { Md } from './md/md.component';
-import { MdPreviewComponent } from './mdpreview/md-preview.component';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Md } from "./md/md.component";
+import { MdPreviewComponent } from "./mdpreview/md-preview.component";
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
 @NgModule({
     imports: [

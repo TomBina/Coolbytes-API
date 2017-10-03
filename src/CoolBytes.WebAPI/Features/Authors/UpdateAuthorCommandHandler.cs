@@ -18,7 +18,7 @@ namespace CoolBytes.WebAPI.Features.Authors
         private readonly IUserService _userService;
         private readonly IConfiguration _configuration;
         private readonly IPhotoFactory _photoFactory;
-        private bool _isPhotoCreated;
+        private bool _isPhotoUpdated;
 
         public UpdateAuthorCommandHandler(AppDbContext appDbContext, IUserService userService, IConfiguration configuration, IPhotoFactory photoFactory)
         {
@@ -61,30 +61,17 @@ namespace CoolBytes.WebAPI.Features.Authors
             using (var stream = file.OpenReadStream())
             {
                 var photo = await _photoFactory.Create(stream, file.FileName, file.ContentType);
-                _isPhotoCreated = true;
+                _isPhotoUpdated = true;
                 return photo;
             }
         }
 
         private async Task SaveAuthor(Author author)
         {
-            if (_isPhotoCreated)
-            {
-                try
-                {
-                    _appDbContext.Authors.Update(author);
-                    await _appDbContext.SaveChangesAsync();
-                }
-                catch (Exception)
-                {
-                    File.Delete(author.AuthorProfile.Photo.Path);
-                    throw;
-                }
-            }
+            if (_isPhotoUpdated)
+                await _appDbContext.SaveChangesAsync(() => File.Delete(author.AuthorProfile.Photo.Path));
             else
-            {
                 await _appDbContext.SaveChangesAsync();
-            }
         }
 
         private AuthorViewModel CreateViewModel(Author author)

@@ -9,6 +9,7 @@ namespace CoolBytes.WebAPI.ViewModels
 {
     public class PhotoViewModel
     {
+        public int Id { get; set; }
         public string PhotoUriPath { get; set; }
         public string PhotoUri { get; set; }
 

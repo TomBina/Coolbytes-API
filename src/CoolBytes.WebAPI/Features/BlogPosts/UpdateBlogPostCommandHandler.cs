@@ -19,7 +19,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         private readonly AppDbContext _appDbContext;
         private readonly IConfiguration _configuration;
         private readonly IPhotoFactory _photoFactory;
-        private bool _isPhotoCreated;
+        private bool _isPhotoUpdated;
 
         public UpdateBlogPostCommandHandler(AppDbContext appDbContext, IPhotoFactory photoFactory, IConfiguration configuration)
         {
@@ -63,29 +63,17 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             using (var stream = file.OpenReadStream())
             {
                 var photo = await _photoFactory.Create(stream, file.FileName, file.ContentType);
-                _isPhotoCreated = true;
+                _isPhotoUpdated = true;
                 return photo;
             }
         }
 
         private async Task SaveBlogPost(BlogPost blogPost)
         {
-            if (_isPhotoCreated)
-            {
-                try
-                {
-                    await _appDbContext.SaveChangesAsync();
-                }
-                catch (Exception)
-                {
-                    File.Delete(blogPost.Photo.Path);
-                    throw;
-                }
-            }
+            if (_isPhotoUpdated)
+                await _appDbContext.SaveChangesAsync(() => File.Delete(blogPost.Photo.Path));
             else
-            {
                 await _appDbContext.SaveChangesAsync();
-            }
         }
 
         private BlogPostViewModel CreateViewModel(BlogPost blogPost)

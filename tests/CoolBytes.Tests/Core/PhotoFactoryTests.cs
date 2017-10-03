@@ -29,7 +29,7 @@ namespace CoolBytes.Tests.Core
         {
             var photoFactory = new PhotoFactory(_photoFactoryOptions, _photoFactoryValidator);
 
-            using (var fileStream = File.Open("assets/testimage.png", FileMode.Open))
+            using (var fileStream = File.OpenRead("assets/testimage.png"))
             {
                 var photo = await photoFactory.Create(fileStream, "testimage.png", "image/png");
 

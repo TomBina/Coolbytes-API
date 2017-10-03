@@ -1,6 +1,8 @@
-import { SharedModule } from '../shared/shared.module';
-import { EditBlogComponent } from './blog/editblog/edit-blog.component';
-import { AddBlogComponent } from './blog/addblog/add-blog.component';
+import { PhotosService } from "../../services/photos.service";
+import { PhotosManagerComponent } from "./photos/photos-manager.component";
+import { SharedModule } from "../shared/shared.module";
+import { EditBlogComponent } from "./blog/editblog/edit-blog.component";
+import { AddBlogComponent } from "./blog/addblog/add-blog.component";
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
@@ -60,11 +62,13 @@ import { AdminAuthorGuardService } from "../../services/admin-author-guard.servi
         BlogManagerComponent,
         AddBlogComponent,
         EditBlogComponent,
-        AuthorComponent
+        AuthorComponent,
+        PhotosManagerComponent
     ],
     providers: [
         AuthService,
         AuthorsService,
+        PhotosService,
         AdminGuardService,
         AdminAuthorGuardService
     ]

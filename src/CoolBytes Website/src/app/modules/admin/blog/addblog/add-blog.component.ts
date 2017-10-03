@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
 
-import { AuthorsService } from '../../../../services/authors.service';
-import { BlogPostAdd } from '../../../../services/blog-post-add';
-import { BlogPostsService } from '../../../../services/blog-posts.service';
+import { AuthorsService } from "../../../../services/authors.service";
+import { BlogPostAdd } from "../../../../services/blog-post-add";
+import { BlogPostsService } from "../../../../services/blog-posts.service";
 
 @Component({
     templateUrl: "./add-blog.component.html",
