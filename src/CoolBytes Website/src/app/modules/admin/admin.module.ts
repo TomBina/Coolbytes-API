@@ -1,5 +1,5 @@
-import { PhotosService } from "../../services/photos.service";
-import { PhotosManagerComponent } from "./photos/photos-manager.component";
+import { ImagesService } from "../../services/images.service";
+import { ImagesManagerComponent } from "./images/images-manager.component";
 import { SharedModule } from "../shared/shared.module";
 import { EditBlogComponent } from "./blog/editblog/edit-blog.component";
 import { AddBlogComponent } from "./blog/addblog/add-blog.component";
@@ -63,12 +63,12 @@ import { AdminAuthorGuardService } from "../../services/admin-author-guard.servi
         AddBlogComponent,
         EditBlogComponent,
         AuthorComponent,
-        PhotosManagerComponent
+        ImagesManagerComponent
     ],
     providers: [
         AuthService,
         AuthorsService,
-        PhotosService,
+        ImagesService,
         AdminGuardService,
         AdminAuthorGuardService
     ]

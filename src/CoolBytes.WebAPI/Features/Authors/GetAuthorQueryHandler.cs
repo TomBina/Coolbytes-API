@@ -6,7 +6,6 @@ using CoolBytes.Data;
 using CoolBytes.WebAPI.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
@@ -14,13 +13,11 @@ namespace CoolBytes.WebAPI.Features.Authors
     {
         private readonly AppDbContext _appDbContext;
         private readonly IUserService _userService;
-        private readonly IConfiguration _configuration;
 
-        public GetAuthorQueryHandler(AppDbContext appDbContext, IUserService userService, IConfiguration configuration)
+        public GetAuthorQueryHandler(AppDbContext appDbContext, IUserService userService)
         {
             _appDbContext = appDbContext;
             _userService = userService;
-            _configuration = configuration;
         }
 
         public async Task<AuthorViewModel> Handle(GetAuthorQuery message)
@@ -35,18 +32,12 @@ namespace CoolBytes.WebAPI.Features.Authors
             var user = await _userService.GetUser();
             var author = await _appDbContext.Authors.AsNoTracking()
                 .Include(a => a.AuthorProfile)
-                .Include(a => a.AuthorProfile.Photo)
+                .Include(a => a.AuthorProfile.Image)
                 .SingleOrDefaultAsync(a => a.UserId == user.Id);
 
             return author;
         }
 
-        private AuthorViewModel CreateViewModel(Author author)
-        {
-            var viewModel = Mapper.Map<AuthorViewModel>(author);
-            viewModel?.Photo?.FormatPhotoUri(_configuration);
-
-            return viewModel;
-        }
+        private AuthorViewModel CreateViewModel(Author author) => Mapper.Map<AuthorViewModel>(author);
     }
 }

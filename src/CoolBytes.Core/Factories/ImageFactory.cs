@@ -7,18 +7,18 @@ using CoolBytes.Core.Models;
 
 namespace CoolBytes.Core.Factories
 {
-    public class PhotoFactory : IPhotoFactory
+    public class ImageFactory : IImageFactory
     {
-        private readonly PhotoFactoryOptions _options;
-        private readonly IPhotoFactoryValidator _validator;
+        private readonly ImageFactoryOptions _options;
+        private readonly IImageFactoryValidator _validator;
 
-        public PhotoFactory(PhotoFactoryOptions options, IPhotoFactoryValidator validator)
+        public ImageFactory(ImageFactoryOptions options, IImageFactoryValidator validator)
         {
             _options = options;
             _validator = validator;
         }
 
-        public async Task<Photo> Create(Stream stream, string currentFileName, string contentType)
+        public async Task<Image> Create(Stream stream, string currentFileName, string contentType)
         {
             stream.IsNotNull();
             currentFileName.IsNotNullOrWhiteSpace();
@@ -42,7 +42,7 @@ namespace CoolBytes.Core.Factories
             }
 
             var uriPath = _options.UriPath(fileName);
-            return new Photo(fileName, path, uriPath, length, contentType);
+            return new Image(fileName, path, uriPath, length, contentType);
         }
     }
 }

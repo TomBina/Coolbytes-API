@@ -7,8 +7,8 @@ namespace CoolBytes.Core.Models
         public int Id { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
-        public Photo Photo { get; private set; }
-        public int? PhotoId { get; private set; }
+        public Image Image { get; private set; }
+        public int? ImageId { get; private set; }
         public string About { get; private set; }
         public Author Author { get; set; }
 
@@ -32,11 +32,11 @@ namespace CoolBytes.Core.Models
             About = about;
         }
 
-        public void SetPhoto(Photo photo)
+        public void SetImage(Image image)
         {
-            photo.IsNotNull();
+            image.IsNotNull();
 
-            Photo = photo;
+            Image = image;
         }
     }
 }

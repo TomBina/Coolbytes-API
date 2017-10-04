@@ -1,4 +1,4 @@
-import { Photo } from "./photo";
+import { Image } from "./image";
 export class BlogPost {
     id: number;
     date: Date;
@@ -9,7 +9,7 @@ export class BlogPost {
     content: string;
     authorName: string;
     tags: BlogPostTag[];
-    photo: Photo;
+    image: Image;
 }
 
 export class BlogPostTag {

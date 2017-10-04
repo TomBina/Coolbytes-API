@@ -3,7 +3,7 @@
     <div class="backdrop" (click)="close()"></div>
     <div class="dialog">
         <div class="files">
-            <img *ngFor="let photo of _photos" [src]="photo.photoUri" (click)="insertPhoto(photo.photoUri, photo.id)" />
+            <img *ngFor="let image of _images" [src]="_imageService.getUri(image.uriPath)" (click)="insertImage(image.uriPath, image.id)" />
         </div>
         <input type="file" class="fileInput" multiple="multiple" (change)="uploadPhotos($event.target)" />
     </div>

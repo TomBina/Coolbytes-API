@@ -1,4 +1,5 @@
-import "rxjs/add/operator/map";
+import { environment } from '../../environments/environment';
+import 'rxjs/add/operator/map';
 
 import { Injectable } from "@angular/core";
 import { Headers, Http, RequestOptions, Response } from "@angular/http";
@@ -12,7 +13,7 @@ import { BlogPostUpdate } from "./blog-post-update";
 @Injectable()
 export class BlogPostsService {
     constructor(private _http: Http, private _authService: AuthService) { }
-    private _url: string = "http://localhost:5000/api/blogposts";
+    private _url: string = environment.apiUri + "api/blogposts";
 
     getAuthRequestOptions(headers: Headers): RequestOptions {
         headers = this._authService.addAuthorizationHeader(headers);

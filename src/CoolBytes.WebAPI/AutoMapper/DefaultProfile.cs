@@ -18,20 +18,19 @@ namespace CoolBytes.WebAPI.AutoMapper
         {
             CreateMap<BlogPost, BlogPostViewModel>()
                 .ForMember(v => v.AuthorName, exp => exp.MapFrom(b => b.Author.AuthorProfile.FirstName))
-                .ForMember(v => v.Photo,
-                    exp => exp.ResolveUsing((blogPost, viewModel, photo) => 
-                                                blogPost.Photo == null ? null : new PhotoViewModel() { PhotoUriPath = blogPost.Photo.UriPath }));
+                .ForMember(v => v.Image,
+                    exp => exp.ResolveUsing((blogPost, viewModel, image) => 
+                                                blogPost.Image == null ? null : new ImageViewModel() { UriPath = blogPost.Image.UriPath }));
             CreateMap<BlogPostTag, BlogPostTagViewModel>();
             CreateMap<Author, AuthorViewModel>()
                 .ForMember(v => v.FirstName, exp => exp.MapFrom(a => a.AuthorProfile.FirstName))
                 .ForMember(v => v.LastName, exp => exp.MapFrom(a => a.AuthorProfile.LastName))
                 .ForMember(v => v.About, exp => exp.MapFrom(a => a.AuthorProfile.About))
-                .ForMember(v => v.Photo, 
-                    exp => exp.ResolveUsing((author, viewModel, photo) => 
-                                                author.AuthorProfile.Photo == null ? null : new PhotoViewModel() { PhotoUriPath = author.AuthorProfile.Photo.UriPath }));
-            CreateMap<Photo, PhotoViewModel>()
-                .ForMember(v => v.PhotoUriPath, exp => exp.MapFrom(p => p.UriPath))
-                .ForMember(v => v.PhotoUri, exp => exp.Ignore());
+                .ForMember(v => v.Image, 
+                    exp => exp.ResolveUsing((author, viewModel, image) => 
+                                                author.AuthorProfile.Image == null ? null : new ImageViewModel() { UriPath = author.AuthorProfile.Image.UriPath }));
+            CreateMap<Image, ImageViewModel>()
+                .ForMember(v => v.UriPath, exp => exp.MapFrom(p => p.UriPath));
         }
     }
 }

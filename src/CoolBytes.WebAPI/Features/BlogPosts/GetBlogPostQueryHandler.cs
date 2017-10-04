@@ -5,19 +5,16 @@ using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
     public class GetBlogPostQueryHandler : IAsyncRequestHandler<GetBlogPostQuery, BlogPostViewModel>
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IConfiguration _configuration;
 
-        public GetBlogPostQueryHandler(AppDbContext appDbContext, IConfiguration configuration)
+        public GetBlogPostQueryHandler(AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
-            _configuration = configuration;
         }
 
         public async Task<BlogPostViewModel> Handle(GetBlogPostQuery message)
@@ -32,17 +29,11 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             var blogPost = await _appDbContext.BlogPosts.AsNoTracking()
                 .Include(b => b.Author.AuthorProfile)
                 .Include(b => b.Tags)
-                .Include(b => b.Photo)
+                .Include(b => b.Image)
                 .SingleAsync(b => b.Id == message.Id);
             return blogPost;
         }
 
-        private BlogPostViewModel CreateViewModel(BlogPost blogPost)
-        {
-            var viewModel = Mapper.Map<BlogPostViewModel>(blogPost);
-            viewModel.Photo?.FormatPhotoUri(_configuration);
-
-            return viewModel;
-        }
+        private BlogPostViewModel CreateViewModel(BlogPost blogPost) => Mapper.Map<BlogPostViewModel>(blogPost);
     }
 }

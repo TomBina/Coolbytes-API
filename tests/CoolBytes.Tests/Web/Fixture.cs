@@ -47,9 +47,9 @@ namespace CoolBytes.Tests.Web
         private void InitConfiguration()
         {
             var configuration = new Mock<IConfiguration>();
-            configuration.Setup(c => c["PhotosUri:Scheme"]).Returns("testdata");
-            configuration.Setup(c => c["PhotosUri:Host"]).Returns("testserver.com");
-            configuration.Setup(c => c["PhotosUri:Port"]).Returns("80");
+            configuration.Setup(c => c["ImagesUri:Scheme"]).Returns("testdata");
+            configuration.Setup(c => c["ImagesUri:Host"]).Returns("testserver.com");
+            configuration.Setup(c => c["ImagesUri:Port"]).Returns("80");
             Configuration = configuration.Object;
         }
 

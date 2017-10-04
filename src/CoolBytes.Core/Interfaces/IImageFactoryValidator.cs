@@ -2,7 +2,7 @@
 
 namespace CoolBytes.Core.Interfaces
 {
-    public interface IPhotoFactoryValidator
+    public interface IImageFactoryValidator
     {
         bool Validate(Stream stream, string contentType);
     }

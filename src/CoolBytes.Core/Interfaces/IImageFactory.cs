@@ -4,8 +4,8 @@ using CoolBytes.Core.Models;
 
 namespace CoolBytes.Core.Interfaces
 {
-    public interface IPhotoFactory
+    public interface IImageFactory
     {
-        Task<Photo> Create(Stream stream, string currentFileName, string contentType);
+        Task<Image> Create(Stream stream, string currentFileName, string contentType);
     }
 }

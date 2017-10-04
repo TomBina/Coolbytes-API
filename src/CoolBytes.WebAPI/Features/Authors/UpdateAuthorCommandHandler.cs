@@ -8,7 +8,6 @@ using CoolBytes.Data;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
@@ -16,16 +15,14 @@ namespace CoolBytes.WebAPI.Features.Authors
     {
         private readonly AppDbContext _appDbContext;
         private readonly IUserService _userService;
-        private readonly IConfiguration _configuration;
-        private readonly IPhotoFactory _photoFactory;
-        private bool _isPhotoUpdated;
+        private readonly IImageFactory _imageFactory;
+        private bool _isImageUpdated;
 
-        public UpdateAuthorCommandHandler(AppDbContext appDbContext, IUserService userService, IConfiguration configuration, IPhotoFactory photoFactory)
+        public UpdateAuthorCommandHandler(AppDbContext appDbContext, IUserService userService, IImageFactory imageFactory)
         {
             _appDbContext = appDbContext;
             _userService = userService;
-            _configuration = configuration;
-            _photoFactory = photoFactory;
+            _imageFactory = imageFactory;
         }
 
         public async Task<AuthorViewModel> Handle(UpdateAuthorCommand message)
@@ -52,33 +49,28 @@ namespace CoolBytes.WebAPI.Features.Authors
             if (message.File == null)
                 return;
 
-            var photo = await CreatePhoto(message.File);
-            author.AuthorProfile.SetPhoto(photo);
+            var image = await CreateImage(message.File);
+            author.AuthorProfile.SetImage(image);
         }
 
-        private async Task<Photo> CreatePhoto(IFormFile file)
+        private async Task<Image> CreateImage(IFormFile file)
         {
             using (var stream = file.OpenReadStream())
             {
-                var photo = await _photoFactory.Create(stream, file.FileName, file.ContentType);
-                _isPhotoUpdated = true;
-                return photo;
+                var image = await _imageFactory.Create(stream, file.FileName, file.ContentType);
+                _isImageUpdated = true;
+                return image;
             }
         }
 
         private async Task SaveAuthor(Author author)
         {
-            if (_isPhotoUpdated)
-                await _appDbContext.SaveChangesAsync(() => File.Delete(author.AuthorProfile.Photo.Path));
+            if (_isImageUpdated)
+                await _appDbContext.SaveChangesAsync(() => File.Delete(author.AuthorProfile.Image.Path));
             else
                 await _appDbContext.SaveChangesAsync();
         }
 
-        private AuthorViewModel CreateViewModel(Author author)
-        {
-            var viewModel = Mapper.Map<AuthorViewModel>(author);
-            viewModel.Photo?.FormatPhotoUri(_configuration);
-            return viewModel;
-        }
+        private AuthorViewModel CreateViewModel(Author author) => Mapper.Map<AuthorViewModel>(author);
     }
 }

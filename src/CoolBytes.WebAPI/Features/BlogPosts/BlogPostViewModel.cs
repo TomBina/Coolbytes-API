@@ -17,6 +17,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         public string Content { get; set; }
         public IEnumerable<BlogPostTagViewModel> Tags { get; set; }
         public string AuthorName { get; set; }
-        public PhotoViewModel Photo { get; set; }
+        public ImageViewModel Image { get; set; }
     }
 }

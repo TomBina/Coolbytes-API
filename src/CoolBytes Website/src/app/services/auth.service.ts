@@ -1,9 +1,10 @@
+import { environment } from '../../environments/environment';
 import { AuthorsService } from "./authors.service";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Headers } from "@angular/http";
-import "rxjs/add/operator/filter";
-import * as auth0 from "auth0-js";
+import 'rxjs/add/operator/filter';
+import * as auth0 from 'auth0-js';
 
 @Injectable()
 export class AuthService {
@@ -14,10 +15,12 @@ export class AuthService {
             clientID: "1172o11AfEVrHK8QTiqwixHdlTD2nwvA",
             domain: "coolbytes.auth0.com",
             responseType: "token id_token",
-            audience: "http://localhost:5000/api/",
-            redirectUri: "http://localhost:4200/processauth",
+            audience: environment.apiUri + "api/",
+            redirectUri: environment.appUri + "processauth",
             scope: "openid email admin"
         });
+
+        console.log(environment.apiUri);
     }
 
     public login(): void {
@@ -47,7 +50,7 @@ export class AuthService {
         localStorage.removeItem("access_token");
         localStorage.removeItem("id_token");
         localStorage.removeItem("expires_at");
-        
+
         this._router.navigate(["/home"]);
     }
 
@@ -56,7 +59,7 @@ export class AuthService {
         return new Date().getTime() < expiresAt;
     }
 
-    public addAuthorizationHeader(headers: Headers) : Headers {
+    public addAuthorizationHeader(headers: Headers): Headers {
         headers.append("Authorization", "Bearer " + localStorage.getItem("access_token"));
 
         return headers;

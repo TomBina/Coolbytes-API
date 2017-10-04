@@ -4,12 +4,12 @@ using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Core.Factories
 {
-    public class PhotoFactoryValidator : IPhotoFactoryValidator
+    public class ImageFactoryValidator : IImageFactoryValidator
     {
         private const int MaxFileSize = (1024 * 1024) * 3;
         private readonly string[] _allowedContentTypes;
 
-        public PhotoFactoryValidator()
+        public ImageFactoryValidator()
         {
             _allowedContentTypes = new []
             {

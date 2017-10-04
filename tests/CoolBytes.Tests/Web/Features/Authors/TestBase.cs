@@ -36,12 +36,12 @@ namespace CoolBytes.Tests.Web.Features.Authors
             InitUserService(user);
         }
 
-        protected PhotoFactory CreatePhotoFactory()
+        protected ImageFactory CreateImageFactory()
         {
-            var options = new PhotoFactoryOptions(Fixture.TempDirectory);
-            var validator = new PhotoFactoryValidator();
-            var photoFactory = new PhotoFactory(options, validator);
-            return photoFactory;
+            var options = new ImageFactoryOptions(Fixture.TempDirectory);
+            var validator = new ImageFactoryValidator();
+            var imageFactory = new ImageFactory(options, validator);
+            return imageFactory;
         }
 
         protected Mock<IFormFile> CreateFileMock()

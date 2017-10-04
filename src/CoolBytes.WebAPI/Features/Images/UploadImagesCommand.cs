@@ -3,9 +3,9 @@ using CoolBytes.WebAPI.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
-namespace CoolBytes.WebAPI.Features.Photos
+namespace CoolBytes.WebAPI.Features.Images
 {
-    public class UploadPhotosCommand : IRequest<IEnumerable<PhotoViewModel>>
+    public class UploadImagesCommand : IRequest<IEnumerable<ImageViewModel>>
     {
         public List<IFormFile> Files { get; set; }
     }

@@ -30,8 +30,8 @@ namespace CoolBytes.Core.Models
         public string Content { get; private set; }
         public Author Author { get; private set; }
         public int AuthorId { get; private set; }
-        public Photo Photo { get; private set; }
-        public int? PhotoId { get; private set; }
+        public Image Image { get; private set; }
+        public int? ImageId { get; private set; }
         public IEnumerable<BlogPostTag> Tags { get => _tags; private set { } }
 
         public BlogPost(string subject, string contentInro, string content, Author author)
@@ -88,11 +88,11 @@ namespace CoolBytes.Core.Models
             return this;
         }
 
-        public void SetPhoto(Photo photo)
+        public void SetImage(Image image)
         {
-            photo.IsNotNull();
+            image.IsNotNull();
 
-            Photo = photo;
+            Image = image;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace CoolBytes.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
-        public DbSet<Photo> Photos { get; set; }
+        public DbSet<Image> Images { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -50,14 +50,14 @@ namespace CoolBytes.Data
                     entity.Property(e => e.SubjectUrl).HasMaxLength(100).IsRequired();
                     entity.HasMany(b => b.Tags).WithOne(bt => bt.BlogPost).OnDelete(DeleteBehavior.Cascade);
                 })
-                .Entity<Photo>(entity =>
+                .Entity<Image>(entity =>
                 {
                     entity.Property(e => e.FileName).HasMaxLength(255).IsRequired();
                     entity.Property(e => e.Path).HasMaxLength(500).IsRequired();
                     entity.Property(e => e.UriPath).HasMaxLength(500).IsRequired();
                     entity.Property(e => e.Length).IsRequired();
                     entity.Property(e => e.ContentType).HasMaxLength(30).IsRequired();
-                    entity.ToTable("Photos");
+                    entity.ToTable("Images");
                 })
                 .Entity<BlogPostTag>(entity =>
                 {

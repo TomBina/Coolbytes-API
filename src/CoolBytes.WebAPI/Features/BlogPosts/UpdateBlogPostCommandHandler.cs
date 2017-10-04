@@ -10,22 +10,19 @@ using CoolBytes.Data;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
     public class UpdateBlogPostCommandHandler : IAsyncRequestHandler<UpdateBlogPostCommand, BlogPostViewModel>
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IConfiguration _configuration;
-        private readonly IPhotoFactory _photoFactory;
-        private bool _isPhotoUpdated;
+        private readonly IImageFactory _imageFactory;
+        private bool _isImageUpdated;
 
-        public UpdateBlogPostCommandHandler(AppDbContext appDbContext, IPhotoFactory photoFactory, IConfiguration configuration)
+        public UpdateBlogPostCommandHandler(AppDbContext appDbContext, IImageFactory imageFactory)
         {
             _appDbContext = appDbContext;
-            _photoFactory = photoFactory;
-            _configuration = configuration;
+            _imageFactory = imageFactory;
         }
 
         public async Task<BlogPostViewModel> Handle(UpdateBlogPostCommand message)
@@ -54,35 +51,28 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             if (message.File == null)
                 return;
 
-            var photo = await CreatePhoto(message.File);
-            blogPost.SetPhoto(photo);
+            var image = await CreateImage(message.File);
+            blogPost.SetImage(image);
         }
 
-        private async Task<Photo> CreatePhoto(IFormFile file)
+        private async Task<Image> CreateImage(IFormFile file)
         {
             using (var stream = file.OpenReadStream())
             {
-                var photo = await _photoFactory.Create(stream, file.FileName, file.ContentType);
-                _isPhotoUpdated = true;
-                return photo;
+                var image = await _imageFactory.Create(stream, file.FileName, file.ContentType);
+                _isImageUpdated = true;
+                return image;
             }
         }
 
         private async Task SaveBlogPost(BlogPost blogPost)
         {
-            if (_isPhotoUpdated)
-                await _appDbContext.SaveChangesAsync(() => File.Delete(blogPost.Photo.Path));
+            if (_isImageUpdated)
+                await _appDbContext.SaveChangesAsync(() => File.Delete(blogPost.Image.Path));
             else
                 await _appDbContext.SaveChangesAsync();
         }
 
-        private BlogPostViewModel CreateViewModel(BlogPost blogPost)
-        {
-            var viewModel = Mapper.Map<BlogPostViewModel>(blogPost);
-            viewModel.Photo?.FormatPhotoUri(_configuration);
-
-            return viewModel;
-        }
-
+        private BlogPostViewModel CreateViewModel(BlogPost blogPost) => Mapper.Map<BlogPostViewModel>(blogPost);
     }
 }

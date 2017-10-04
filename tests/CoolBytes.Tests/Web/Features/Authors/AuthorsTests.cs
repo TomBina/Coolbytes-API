@@ -25,7 +25,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         public async Task GetAuthorQueryHandler_ReturnsAuthor()
         {
             await AddAuthor();
-            var getAuthorQueryHandler = new GetAuthorQueryHandler(Context, UserService, Fixture.Configuration);
+            var getAuthorQueryHandler = new GetAuthorQueryHandler(Context, UserService);
             var message = new GetAuthorQuery();
 
             var result = await getAuthorQueryHandler.Handle(message);
@@ -51,7 +51,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         public async Task AddAuthorCommandHandler_ReturnsAuthor()
         {
             var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, Fixture.Configuration, null);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, null);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             var result = await addAuthorCommandHandler.Handle(message);
@@ -60,11 +60,11 @@ namespace CoolBytes.Tests.Web.Features.Authors
         }
 
         [Fact]
-        public async Task AddAuthorCommandHandler_WithPhoto_ReturnsAuthor()
+        public async Task AddAuthorCommandHandler_WithImage_ReturnsAuthor()
         {
-            var photoFactory = CreatePhotoFactory();
+            var imageFactory = CreateImageFactory();
             var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, Fixture.Configuration, photoFactory);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, imageFactory);
             var fileMock = CreateFileMock();
             var file = fileMock.Object;
 
@@ -78,14 +78,14 @@ namespace CoolBytes.Tests.Web.Features.Authors
 
             var result = await addAuthorCommandHandler.Handle(message);
 
-            Assert.NotNull(result.Photo.PhotoUri);
+            Assert.NotNull(result.Image.UriPath);
         }
 
         [Fact]
         public async Task AddAuthorCommandHandler_AddingSecondTime_ThrowsException()
         {
             var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, Fixture.Configuration, null);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, null);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             await addAuthorCommandHandler.Handle(message);
@@ -102,7 +102,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             await AddAuthor();
 
             var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test" };
-            var handler = new UpdateAuthorCommandHandler(Context, UserService, Fixture.Configuration, CreatePhotoFactory());
+            var handler = new UpdateAuthorCommandHandler(Context, UserService, CreateImageFactory());
 
             var result = await handler.Handle(message);
 
@@ -110,12 +110,12 @@ namespace CoolBytes.Tests.Web.Features.Authors
         }
 
         [Fact]
-        public async Task UpdateAuthorCommandHandler_WithPhoto_ReturnsAuthor()
+        public async Task UpdateAuthorCommandHandler_WithImage_ReturnsAuthor()
         {
             await AddAuthor();
 
-            var photoFactory = CreatePhotoFactory();
-            var handler = new UpdateAuthorCommandHandler(Context, UserService, Fixture.Configuration, photoFactory);
+            var imageFactory = CreateImageFactory();
+            var handler = new UpdateAuthorCommandHandler(Context, UserService, imageFactory);
 
             var file = CreateFileMock().Object;
             var message = new UpdateAuthorCommand()
@@ -128,7 +128,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
 
             var result = await handler.Handle(message);
 
-            Assert.NotNull(result.Photo);
+            Assert.NotNull(result.Image);
         }
 
         public async Task DisposeAsync()

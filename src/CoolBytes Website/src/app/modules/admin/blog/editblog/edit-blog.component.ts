@@ -1,4 +1,5 @@
-import { Photo } from "../../../../services/photo";
+import { ImagesService } from '../../../../services/images.service';
+import { Image } from "../../../../services/image";
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -17,7 +18,8 @@ export class EditBlogComponent implements OnInit {
         private _route: ActivatedRoute,
         private _authorsService: AuthorsService,
         private _blogPostsService: BlogPostsService,
-        private _router: Router) { }
+        private _router: Router,
+        private _imagesService: ImagesService) { }
 
     public blogForm: FormGroup;
     private _id: number;
@@ -26,7 +28,7 @@ export class EditBlogComponent implements OnInit {
     private _contentIntro: FormControl;
     private _content: FormControl;
     private _tags: FormControl;
-    private _photo: Photo;
+    private _image: Image;
     private _files: FileList;
 
     ngOnInit(): void {
@@ -52,7 +54,10 @@ export class EditBlogComponent implements OnInit {
         this._subject.setValue(blogPost.subject);
         this._contentIntro.setValue(blogPost.contentIntro);
         this._content.setValue(blogPost.content);
-        this._photo = blogPost.photo;
+        this._image = blogPost.image;
+        
+        if (this._image)
+            this._image.uri = this._imagesService.getUri(this._image.uriPath);
 
         let blogPostTags: string[] = [];
         blogPost.tags.forEach(t => {

@@ -1,5 +1,6 @@
+import { environment } from '../../environments/environment';
 import { AuthorAddUpdate } from "./author-add-update";
-import "rxjs/add/operator/map";
+import 'rxjs/add/operator/map';
 
 import { Injectable } from "@angular/core";
 import { Headers, Http, RequestOptions, Response } from "@angular/http";
@@ -13,7 +14,7 @@ export class AuthorsService {
 
     constructor(private _http: Http, private _authService: AuthService) { }
 
-    private _url: string = "http://localhost:5000/api/authors/";
+    private _url: string = environment.apiUri + "api/authors/";
 
     getRequestOptions(headers: Headers): RequestOptions {
         headers = this._authService.addAuthorizationHeader(headers);
@@ -43,7 +44,7 @@ export class AuthorsService {
     createFormData(model): FormData {
         let formData = new FormData();
         let file = model.files && model.files.length > 0 ? model.files[0] : null;
-        
+
         formData.append("firstName", model.firstName);
         formData.append("lastName", model.lastName);
         formData.append("about", model.about);

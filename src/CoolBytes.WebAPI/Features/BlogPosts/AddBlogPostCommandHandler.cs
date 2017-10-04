@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -18,15 +17,13 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
     {
         private readonly AppDbContext _appDbContext;
         private readonly IUserService _userService;
-        private readonly IPhotoFactory _photoFactory;
-        private readonly IConfiguration _configuration;
+        private readonly IImageFactory _imageFactory;
 
-        public AddBlogPostCommandHandler(AppDbContext appDbContext, IUserService userService, IPhotoFactory photoFactory, IConfiguration configuration) 
+        public AddBlogPostCommandHandler(AppDbContext appDbContext, IUserService userService, IImageFactory imageFactory) 
         {
             _appDbContext = appDbContext;
             _userService = userService;
-            _photoFactory = photoFactory;
-            _configuration = configuration;
+            _imageFactory = imageFactory;
         }
 
         public async Task<BlogPostViewModel> Handle(AddBlogPostCommand message)
@@ -53,8 +50,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             if (message.File == null)
                 return blogPost;
 
-            var photo = await CreatePhoto(message.File);
-            blogPost.SetPhoto(photo);
+            var image = await CreateImage(message.File);
+            blogPost.SetImage(image);
             return blogPost;
         }
 
@@ -62,23 +59,18 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         {
             _appDbContext.BlogPosts.Add(blogPost);
 
-            if (blogPost.Photo != null)
-                await _appDbContext.SaveChangesAsync(() => File.Delete(blogPost.Photo.Path));
+            if (blogPost.Image != null)
+                await _appDbContext.SaveChangesAsync(() => File.Delete(blogPost.Image.Path));
             else
                 await _appDbContext.SaveChangesAsync();
         }
 
-        private async Task<Photo> CreatePhoto(IFormFile file)
+        private async Task<Image> CreateImage(IFormFile file)
         {
             using (var stream = file.OpenReadStream())
-                return await _photoFactory.Create(stream, file.FileName, file.ContentType);
+                return await _imageFactory.Create(stream, file.FileName, file.ContentType);
         }
 
-        private BlogPostViewModel CreateViewModel(BlogPost blogPost)
-        {
-            var viewModel = Mapper.Map<BlogPostViewModel>(blogPost);
-            viewModel.Photo?.FormatPhotoUri(_configuration);
-            return viewModel;
-        }
+        private BlogPostViewModel CreateViewModel(BlogPost blogPost) => Mapper.Map<BlogPostViewModel>(blogPost);
     }
 }

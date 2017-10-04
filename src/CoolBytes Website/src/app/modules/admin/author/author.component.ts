@@ -1,17 +1,18 @@
+import { ImagesService } from '../../../services/images.service';
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
 import { AuthorAddUpdate } from "../../../services/author-add-update";
 import { AuthorsService } from "../../../services/authors.service";
-import { Photo } from "../../../services/photo";
+import { Image } from "../../../services/image";
 
 @Component({
   templateUrl: "./author.component.html"
 })
 export class AuthorComponent implements OnInit {
 
-  constructor(private _authorsService: AuthorsService, private _router: Router) { }
+  constructor(private _authorsService: AuthorsService, private _router: Router, private _imagesService: ImagesService) { }
 
   authorForm: FormGroup;
 
@@ -19,7 +20,7 @@ export class AuthorComponent implements OnInit {
   private _firstName: FormControl;
   private _lastName: FormControl;
   private _about: FormControl;
-  private _photo: Photo;
+  private _image: Image;
   private _files: FileList;
 
   ngOnInit() {
@@ -39,7 +40,10 @@ export class AuthorComponent implements OnInit {
         this._firstName.setValue(author.firstName);
         this._lastName.setValue(author.lastName);
         this._about.setValue(author.about);
-        this._photo = author.photo;
+        this._image = author.image;
+
+        if (this._image)
+          this._image.uri = this._imagesService.getUri(this._image.uriPath);
       });
   }
 

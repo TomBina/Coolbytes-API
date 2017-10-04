@@ -9,9 +9,15 @@ export class MdPreviewComponent implements OnChanges {
     @Input()
     text: string;
     private _previewOn: boolean;
+    private _marked;
+
+    constructor() {
+        this._marked = marked;
+        marked.setOptions({ gfm:true, breaks: true });
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.text = marked(this.text);
+        this.text = this._marked(this.text);
     }
 
     togglePreview() {

@@ -8,6 +8,6 @@ namespace CoolBytes.WebAPI.Features.Authors
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string About { get; set; }
-        public PhotoViewModel Photo { get; set; }
+        public ImageViewModel Image { get; set; }
     }
 }

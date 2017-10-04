@@ -29,7 +29,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContextPool<AppDbContext>(builder => builder.UseInMemoryDatabase("Test"));
             serviceCollection.AddScoped<IAuthorValidator, AuthorValidator>();
-            serviceCollection.AddScoped<IPhotoFactory>(sp => null);
+            serviceCollection.AddScoped<IImageFactory>(sp => null);
             serviceCollection.AddScoped<IConfiguration>(sp => null);
 
             var userService = new Mock<IUserService>();

@@ -7,7 +7,6 @@ using MediatR;
 using System.Threading.Tasks;
 using CoolBytes.Core.Factories;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
@@ -16,16 +15,14 @@ namespace CoolBytes.WebAPI.Features.Authors
         private readonly AppDbContext _appDbContext;
         private readonly IUserService _userService;
         private readonly IAuthorValidator _authorValidator;
-        private readonly IPhotoFactory _photoFactory;
-        private readonly IConfiguration _configuration;
+        private readonly IImageFactory _imageFactory;
 
-        public AddAuthorCommandHandler(AppDbContext appDbContext, IUserService userService, IAuthorValidator authorValidator, IConfiguration configuration, IPhotoFactory photoFactory)
+        public AddAuthorCommandHandler(AppDbContext appDbContext, IUserService userService, IAuthorValidator authorValidator, IImageFactory imageFactory)
         {
             _appDbContext = appDbContext;
             _userService = userService;
             _authorValidator = authorValidator;
-            _configuration = configuration;
-            _photoFactory = photoFactory;
+            _imageFactory = imageFactory;
         }
 
         public async Task<AuthorViewModel> Handle(AddAuthorCommand message)
@@ -46,33 +43,27 @@ namespace CoolBytes.WebAPI.Features.Authors
             if (message.File == null)
                 return author;
 
-            var photo = await CreatePhoto(message.File);
-            author.AuthorProfile.SetPhoto(photo);
+            var image = await CreateImage(message.File);
+            author.AuthorProfile.SetImage(image);
             return author;
         }
 
-        private async Task<Photo> CreatePhoto(IFormFile file)
+        private async Task<Image> CreateImage(IFormFile file)
         {
             using (var stream = file.OpenReadStream())
-                return await _photoFactory.Create(stream, file.FileName, file.ContentType);
+                return await _imageFactory.Create(stream, file.FileName, file.ContentType);
         }
 
         private async Task SaveAuthor(Author author)
         {
             _appDbContext.Authors.Add(author);
 
-            if (author.AuthorProfile.Photo != null)
-                await _appDbContext.SaveChangesAsync(() => File.Delete(author.AuthorProfile.Photo.Path));
+            if (author.AuthorProfile.Image != null)
+                await _appDbContext.SaveChangesAsync(() => File.Delete(author.AuthorProfile.Image.Path));
             else
                 await _appDbContext.SaveChangesAsync();
         }
 
-        private AuthorViewModel CreateViewModel(Author author)
-        {
-            var viewModel = Mapper.Map<AuthorViewModel>(author);
-            viewModel.Photo?.FormatPhotoUri(_configuration);
-
-            return viewModel;
-        }
+        private AuthorViewModel CreateViewModel(Author author) => Mapper.Map<AuthorViewModel>(author);
     }
 }

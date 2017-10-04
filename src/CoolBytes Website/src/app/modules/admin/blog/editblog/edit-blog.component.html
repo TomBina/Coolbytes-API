@@ -15,14 +15,15 @@
         <p>
             <textarea formControlName="content" id="content" [ngClass]="inputCssClass('content')"></textarea>
             <admin-md-preview text="{{_content.value}}"></admin-md-preview>
+            <admin-images-manager [control]="_content"></admin-images-manager>
         </p>
         <label for="tag">Tags</label>
         <p>
             <textarea formControlName="tags" id="tags" [ngClass]="inputCssClass('tags')"></textarea>
         </p>
-        <label for="photo">Photo</label>
-        <p *ngIf="_photo">
-            <img [src]="_photo.photoUri" width="200" />
+        <label for="image">Image</label>
+        <p *ngIf="_image && _image.uri">
+            <img [src]="_image.uri" width="200" />
         </p>
         <p>
             <input type="file" id="file" (change)="onFileChanged($event.target)" />

@@ -14,9 +14,10 @@
         <p>
             <textarea formControlName="about" id="about" [ngClass]="inputCssClass('about')"></textarea>
             <admin-md-preview text="{{_about.value}}"></admin-md-preview>
+            <admin-images-manager [control]="_about"></admin-images-manager>
         </p>
-        <p *ngIf="_photo">
-            <img [src]="_photo.photoUri" width="200" />
+        <p *ngIf="_image && _image.uri">
+            <img [src]="_image.uri" width="200" />
         </p>
         <p>
             <input type="file" id="file" (change)="onFileChanged($event.target)" />
