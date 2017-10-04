@@ -1,5 +1,6 @@
+import { ImagesService } from '../../../services/images.service';
 import { Component, OnChanges, Input } from "@angular/core";
-import * as marked from "marked";
+import * as marked from 'marked';
 
 @Component({
     selector: "md",
@@ -11,9 +12,16 @@ export class Md implements OnChanges {
 
     private _marked;
 
-    constructor() {
+    constructor(private _imagesService: ImagesService) {
+        let renderer = new marked.Renderer();
+        renderer.image = (href: string, title: string, text: string) => {
+            if (href.startsWith("/"))
+                return `<img src="${_imagesService.getUri(href)}" />`
+            else
+                return `<img src="${href}" />`
+        };
+        marked.setOptions({ gfm: true, breaks: true, renderer: renderer });
         this._marked = marked;
-        marked.setOptions({ gfm:true, breaks: true });
     }
 
     ngOnChanges(): void {

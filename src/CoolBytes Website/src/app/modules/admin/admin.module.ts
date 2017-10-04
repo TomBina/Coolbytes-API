@@ -1,23 +1,21 @@
-import { ImagesService } from "../../services/images.service";
-import { ImagesManagerComponent } from "./images/images-manager.component";
-import { SharedModule } from "../shared/shared.module";
-import { EditBlogComponent } from "./blog/editblog/edit-blog.component";
-import { AddBlogComponent } from "./blog/addblog/add-blog.component";
-import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
-import { RouterModule } from "@angular/router";
-import { ReactiveFormsModule } from "@angular/forms";
-import { Http, RequestOptions } from "@angular/http";
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
-import { MenuComponent } from "./menu/menu.component";
-import { ProcessAuthComponent } from "./processauth/process-auth.component";
-import { BlogManagerComponent } from "./blog/blog-manager.component";
-
-import { AuthService } from "../../services/auth.service";
-import { AdminGuardService } from "../../services/admin-guard.service";
-import { AuthorComponent } from "./author/author.component";
-import { AuthorsService } from "../../services/authors.service";
-import { AdminAuthorGuardService } from "../../services/admin-author-guard.service";
+import { AdminAuthorGuardService } from '../../services/admin-author-guard.service';
+import { AdminGuardService } from '../../services/admin-guard.service';
+import { AuthService } from '../../services/auth.service';
+import { AuthorsService } from '../../services/authors.service';
+import { ImagesService } from '../../services/images.service';
+import { SharedModule } from '../shared/shared.module';
+import { AuthorComponent } from './author/author.component';
+import { AddBlogComponent } from './blog/addblog/add-blog.component';
+import { BlogManagerComponent } from './blog/blog-manager.component';
+import { UpdateBlogComponent } from './blog/updateblog/update-blog.component';
+import { ImagesManagerComponent } from './images/images-manager.component';
+import { MenuComponent } from './menu/menu.component';
+import { ProcessAuthComponent } from './processauth/process-auth.component';
 
 @NgModule({
     imports: [
@@ -44,7 +42,7 @@ import { AdminAuthorGuardService } from "../../services/admin-author-guard.servi
             },
             {
                 path: "admin/blogs/edit/:id",
-                component: EditBlogComponent,
+                component: UpdateBlogComponent,
                 canActivate: [AdminGuardService, AdminAuthorGuardService]
             },
             {
@@ -61,7 +59,7 @@ import { AdminAuthorGuardService } from "../../services/admin-author-guard.servi
         ProcessAuthComponent,
         BlogManagerComponent,
         AddBlogComponent,
-        EditBlogComponent,
+        UpdateBlogComponent,
         AuthorComponent,
         ImagesManagerComponent
     ],
