@@ -1,6 +1,7 @@
+import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
 import { ImagesService } from '../../../../services/images.service';
 import { Image } from "../../../../services/image";
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 
@@ -8,12 +9,14 @@ import { AuthorsService } from "../../../../services/authors.service";
 import { BlogPost } from "../../../../services/blog-post";
 import { BlogPostUpdate } from "../../../../services/blog-post-update";
 import { BlogPostsService } from "../../../../services/blog-posts.service";
+import { Subscription } from 'rxjs';
+import { BlogPostPreview } from '../previewblog/blog-post-preview';
 
 @Component({
     templateUrl: "./update-blog.component.html",
     styleUrls: ["./update-blog.component.css"]
 })
-export class UpdateBlogComponent implements OnInit {
+export class UpdateBlogComponent implements OnInit, OnDestroy {
     constructor(
         private _route: ActivatedRoute,
         private _authorsService: AuthorsService,
@@ -21,7 +24,7 @@ export class UpdateBlogComponent implements OnInit {
         private _router: Router,
         private _imagesService: ImagesService) { }
 
-    public blogForm: FormGroup;
+    private _blogForm: FormGroup;
     private _id: number;
     private _blogPost: BlogPost;
     private _subject: FormControl;
@@ -30,6 +33,10 @@ export class UpdateBlogComponent implements OnInit {
     private _tags: FormControl;
     private _image: Image;
     private _files: FileList;
+    
+    @ViewChild(PreviewBlogComponent)
+    private _previewBlogComponent: PreviewBlogComponent;
+    private _previewObserver: Subscription
 
     ngOnInit(): void {
         this._subject = new FormControl(null, [Validators.required, Validators.maxLength(100)]);
@@ -37,16 +44,24 @@ export class UpdateBlogComponent implements OnInit {
         this._content = new FormControl(null, [Validators.required, Validators.maxLength(4000)]);
         this._tags = new FormControl(null, Validators.maxLength(500));
 
-        this.blogForm = new FormGroup({
+        this._blogForm = new FormGroup({
             subject: this._subject,
             contentIntro: this._contentIntro,
             content: this._content,
             tags: this._tags
         });
 
-        let id: number = parseInt(this._route.snapshot.paramMap.get("id"));
+        this._previewObserver = this._blogForm.valueChanges.subscribe(v => {
+            this._previewBlogComponent.blogPostPreview = new BlogPostPreview(this._subject.value, this._contentIntro.value, this._content.value);
+        })
 
+        let id: number = parseInt(this._route.snapshot.paramMap.get("id"));
         this._blogPostsService.get(id).subscribe(blogPost => this.updateForm(blogPost));
+    }
+
+    ngOnDestroy(): void {
+        if (this._previewObserver)
+            this._previewObserver.unsubscribe();
     }
 
     updateForm(blogPost: BlogPost) {
@@ -55,7 +70,7 @@ export class UpdateBlogComponent implements OnInit {
         this._contentIntro.setValue(blogPost.contentIntro);
         this._content.setValue(blogPost.content);
         this._image = blogPost.image;
-        
+
         if (this._image)
             this._image.uri = this._imagesService.getUri(this._image.uriPath);
 
@@ -68,20 +83,20 @@ export class UpdateBlogComponent implements OnInit {
     }
 
     inputCssClass(name: string) {
-        let formControl = this.blogForm.get(name);
+        let formControl = this._blogForm.get(name);
 
         if (!formControl.valid && formControl.touched)
             return "error";
     }
-    
+
     onFileChanged(element: HTMLInputElement) {
         this._files = element.files;
     }
 
     onSubmit(): void {
-        if (!this.blogForm.valid) {
-            for (let controlName in this.blogForm.controls) {
-                this.blogForm.get(controlName).markAsTouched();
+        if (!this._blogForm.valid) {
+            for (let controlName in this._blogForm.controls) {
+                this._blogForm.get(controlName).markAsTouched();
             }
             return;
         }

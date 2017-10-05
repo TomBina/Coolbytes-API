@@ -5,6 +5,17 @@
     margin: 15px 10px 15px 10px;
     box-sizing: border-box;
     overflow:hidden;
+    transition: background-color 500ms, opacity 1s;
+}
+
+.post:hover {
+    border: 1px solid #1e243d;
+    background-color:#EFF1F7;
+    box-shadow:-2px 6px 20px -1px #CECECE;
+}
+
+.post.tobackground {
+    opacity:0.8;
 }
 
 .info {

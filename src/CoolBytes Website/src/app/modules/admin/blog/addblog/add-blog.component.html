@@ -1,30 +1,34 @@
 <app-admin-menu></app-admin-menu>
 <div class="admin-content">
-    <h1>Add blog</h1>
-    <form [formGroup]="blogForm" (ngSubmit)="onSubmit()">
-        <label for="subject">Subject</label>
-        <p>
-            <input formControlName="subject" id="subject" [ngClass]="inputCssClass('subject')" />
-        </p>
-        <label for="contentIntro">Content intro:</label>
-        <p>
-            <textarea formControlName="contentIntro" id="contentIntro" [ngClass]="inputCssClass('contentIntro')"></textarea>
-            <admin-md-preview text="{{_contentIntro.value}}"></admin-md-preview>
-        </p>
-        <label for="content">Content:</label>
-        <p>
-            <textarea formControlName="content" id="content" [ngClass]="inputCssClass('content')"></textarea>
-            <admin-md-preview text="{{_content.value}}"></admin-md-preview>
-            <admin-images-manager [control]="_content"></admin-images-manager>
-        </p>
-        <label for="tag">Tags</label>
-        <p>
-            <textarea formControlName="tags" id="tags" [ngClass]="inputCssClass('tags')"></textarea>
-        </p>
-        <label for="image">Image</label>
-        <p>
-            <input type="file" id="file" (change)="onFileChanged($event.target)" />
-        </p>
-        <input type="submit" value="save" />
-    </form>
+    <div class="left">
+        <h1>Add blog</h1>
+        <form [formGroup]="_blogForm" (ngSubmit)="onSubmit()" >
+            <label for="subject">Subject</label>
+            <p>
+                <input formControlName="subject" id="subject" [ngClass]="inputCssClass('subject')" />
+            </p>
+            <label for="contentIntro">Content intro:</label>
+            <p>
+                <textarea formControlName="contentIntro" id="contentIntro" [ngClass]="inputCssClass('contentIntro')">
+                </textarea>
+            </p>
+            <label for="content">Content:</label>
+            <p>
+                <textarea formControlName="content" id="content" [ngClass]="inputCssClass('content')"></textarea>
+                <admin-images-manager [control]="_content"></admin-images-manager>
+            </p>
+            <label for="tag">Tags</label>
+            <p>
+                <textarea formControlName="tags" id="tags" [ngClass]="inputCssClass('tags')"></textarea>
+            </p>
+            <label for="image">Image</label>
+            <p>
+                <input type="file" id="file" (change)="onFileChanged($event.target)" />
+            </p>
+            <input type="submit" value="save" />
+        </form>
+    </div>
+    <div class="right">
+        <admin-preview-blog></admin-preview-blog>
+    </div>
 </div>

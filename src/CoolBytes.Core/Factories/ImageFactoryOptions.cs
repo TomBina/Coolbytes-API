@@ -1,9 +1,10 @@
 ﻿using System;
 using CoolBytes.Core.Extensions;
+using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Core.Factories
 {
-    public class ImageFactoryOptions
+    public class ImageFactoryOptions : IImageFactoryOptions
     {
         public string UploadPath { get; }
         public Func<string, string> FileName { get; } =

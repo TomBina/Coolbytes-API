@@ -30,7 +30,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                 .Include(b => b.Author.AuthorProfile)
                 .Include(b => b.Tags)
                 .Include(b => b.Image)
-                .SingleAsync(b => b.Id == message.Id);
+                .FirstOrDefaultAsync(b => b.Id == message.Id);
             return blogPost;
         }
 

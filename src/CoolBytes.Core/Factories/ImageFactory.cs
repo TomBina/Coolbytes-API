@@ -9,10 +9,10 @@ namespace CoolBytes.Core.Factories
 {
     public class ImageFactory : IImageFactory
     {
-        private readonly ImageFactoryOptions _options;
+        private readonly IImageFactoryOptions _options;
         private readonly IImageFactoryValidator _validator;
 
-        public ImageFactory(ImageFactoryOptions options, IImageFactoryValidator validator)
+        public ImageFactory(IImageFactoryOptions options, IImageFactoryValidator validator)
         {
             _options = options;
             _validator = validator;

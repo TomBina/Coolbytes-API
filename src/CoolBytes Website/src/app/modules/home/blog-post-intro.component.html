@@ -1,4 +1,4 @@
-<div class="post">
+<div [ngClass]="cssClass" (mouseenter)="onBlogPostMouseEnterHandler()" (mouseleave)="onBlogPostMouseLeaveHandler()">
     <div class="info">
         {{blogPost.date | date}} by <a>{{blogPost.authorName}}</a>
     </div>

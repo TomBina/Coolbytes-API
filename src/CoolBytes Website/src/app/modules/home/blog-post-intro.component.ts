@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { BlogPost } from "../../services/blog-post";
 
 @Component({
@@ -9,4 +9,21 @@ import { BlogPost } from "../../services/blog-post";
 export class BlogPostIntroComponent { 
     @Input()
     blogPost: BlogPost;
+
+    @Input()
+    cssClass: string;
+
+    @Output()
+    onBlogPostMouseEnter = new EventEmitter<BlogPost>();
+    
+    @Output()
+    onBlogPostMouseLeave = new EventEmitter<BlogPost>();
+
+    onBlogPostMouseEnterHandler() {
+        this.onBlogPostMouseEnter.emit(this.blogPost);
+    }
+
+    onBlogPostMouseLeaveHandler() {
+        this.onBlogPostMouseLeave.emit(this.blogPost);
+    }
 }

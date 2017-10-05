@@ -19,8 +19,6 @@ export class AuthService {
             redirectUri: environment.appUri + "processauth",
             scope: "openid email admin"
         });
-
-        console.log(environment.apiUri);
     }
 
     public login(): void {

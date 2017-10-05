@@ -43,6 +43,7 @@ export class ImagesManagerComponent implements OnInit {
         value += `![](${uri})`;
 
         this.control.setValue(value);
+        this.close();
     }
 
     open() {

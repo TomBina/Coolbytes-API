@@ -1,19 +1,16 @@
-<article>
-    <h1>Test!</h1>
+<article *ngIf="blogPost">
+    <h1>{{blogPost.subject}}</h1>
     <p>
-        When we write a value, we set it. When we read a value, we get it. Get it?
-        With set and get, we can control what happens between the read/write operations of values.
-        Okay let’s move on. Why don’t we create our own set and get methods to demonstrate how we can use them.
-        ES5 and Object.defineProperty
-        Taking the above example, why don’t we write our own implementation?
-        First, let’s define a quick module pattern using ES5 (wait for TypeScript later, okay) to encapsulate our small constructor example:
+        {{blogPost.date | date}} by {{blogPost.authorName}} - estimated reading time {{blogPost.ReadingTime}}
     </p>
     <p>
-        When we write a value, we set it. When we read a value, we get it. Get it?
-        With set and get, we can control what happens between the read/write operations of values.
-        Okay let’s move on. Why don’t we create our own set and get methods to demonstrate how we can use them.
-        ES5 and Object.defineProperty
-        Taking the above example, why don’t we write our own implementation?
-        First, let’s define a quick module pattern using ES5 (wait for TypeScript later, okay) to encapsulate our small constructor example:
+        <md [value]="blogPost.contentIntro"></md>
+    </p>
+    <p>
+        <md [value]="blogPost.content"></md>
+    </p>
+    <p>
+        Tags:
+        <a *ngFor="let tag of blogPost.tags">{{tag.name}}</a>
     </p>
 </article>

@@ -31,7 +31,7 @@ namespace CoolBytes.WebAPI
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorValidator, AuthorValidator>();
             services.AddScoped<IImageFactory, ImageFactory>();
-            services.AddScoped<ImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
+            services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
             services.AddScoped<IImageFactoryValidator, ImageFactoryValidator>();
 
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));

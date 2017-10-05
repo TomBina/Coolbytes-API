@@ -8,8 +8,8 @@ header {
     align-items:center;
     top:0;
     padding:6px 8px 6px 8px;
-    opacity:0.9;
     box-sizing:border-box;
+    z-index:1000;
 }
 
 img {

@@ -6,7 +6,7 @@ import * as marked from 'marked';
     selector: "md",
     template: `<div [innerHtml]="value"></div>`
 })
-export class Md implements OnChanges {
+export class MdComponent implements OnChanges {
     @Input()
     value: string;
 

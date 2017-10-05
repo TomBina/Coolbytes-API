@@ -13,7 +13,6 @@
         <label for="about">About me:</label>
         <p>
             <textarea formControlName="about" id="about" [ngClass]="inputCssClass('about')"></textarea>
-            <admin-md-preview text="{{_about.value}}"></admin-md-preview>
             <admin-images-manager [control]="_about"></admin-images-manager>
         </p>
         <p *ngIf="_image && _image.uri">

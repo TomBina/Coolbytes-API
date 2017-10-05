@@ -1,3 +1,4 @@
+import { PreviewBlogComponent } from './blog/previewblog/preview-blog.component';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -61,7 +62,8 @@ import { ProcessAuthComponent } from './processauth/process-auth.component';
         AddBlogComponent,
         UpdateBlogComponent,
         AuthorComponent,
-        ImagesManagerComponent
+        ImagesManagerComponent,
+        PreviewBlogComponent
     ],
     providers: [
         AuthService,
