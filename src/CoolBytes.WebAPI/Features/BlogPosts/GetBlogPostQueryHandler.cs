@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
+using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +19,21 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         public async Task<BlogPostViewModel> Handle(GetBlogPostQuery message)
         {
-            var blogPost = await _appDbContext.BlogPosts.AsNoTracking().SingleAsync(b => b.Id == message.Id);
+            var blogPost = await GetBlogPost(message);
 
-            return Mapper.Map<BlogPostViewModel>(blogPost);
+            return CreateViewModel(blogPost);
         }
+
+        private async Task<BlogPost> GetBlogPost(GetBlogPostQuery message)
+        {
+            var blogPost = await _appDbContext.BlogPosts.AsNoTracking()
+                .Include(b => b.Author.AuthorProfile)
+                .Include(b => b.Tags)
+                .Include(b => b.Image)
+                .FirstOrDefaultAsync(b => b.Id == message.Id);
+            return blogPost;
+        }
+
+        private BlogPostViewModel CreateViewModel(BlogPost blogPost) => Mapper.Map<BlogPostViewModel>(blogPost);
     }
 }

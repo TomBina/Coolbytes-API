@@ -1,10 +1,16 @@
-<div class="post">
-    <div class="info">
-        {{blogPost.date | date}} by <a>{{blogPost.authorName}}</a>
-    </div>
-    <div class="image"></div>
-    <div class="text">
-        <a>{{blogPost.subject}}</a>
-        <p>{{blogPost.contentIntro}}</p>
-    </div>
-</div>
+<article *ngIf="blogPost">
+    <h1>{{blogPost.subject}}</h1>
+    <p>
+        {{blogPost.date | date}} by {{blogPost.authorName}} - estimated reading time {{blogPost.ReadingTime}}
+    </p>
+    <p>
+        <md [value]="blogPost.contentIntro"></md>
+    </p>
+    <p>
+        <md [value]="blogPost.content"></md>
+    </p>
+    <p>
+        Tags:
+        <a *ngFor="let tag of blogPost.tags">{{tag.name}}</a>
+    </p>
+</article>

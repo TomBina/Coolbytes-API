@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
+using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Services;
 using MediatR;
@@ -20,10 +22,22 @@ namespace CoolBytes.WebAPI.Features.Authors
 
         public async Task<AuthorViewModel> Handle(GetAuthorQuery message)
         {
-            var user = await _userService.GetUser();
-            var author = await _appDbContext.Authors.AsNoTracking().Include(a => a.AuthorProfile).SingleOrDefaultAsync(a => a.UserId == user.Id);
+            var author = await GetAuthor();
 
-            return Mapper.Map<AuthorViewModel>(author);
+            return CreateViewModel(author);
         }
+
+        private async Task<Author> GetAuthor()
+        {
+            var user = await _userService.GetUser();
+            var author = await _appDbContext.Authors.AsNoTracking()
+                .Include(a => a.AuthorProfile)
+                .Include(a => a.AuthorProfile.Image)
+                .SingleOrDefaultAsync(a => a.UserId == user.Id);
+
+            return author;
+        }
+
+        private AuthorViewModel CreateViewModel(Author author) => Mapper.Map<AuthorViewModel>(author);
     }
 }

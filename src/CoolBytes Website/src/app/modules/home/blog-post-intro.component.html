@@ -1,0 +1,10 @@
+<div [ngClass]="cssClass" (mouseenter)="onBlogPostMouseEnterHandler()" (mouseleave)="onBlogPostMouseLeaveHandler()">
+    <div class="info">
+        {{blogPost.date | date}} by <a>{{blogPost.authorName}}</a>
+    </div>
+    <div class="image"></div>
+    <div class="text">
+        <a routerLink="/post/{{blogPost.id}}/{{blogPost.subjectUrl}}">{{blogPost.subject}}</a>
+        <p><md [value]="blogPost.contentIntro"></md></p>
+    </div>
+</div>

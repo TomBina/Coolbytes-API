@@ -7,16 +7,42 @@ import { BlogPost } from "../../services/blog-post";
     styleUrls: ["./blog.component.css"]
 })
 export class BlogComponent implements OnInit {
-    blogPosts: BlogPost[];
+    private _blogPosts: BlogPostViewModel[];
 
     constructor(private _blogpostsService: BlogPostsService) {
 
     }
 
     ngOnInit(): void {
-        this._blogpostsService.getAll().subscribe(
-            blogPosts => { this.blogPosts = blogPosts; },
-            error => { });
+        this._blogpostsService.getAll().map(blogPosts => {
+            let blogPostsViewModel: BlogPostViewModel[] = [];
+
+            blogPosts.forEach(blogPost => {
+                let blogPostViewModel = new BlogPostViewModel();
+                blogPostViewModel.blogPost = blogPost;
+                blogPostsViewModel.push(blogPostViewModel);
+            });
+
+            return blogPostsViewModel;
+        }).subscribe(blogPosts => { this._blogPosts = blogPosts; });
     }
 
+    onBlogPostMouseEnterHandler(blogPost: BlogPost) {
+        this._blogPosts.forEach(b => { 
+            if (b.blogPost.id != blogPost.id)
+                b.cssClass = "post tobackground";
+        });
+    }
+
+    onBlogPostMouseLeaveHandler(blogPost: BlogPost) {
+        this._blogPosts.forEach(b => { 
+            if (b.blogPost.id != blogPost.id)
+                b.cssClass = "post";
+        });
+    }
+}
+
+export class BlogPostViewModel {
+    blogPost: BlogPost;
+    cssClass: string = "post";
 }

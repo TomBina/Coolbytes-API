@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CoolBytes.Core.Factories;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI;
@@ -11,6 +13,7 @@ using CoolBytes.WebAPI.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Xunit;
@@ -25,6 +28,9 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {            
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContextPool<AppDbContext>(builder => builder.UseInMemoryDatabase("Test"));
+            serviceCollection.AddScoped<IAuthorValidator, AuthorValidator>();
+            serviceCollection.AddScoped<IImageFactory>(sp => null);
+            serviceCollection.AddScoped<IConfiguration>(sp => null);
 
             var userService = new Mock<IUserService>();
             var user = new User("test");

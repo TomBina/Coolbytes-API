@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 
 namespace CoolBytes.Data.Migrations
@@ -52,15 +54,15 @@ namespace CoolBytes.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<int?>("ImageId");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<int?>("PhotoId");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("PhotoId");
+                    b.HasIndex("ImageId");
 
                     b.ToTable("AuthorsProfile");
                 });
@@ -82,9 +84,13 @@ namespace CoolBytes.Data.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int?>("PhotoId");
+                    b.Property<int?>("ImageId");
 
                     b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<string>("SubjectUrl")
                         .IsRequired()
                         .HasMaxLength(100);
 
@@ -94,7 +100,7 @@ namespace CoolBytes.Data.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("PhotoId");
+                    b.HasIndex("ImageId");
 
                     b.ToTable("BlogPosts");
                 });
@@ -117,12 +123,10 @@ namespace CoolBytes.Data.Migrations
                     b.ToTable("BlogPostTags");
                 });
 
-            modelBuilder.Entity("CoolBytes.Core.Models.Photo", b =>
+            modelBuilder.Entity("CoolBytes.Core.Models.Image", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("AuthorId");
 
                     b.Property<string>("ContentType")
                         .IsRequired()
@@ -138,11 +142,13 @@ namespace CoolBytes.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500);
 
+                    b.Property<string>("UriPath")
+                        .IsRequired()
+                        .HasMaxLength(500);
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
-
-                    b.ToTable("Photos");
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("CoolBytes.Core.Models.User", b =>
@@ -174,9 +180,9 @@ namespace CoolBytes.Data.Migrations
 
             modelBuilder.Entity("CoolBytes.Core.Models.AuthorProfile", b =>
                 {
-                    b.HasOne("CoolBytes.Core.Models.Photo", "Photo")
+                    b.HasOne("CoolBytes.Core.Models.Image", "Image")
                         .WithMany()
-                        .HasForeignKey("PhotoId");
+                        .HasForeignKey("ImageId");
                 });
 
             modelBuilder.Entity("CoolBytes.Core.Models.BlogPost", b =>
@@ -186,23 +192,17 @@ namespace CoolBytes.Data.Migrations
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("CoolBytes.Core.Models.Photo", "Photo")
+                    b.HasOne("CoolBytes.Core.Models.Image", "Image")
                         .WithMany()
-                        .HasForeignKey("PhotoId");
+                        .HasForeignKey("ImageId");
                 });
 
             modelBuilder.Entity("CoolBytes.Core.Models.BlogPostTag", b =>
                 {
-                    b.HasOne("CoolBytes.Core.Models.BlogPost")
+                    b.HasOne("CoolBytes.Core.Models.BlogPost", "BlogPost")
                         .WithMany("Tags")
-                        .HasForeignKey("BlogPostId");
-                });
-
-            modelBuilder.Entity("CoolBytes.Core.Models.Photo", b =>
-                {
-                    b.HasOne("CoolBytes.Core.Models.Author", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
+                        .HasForeignKey("BlogPostId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -1,39 +1,49 @@
-import { Router } from '@angular/router';
-import { forEach } from "@angular/router/src/utils/collection";
-import { Author } from "../../../services/author";
-import { AuthorsService } from "../../../services/authors.service";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { ImagesService } from '../../../services/images.service';
 import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+
+import { AuthorAddUpdate } from "../../../services/author-add-update";
+import { AuthorsService } from "../../../services/authors.service";
+import { Image } from "../../../services/image";
 
 @Component({
   templateUrl: "./author.component.html"
 })
 export class AuthorComponent implements OnInit {
 
-  constructor(private _authorsService: AuthorsService, private _router: Router) { }
+  constructor(private _authorsService: AuthorsService, private _router: Router, private _imagesService: ImagesService) { }
 
   authorForm: FormGroup;
 
+  private _id: number;
   private _firstName: FormControl;
   private _lastName: FormControl;
-  private _aboutMe: FormControl;
+  private _about: FormControl;
+  private _image: Image;
+  private _files: FileList;
 
   ngOnInit() {
     this._firstName = new FormControl(null, [Validators.required, Validators.maxLength(50)]);
     this._lastName = new FormControl(null, [Validators.required, Validators.maxLength(50)]);
-    this._aboutMe = new FormControl(null, [Validators.required, Validators.maxLength(500)]);
+    this._about = new FormControl(null, [Validators.required, Validators.maxLength(500)]);
 
     this.authorForm = new FormGroup({
       firstName: this._firstName,
       lastName: this._lastName,
-      aboutMe: this._aboutMe
+      about: this._about
     });
 
     this._authorsService.get().subscribe(
       author => {
+        this._id = author.id;
         this._firstName.setValue(author.firstName);
         this._lastName.setValue(author.lastName);
-        this._aboutMe.setValue(author.about);
+        this._about.setValue(author.about);
+        this._image = author.image;
+
+        if (this._image)
+          this._image.uri = this._imagesService.getUri(this._image.uriPath);
       });
   }
 
@@ -44,6 +54,10 @@ export class AuthorComponent implements OnInit {
       return "error";
   }
 
+  onFileChanged(element: HTMLInputElement) {
+    this._files = element.files;
+  }
+
   onSubmit() {
     if (!this.authorForm.valid) {
       for (let controlName in this.authorForm.controls) {
@@ -52,13 +66,21 @@ export class AuthorComponent implements OnInit {
       return;
     }
 
-    var author = new Author();
-    author.firstName = this._firstName.value;
-    author.lastName = this._lastName.value;
-    author.about = this._aboutMe.value;
-
-    this._authorsService.save(author).subscribe(author => {
-      this._router.navigate(["admin"]);
-    });
+    let model = new AuthorAddUpdate();
+    model.firstName = this._firstName.value;
+    model.lastName = this._lastName.value;
+    model.about = this._about.value;
+    model.files = this._files;
+    
+    if (this._id) {
+      this._authorsService.update(model).subscribe(author => {
+        this._router.navigate(["admin"]);
+      });
+    }
+    else {
+      this._authorsService.add(model).subscribe(author => {
+        this._router.navigate(["admin"]);
+      });
+    }
   }
 }

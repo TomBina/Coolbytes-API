@@ -1,33 +1,51 @@
 ﻿using System;
+using System.IO;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts;
 using CoolBytes.WebAPI.Services;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Factories;
+using CoolBytes.Core.Interfaces;
+using CoolBytes.Tests.Web.Features.Authors;
+using Microsoft.AspNetCore.Http;
+using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
 {
-    public class BlogPostsTests : IClassFixture<Fixture>, IDisposable
+    public class BlogPostsTests : TestBase, IClassFixture<Fixture>, IAsyncLifetime
     {
-        private readonly AppDbContext _appDbContext;
-        private readonly IUserService _userService;
-        private readonly Fixture _fixture;
-
-        public BlogPostsTests(Fixture fixture)
+        public BlogPostsTests(Fixture fixture) : base(fixture)
         {
-            _fixture = fixture;
-            _appDbContext = fixture.GetContext();
-            _userService = fixture.UserService;
+        }
 
-            SeedDb();
+        public async Task InitializeAsync() => await SeedDb();
+
+        private async Task SeedDb()
+        {
+            using (var context = Fixture.CreateNewContext())
+            {
+                var user = new User("Test");
+
+                var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
+                var authorValidator = new AuthorValidator(Context);
+                var author = Author.Create(user, authorProfile, authorValidator).Result;
+                var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
+
+                context.BlogPosts.Add(blogPost);
+                await context.SaveChangesAsync();
+
+                InitUserService(user);
+            }
         }
 
         [Fact]
-        public async Task GetBlogPostsQueryHandler_ReturnsCourses()
+        public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(_appDbContext);
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context);
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery());
 
@@ -35,10 +53,10 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
-        public async Task GetBlogPostQueryHandler_ReturnsCourse()
+        public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
-            var blogPostId = _appDbContext.BlogPosts.First().Id;
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(_appDbContext);
+            var blogPostId = Context.BlogPosts.First().Id;
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context);
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId });
 
@@ -46,17 +64,16 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
-        public async Task AddBlogPostCommandHandler_AddsCourse()
+        public async Task AddBlogPostCommandHandler_AddsBlog()
         {
+            var imageFactory = CreateImageFactory();
+            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(Context, UserService, imageFactory);
             var addBlogPostCommand = new AddBlogPostCommand()
             {
                 Subject = "Test",
                 ContentIntro = "Test",
-                Content = "Test",
-                AuthorId = _appDbContext.Authors.First().Id
+                Content = "Test"
             };
-
-            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(_appDbContext, _userService);
 
             var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand);
 
@@ -64,58 +81,86 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
-        public async Task UpdateBlogPostCommandHandler_UpdatesCourse()
+        public async Task AddBlogPostCommandHandler_WithFile_AddsBlog()
         {
-            var blogPost = _appDbContext.BlogPosts.First();
-            var updateBlogPostCommand = new UpdateBlogPostCommand()
+            var imageFactory = CreateImageFactory();
+            var handler = new AddBlogPostCommandHandler(Context, UserService, imageFactory);
+            var fileMock = CreateFileMock();
+            var file = fileMock.Object;
+
+            var message = new AddBlogPostCommand()
+            {
+                Subject = "Test",
+                Content = "Test",
+                ContentIntro = "Test",
+                File = file
+            };
+
+            var result = await handler.Handle(message);
+
+            Assert.NotNull(result.Image.UriPath);
+        }
+
+        [Fact]
+        public async Task UpdateBlogPostCommandHandler_UpdatesBlog()
+        {
+            var blogPost = Context.BlogPosts.First();
+            var message = new UpdateBlogPostCommand()
             {
                 Id = blogPost.Id,
                 Subject = "Test new",
                 ContentIntro = "Test",
-                Content = "Test",
-                AuthorId = blogPost.AuthorId
+                Content = "Test"
             };
-            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(_appDbContext);
+            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(Context, null);
 
-            await updateBlogPostCommandHandler.Handle(updateBlogPostCommand);
+            await updateBlogPostCommandHandler.Handle(message);
 
             Assert.Equal("Test new", blogPost.Subject);
         }
 
         [Fact]
-        public async Task DeleteBlogPostCommandHandler_DeletesCourse()
+        public async Task UpdateBlogPostCommandHandler_WithFile_UpdatesBlog()
         {
-            var blogPost = _appDbContext.BlogPosts.First();
+            var imageFactory = CreateImageFactory();
+            var handler = new UpdateBlogPostCommandHandler(Context, imageFactory);
+            var fileMock = CreateFileMock();
+            var file = fileMock.Object;
+
+            var blogPost = Context.BlogPosts.First();
+            var message = new UpdateBlogPostCommand()
+            {
+                Id = blogPost.Id,
+                Subject = "Test new",
+                ContentIntro = "Test",
+                Content = "Test",
+                File = file
+            };
+
+            var result = await handler.Handle(message);
+
+            Assert.NotNull(result.Image.UriPath);
+        }
+
+        [Fact]
+        public async Task DeleteBlogPostCommandHandler_DeletesBlog()
+        {
+            var blogPost = Context.BlogPosts.First();
             var deleteBlogPostCommand = new DeleteBlogPostCommand() { Id = blogPost.Id };
-            var deleteBlogPostCommandHandler = new DeleteBlogPostCommandHandler(_appDbContext);
+            var deleteBlogPostCommandHandler = new DeleteBlogPostCommandHandler(Context);
 
             await deleteBlogPostCommandHandler.Handle(deleteBlogPostCommand);
 
-            Assert.Null(await _appDbContext.BlogPosts.FindAsync(blogPost.Id));
+            Assert.Null(await Context.BlogPosts.FindAsync(blogPost.Id));
         }
-
-        private void SeedDb()
+      
+        public async Task DisposeAsync()
         {
-            using (var context = _fixture.GetContext())
-            {
-                var user = new User("Test");
-                var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorData = new AuthorData(_appDbContext);
-                var author = Author.Create(user, authorProfile, authorData).Result;
-                var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
-
-                context.BlogPosts.Add(blogPost);
-                context.SaveChanges();
-            }
-        }
-
-        public void Dispose()
-        {
-            _appDbContext.BlogPosts.RemoveRange(_appDbContext.BlogPosts.ToArray());
-            _appDbContext.Authors.RemoveRange(_appDbContext.Authors.ToArray());
-            _appDbContext.Users.RemoveRange(_appDbContext.Users.ToArray());
-            _appDbContext.SaveChanges();
-            _appDbContext.Dispose();
+            Context.BlogPosts.RemoveRange(Context.BlogPosts.ToArray());
+            Context.Authors.RemoveRange(Context.Authors.ToArray());
+            Context.Users.RemoveRange(Context.Users.ToArray());
+            await Context.SaveChangesAsync();
+            Context.Dispose();
         }
     }
 }

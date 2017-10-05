@@ -1,39 +1,4 @@
-.post {
-    width: 320px;
-    height: 320px;
-    border: 1px solid #ABB0C5;
-    margin: 15px 10px 15px 10px;
-    box-sizing: border-box;
-    overflow:hidden;
-}
-
-.info {
-    font-size:12px; 
-    text-transform: uppercase;
-    height:20px;
-    padding:2px 5px 3px 5px;
-    box-sizing: border-box;
-}
-
-.image { 
-    background-color: #ABB0C5;
-    height:160px;
-}
-
-.text {
-    margin:10px;
-    height: 120px;
-    overflow:hidden;
-}
-
-.text > a {
-    font-family:Raleway;
-    font-size:18px;
-    font-weight:700;
-    color:#1e243d;
-    text-overflow: ellipsis;
-}
-.text > p {
-    font-size:14px;
-    text-overflow: ellipsis;
+article {
+    margin:100px auto 20px auto;
+    width:80%;
 }

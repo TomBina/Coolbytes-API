@@ -1,23 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using CoolBytes.Core.Extensions;
+using CoolBytes.Core.Factories;
 
 namespace CoolBytes.Core.Models
 {
     public class BlogPost
     {
-        private readonly List<BlogPostTag> _tags = new List<BlogPostTag>();
+        private readonly BlogPostTagCollection _tags = new BlogPostTagCollection();
 
         public int Id { get; private set; }
         public DateTime Date { get; private set; }
         public DateTime? Updated { get; private set; }
         public string Subject { get; private set; }
+        private string _subjectUrl;
+        public string SubjectUrl
+        {
+            get => _subjectUrl;
+            private set
+            {
+                _subjectUrl = value.Replace(' ', '-').ToLower();
+                _subjectUrl = Regex.Replace(_subjectUrl, @"[^\w-]", string.Empty);
+            }
+        }
         public string ContentIntro { get; private set; }
         public string Content { get; private set; }
         public Author Author { get; private set; }
         public int AuthorId { get; private set; }
-        public Photo Photo { get; private set; }
-        public int? PhotoId { get; private set; }
+        public Image Image { get; private set; }
+        public int? ImageId { get; private set; }
         public IEnumerable<BlogPostTag> Tags { get => _tags; private set { } }
 
         public BlogPost(string subject, string contentInro, string content, Author author)
@@ -26,12 +40,13 @@ namespace CoolBytes.Core.Models
             subject.IsNotNullOrWhiteSpace();
             contentInro.IsNotNullOrWhiteSpace();
             content.IsNotNullOrWhiteSpace();
-            
+
             Date = DateTime.Now;
             Subject = subject;
             ContentIntro = contentInro;
             Content = content;
             Author = author;
+            SubjectUrl = Subject;
         }
 
         private BlogPost() { }
@@ -59,17 +74,25 @@ namespace CoolBytes.Core.Models
         public BlogPost AddTags(IEnumerable<BlogPostTag> blogPostTags)
         {
             blogPostTags.IsNotNull();
+
             _tags.AddRange(blogPostTags);
 
             return this;
         }
 
-        public BlogPost ChangePhoto(Photo photo)
+        public BlogPost UpdateTags(IEnumerable<BlogPostTag> blogPostTags)
         {
-            photo.IsNotNull();
-            Photo = photo;
+            blogPostTags.IsNotNull();
+            _tags.Update(blogPostTags);
 
             return this;
+        }
+
+        public void SetImage(Image image)
+        {
+            image.IsNotNull();
+
+            Image = image;
         }
     }
 }

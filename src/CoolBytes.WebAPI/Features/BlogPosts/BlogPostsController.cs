@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -25,7 +26,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddBlogPostCommand command)
+        public async Task<IActionResult> Post([FromForm] AddBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -35,7 +36,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpPut]
-        public async Task<IActionResult> Put([FromBody] UpdateBlogPostCommand command)
+        public async Task<IActionResult> Put([FromForm] UpdateBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -44,8 +45,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [Authorize("admin")]
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromBody] DeleteBlogPostCommand command)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(DeleteBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

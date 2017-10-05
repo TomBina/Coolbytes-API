@@ -1,4 +1,20 @@
 <app-admin-menu></app-admin-menu>
 <div class="admin-content">
-    <a class="button">add new blog</a>
+    <h1>Blogs</h1>
+    <div class="table">
+        <div class="row-head">
+            <div>Date</div>
+            <div>Subject</div>
+            <div>Options</div>
+        </div>
+        <div class="row" *ngFor="let blog of _blogPosts">
+            <div>{{blog.date | date}}</div>
+            <div>{{blog.subject}}</div>
+            <div>
+                <a class="button small" routerLink="/admin/blogs/edit/{{blog.id}}">edit</a>
+                <a class="button small" (click)="delete(blog.id)">delete</a>
+            </div>
+        </div>
+    </div>
+    <a class="button" routerLink="/admin/blogs/add">add new blog</a>
 </div>

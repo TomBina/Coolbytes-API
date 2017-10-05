@@ -10,9 +10,16 @@
         <p>
             <input formControlName="lastName" id="lastName" [ngClass]="inputCssClass('lastName')" />
         </p>
-        <label for="aboutMe">About me:</label>
+        <label for="about">About me:</label>
         <p>
-            <textarea formControlName="aboutMe" id="aboutMe" [ngClass]="inputCssClass('aboutMe')"></textarea>
+            <textarea formControlName="about" id="about" [ngClass]="inputCssClass('about')"></textarea>
+            <admin-images-manager [control]="_about"></admin-images-manager>
+        </p>
+        <p *ngIf="_image && _image.uri">
+            <img [src]="_image.uri" width="200" />
+        </p>
+        <p>
+            <input type="file" id="file" (change)="onFileChanged($event.target)" />
         </p>
         <input type="submit" value="save" />
     </form>

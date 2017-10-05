@@ -1,0 +1,10 @@
+<a *ngIf="!_open" (click)="open()">insert photo</a>
+<div *ngIf="_open">
+    <div class="backdrop" (click)="close()"></div>
+    <div class="dialog">
+        <div class="files">
+            <img *ngFor="let image of _images" [src]="_imageService.getUri(image.uriPath)" (click)="insertImage(image.uriPath, image.id)" />
+        </div>
+        <input type="file" class="fileInput" multiple="multiple" (change)="uploadImages($event.target)" />
+    </div>
+</div>
