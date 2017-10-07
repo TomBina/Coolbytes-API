@@ -3,7 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
-import { AuthorAddUpdate } from "../../../services/author-add-update";
+import { AuthorAddUpdateCommand } from "../../../services/author-add-update-command";
 import { AuthorsService } from "../../../services/authors.service";
 import { Image } from "../../../services/image";
 
@@ -66,7 +66,7 @@ export class AuthorComponent implements OnInit {
       return;
     }
 
-    let model = new AuthorAddUpdate();
+    let model = new AuthorAddUpdateCommand();
     model.firstName = this._firstName.value;
     model.lastName = this._lastName.value;
     model.about = this._about.value;

@@ -54,7 +54,7 @@ namespace CoolBytes.Tests.Web.Features.Images
 
             await handler.Handle(message);
 
-            Assert.Equal(0, Context.Images.Count());
+            Assert.Equal(null, await Context.Images.FindAsync(image.Id));
         }
 
         private async Task<Image> AddImage()

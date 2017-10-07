@@ -1,4 +1,5 @@
-export class BlogPostAdd {
+export class BlogPostUpdateCommand {
+    id: number;
     subject: string;
     contentIntro: string;
     content: string;

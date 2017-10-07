@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
-    public class GetBlogPostsQueryHandler : IAsyncRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostViewModel>>
+    public class GetBlogPostsQueryHandler : IAsyncRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostSummaryViewModel>>
     {
         private readonly AppDbContext _appDbContext;
 
@@ -21,24 +22,22 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             _appDbContext = context;
         }
 
-        public async Task<IEnumerable<BlogPostViewModel>> Handle(GetBlogPostsQuery message)
+        public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsQuery message)
         {
             var blogPosts = await GetBlogPosts();
 
             return CreateViewModel(blogPosts);
         }
 
-        private async Task<List<BlogPost>> GetBlogPosts()
-        {
-            var blogPosts = await _appDbContext.BlogPosts.AsNoTracking()
-                .Include(b => b.Author)
-                .Include(b => b.Author.AuthorProfile)
-                .Include(b => b.Image)
-                .OrderByDescending(b => b.Id)
-                .ToListAsync();
-            return blogPosts;
-        }
+        private async Task<List<BlogPost>> GetBlogPosts() => 
+            await _appDbContext.BlogPosts
+                        .AsNoTracking()
+                        .Include(b => b.Author)
+                        .Include(b => b.Author.AuthorProfile)
+                        .Include(b => b.Image)
+                        .OrderByDescending(b => b.Id)
+                        .ToListAsync();
 
-        private IEnumerable<BlogPostViewModel> CreateViewModel(List<BlogPost> blogPosts) => Mapper.Map<IEnumerable<BlogPostViewModel>>(blogPosts);
+        private IEnumerable<BlogPostSummaryViewModel> CreateViewModel(List<BlogPost> blogPosts) => Mapper.Map<IEnumerable<BlogPostSummaryViewModel>>(blogPosts);
     }
 }

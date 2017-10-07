@@ -1,14 +1,16 @@
-import { environment } from '../../environments/environment';
+import { BlogPost } from './blog-post';
+import { BlogPostUpdateCommand } from './blog-post-update-command';
 import 'rxjs/add/operator/map';
 
-import { Injectable } from "@angular/core";
-import { Headers, Http, RequestOptions, Response } from "@angular/http";
-import { Observable } from "rxjs/Observable";
+import { Injectable } from '@angular/core';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
-import { AuthService } from "./auth.service";
-import { BlogPost } from "./blog-post";
-import { BlogPostAdd } from "./blog-post-add";
-import { BlogPostUpdate } from "./blog-post-update";
+import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
+import { BlogPostAddCommand } from './blog-post-add-command';
+import { BlogPostSummary } from './blog-post-summary';
+import { BlogPostUpdate } from './blog-post-update';
 
 @Injectable()
 export class BlogPostsService {
@@ -25,23 +27,28 @@ export class BlogPostsService {
         return observable.map((response: Response) => <BlogPost>response.json());
     }
 
-    getAll(): Observable<BlogPost[]> {
+    getAll(): Observable<BlogPostSummary[]> {
         let observable = this._http.get(this._url);
-        return observable.map((response: Response) => <BlogPost[]>response.json());
+        return observable.map((response: Response) => <BlogPostSummary[]>response.json());
     }
 
-    add(blogPostAdd: BlogPostAdd, files: FileList): Observable<BlogPostAdd> {
+    add(blogPostAdd: BlogPostAddCommand, files: FileList): Observable<BlogPostSummary> {
         let formData = this.createFormData(blogPostAdd, files);
         let observable = this._http.post(this._url, formData, this.getAuthRequestOptions(new Headers()));
-        return observable.map((response: Response) => <BlogPostAdd>response.json());
+        return observable.map((response: Response) => <BlogPostSummary>response.json());
     }
 
-    update(blogPostUpdate: BlogPostUpdate, files: FileList): Observable<BlogPostUpdate> {
-        let formData = this.createFormData(blogPostUpdate, files);
-        formData.append("id", blogPostUpdate.id.toString());
-
-        let observable = this._http.put(this._url, formData, this.getAuthRequestOptions(new Headers()));
+    getUpdate(blogPostId: number) {
+        let observable = this._http.get(`${this._url}/update/${blogPostId}`, this.getAuthRequestOptions(new Headers()));
         return observable.map((response: Response) => <BlogPostUpdate>response.json());
+    }
+
+    update(blogPostUpdateCommand: BlogPostUpdateCommand, files: FileList): Observable<BlogPostSummary> {
+        let formData = this.createFormData(blogPostUpdateCommand, files);
+        formData.append("id", blogPostUpdateCommand.id.toString());
+
+        let observable = this._http.put(`${this._url}/update/`, formData, this.getAuthRequestOptions(new Headers()));
+        return observable.map((response: Response) => <BlogPostSummary>response.json());
     }
 
     private createFormData(model, files: FileList): FormData {

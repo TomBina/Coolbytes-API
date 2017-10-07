@@ -47,7 +47,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var controller = new AuthorsController(_serviceProvider.GetService<IMediator>());
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
-            var result = await controller.AddAuthor(message);
+            var result = await controller.Add(message);
 
             Assert.IsType<OkObjectResult>(result);
         }
@@ -58,8 +58,8 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var controller = new AuthorsController(_serviceProvider.GetService<IMediator>());
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
-            await controller.AddAuthor(message);
-            var result = await controller.AddAuthor(message);
+            await controller.Add(message);
+            var result = await controller.Add(message);
 
             Assert.IsType<BadRequestObjectResult>(result);
         }

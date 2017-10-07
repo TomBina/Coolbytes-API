@@ -7,13 +7,14 @@ using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
-    public class UpdateBlogPostCommandHandler : IAsyncRequestHandler<UpdateBlogPostCommand, BlogPostViewModel>
+    public class UpdateBlogPostCommandHandler : IAsyncRequestHandler<UpdateBlogPostCommand, BlogPostSummaryViewModel>
     {
         private readonly AppDbContext _appDbContext;
         private readonly IImageFactory _imageFactory;
@@ -25,7 +26,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             _imageFactory = imageFactory;
         }
 
-        public async Task<BlogPostViewModel> Handle(UpdateBlogPostCommand message)
+        public async Task<BlogPostSummaryViewModel> Handle(UpdateBlogPostCommand message)
         {
             var blogPost = await GetBlogPost(message);
 
@@ -73,6 +74,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                 await _appDbContext.SaveChangesAsync();
         }
 
-        private BlogPostViewModel CreateViewModel(BlogPost blogPost) => Mapper.Map<BlogPostViewModel>(blogPost);
+        private BlogPostSummaryViewModel CreateViewModel(BlogPost blogPost) => Mapper.Map<BlogPostSummaryViewModel>(blogPost);
     }
 }

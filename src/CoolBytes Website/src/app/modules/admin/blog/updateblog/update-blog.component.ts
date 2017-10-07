@@ -1,16 +1,17 @@
-import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
-import { ImagesService } from '../../../../services/images.service';
-import { Image } from "../../../../services/image";
-import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-
-import { AuthorsService } from "../../../../services/authors.service";
-import { BlogPost } from "../../../../services/blog-post";
-import { BlogPostUpdate } from "../../../../services/blog-post-update";
-import { BlogPostsService } from "../../../../services/blog-posts.service";
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+
+import { AuthorsService } from '../../../../services/authors.service';
+import { BlogPostSummary } from '../../../../services/blog-post-summary';
+import { BlogPostUpdate } from '../../../../services/blog-post-update';
+import { BlogPostUpdateCommand } from '../../../../services/blog-post-update-command';
+import { BlogPostsService } from '../../../../services/blog-posts.service';
+import { Image } from '../../../../services/image';
+import { ImagesService } from '../../../../services/images.service';
 import { BlogPostPreview } from '../previewblog/blog-post-preview';
+import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
 
 @Component({
     templateUrl: "./update-blog.component.html",
@@ -26,7 +27,7 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
 
     private _blogForm: FormGroup;
     private _id: number;
-    private _blogPost: BlogPost;
+    private _blogPost: BlogPostSummary;
     private _subject: FormControl;
     private _contentIntro: FormControl;
     private _content: FormControl;
@@ -56,7 +57,7 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
         })
 
         let id: number = parseInt(this._route.snapshot.paramMap.get("id"));
-        this._blogPostsService.get(id).subscribe(blogPost => this.updateForm(blogPost));
+        this._blogPostsService.getUpdate(id).subscribe(blogPostUpdate => this.updateForm(blogPostUpdate));
     }
 
     ngOnDestroy(): void {
@@ -64,7 +65,7 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
             this._previewObserver.unsubscribe();
     }
 
-    updateForm(blogPost: BlogPost) {
+    updateForm(blogPost: BlogPostUpdate) {
         this._id = blogPost.id;
         this._subject.setValue(blogPost.subject);
         this._contentIntro.setValue(blogPost.contentIntro);
@@ -101,7 +102,7 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let blogPostUpdate = new BlogPostUpdate();
+        let blogPostUpdate = new BlogPostUpdateCommand();
 
         blogPostUpdate.id = this._id;
         blogPostUpdate.subject = this._subject.value;

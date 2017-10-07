@@ -1,16 +1,30 @@
-<article *ngIf="blogPost">
-    <h1>{{blogPost.subject}}</h1>
-    <p>
-        {{blogPost.date | date}} by {{blogPost.authorName}} - estimated reading time {{blogPost.ReadingTime}}
-    </p>
-    <p>
-        <md [value]="blogPost.contentIntro"></md>
-    </p>
-    <p>
-        <md [value]="blogPost.content"></md>
-    </p>
-    <p>
-        Tags:
-        <a *ngFor="let tag of blogPost.tags">{{tag.name}}</a>
-    </p>
-</article>
+<div class="page">
+    <article *ngIf="blogPost">
+        <h1>{{blogPost.subject}}</h1>
+        <p class="details">
+            {{blogPost.date | date}} by {{blogPost.authorName}} - estimated reading time {{blogPost.ReadingTime}}
+        </p>
+        <p>
+            <md [value]="blogPost.contentIntro"></md>
+        </p>
+        <p>
+            <md [value]="blogPost.content"></md>
+        </p>
+        <p>
+            Tags:
+            <a *ngFor="let tag of blogPost.tags">{{tag.name}}</a>
+        </p>
+    </article>
+    <aside>
+        <h2>Share this post</h2>
+        <p>
+            Links
+        </p>
+        <div *ngIf="blogPost.links">
+            <h2>More posts</h2>
+            <ul>
+                <li *ngFor="let link of blogPost.links"><a>{{link.subject}}</a></li>
+            </ul>
+        </div>
+    </aside>
+</div>

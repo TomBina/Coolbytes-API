@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthorsService } from '../../../../services/authors.service';
-import { BlogPostAdd } from '../../../../services/blog-post-add';
+import { BlogPostAddCommand } from '../../../../services/blog-post-add-command';
 import { BlogPostsService } from '../../../../services/blog-posts.service';
 import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
 import { Subscription } from 'rxjs';
@@ -69,7 +69,7 @@ export class AddBlogComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let blogPostAdd = new BlogPostAdd();
+        let blogPostAdd = new BlogPostAddCommand();
 
         blogPostAdd.subject = this._subject.value;
         blogPostAdd.content = this._content.value;

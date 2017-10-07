@@ -1,3 +1,4 @@
+import { BlogPostSummary } from '../../services/blog-post-summary';
 import { Component, OnInit } from "@angular/core";
 import { BlogPostsService } from "../../services/blog-posts.service";
 import { BlogPost } from "../../services/blog-post";
@@ -43,6 +44,6 @@ export class BlogComponent implements OnInit {
 }
 
 export class BlogPostViewModel {
-    blogPost: BlogPost;
+    blogPost: BlogPostSummary;
     cssClass: string = "post";
 }

@@ -1,4 +1,4 @@
-﻿using CoolBytes.WebAPI.ViewModels;
+﻿using CoolBytes.WebAPI.Features.Images;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {

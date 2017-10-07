@@ -1,4 +1,4 @@
-import { BlogPost } from "../../../services/blog-post";
+import { BlogPostSummary } from "../../../services/blog-post-summary";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
@@ -10,7 +10,7 @@ import { BlogPostsService } from "../../../services/blog-posts.service";
     styleUrls: ["./blog-manager.component.css"]
 })
 export class BlogManagerComponent implements OnInit {
-    private _blogPosts: BlogPost[];
+    private _blogPosts: BlogPostSummary[];
 
     constructor(private _blogPostsService: BlogPostsService) {
 

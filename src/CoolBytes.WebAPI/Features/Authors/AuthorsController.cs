@@ -22,12 +22,12 @@ namespace CoolBytes.WebAPI.Features.Authors
 
         [Authorize("admin")]
         [HttpGet]
-        public async Task<IActionResult> GetAuthor(GetAuthorQuery query) =>
+        public async Task<IActionResult> Get(GetAuthorQuery query) =>
             this.OkOrNotFound(await _mediator.Send(query));
 
         [Authorize("admin")]
         [HttpPost]
-        public async Task<IActionResult> AddAuthor([FromForm] AddAuthorCommand command)
+        public async Task<IActionResult> Add([FromForm] AddAuthorCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -44,7 +44,7 @@ namespace CoolBytes.WebAPI.Features.Authors
 
         [Authorize("admin")]
         [HttpPut]
-        public async Task<IActionResult> UpdateAuthor([FromForm] UpdateAuthorCommand command)
+        public async Task<IActionResult> Update([FromForm] UpdateAuthorCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

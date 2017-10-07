@@ -1,4 +1,4 @@
-export class AuthorAddUpdate {
+export class AuthorAddUpdateCommand {
     firstName: string;
     lastName: string;
     about: string;

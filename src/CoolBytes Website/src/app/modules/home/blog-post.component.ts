@@ -1,4 +1,5 @@
 import { BlogPost } from '../../services/blog-post';
+import { BlogPostSummary } from '../../services/blog-post-summary';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 

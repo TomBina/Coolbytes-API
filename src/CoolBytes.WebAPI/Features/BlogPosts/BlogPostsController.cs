@@ -1,10 +1,8 @@
-﻿using System.Security.Claims;
-using CoolBytes.WebAPI.Extensions;
+﻿using CoolBytes.WebAPI.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -26,7 +24,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm] AddBlogPostCommand command)
+        public async Task<IActionResult> Add([FromForm] AddBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -34,9 +32,13 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             return Ok(await _mediator.Send(command));
         }
 
+        [Authorize("Admin")]
+        [HttpGet("update/{id}")]
+        public async Task<IActionResult> Update(UpdateBlogPostQuery query) => this.OkOrNotFound(await _mediator.Send(query));
+
         [Authorize("admin")]
-        [HttpPut]
-        public async Task<IActionResult> Put([FromForm] UpdateBlogPostCommand command)
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromForm] UpdateBlogPostCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

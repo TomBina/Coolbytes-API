@@ -5,7 +5,7 @@
     margin: 15px 10px 15px 10px;
     box-sizing: border-box;
     overflow:hidden;
-    transition: background-color 500ms, opacity 1s;
+    transition: background-color 500ms, opacity 500ms;
 }
 
 .post:hover {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using CoolBytes.WebAPI.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 

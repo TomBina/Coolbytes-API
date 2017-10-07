@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoolBytes.WebAPI.ViewModels
+namespace CoolBytes.Core.Models
 {
-    public class ImageViewModel
+    public class BlogPostLink
     {
         public int Id { get; set; }
-        public string UriPath { get; set; }
+        public string Subject { get; set; }
+        public DateTime Date { get; set; }
     }
 }

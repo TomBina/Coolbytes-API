@@ -5,7 +5,6 @@ using AutoMapper;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
-using CoolBytes.WebAPI.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 

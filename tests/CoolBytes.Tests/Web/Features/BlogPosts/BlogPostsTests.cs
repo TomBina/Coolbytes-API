@@ -1,17 +1,9 @@
-﻿using System;
-using System.IO;
-using CoolBytes.Core.Models;
-using CoolBytes.Data;
+﻿using CoolBytes.Core.Models;
+using CoolBytes.Tests.Web.Features.Authors;
 using CoolBytes.WebAPI.Features.BlogPosts;
 using CoolBytes.WebAPI.Services;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Factories;
-using CoolBytes.Core.Interfaces;
-using CoolBytes.Tests.Web.Features.Authors;
-using Microsoft.AspNetCore.Http;
-using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -102,6 +94,18 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
+        public async Task UpdateBlogPostQueryHandler_ReturnsBlogAsync()
+        {
+            var blog = Context.BlogPosts.First();
+            var query = new UpdateBlogPostQuery() { Id = blog.Id };
+            var handler = new UpdateBlogPostQueryHandler(Context);
+
+            var result = await handler.Handle(query);
+
+            Assert.NotNull(result);
+        }
+
+        [Fact]
         public async Task UpdateBlogPostCommandHandler_UpdatesBlog()
         {
             var blogPost = Context.BlogPosts.First();
@@ -153,7 +157,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
             Assert.Null(await Context.BlogPosts.FindAsync(blogPost.Id));
         }
-      
+
         public async Task DisposeAsync()
         {
             Context.BlogPosts.RemoveRange(Context.BlogPosts.ToArray());

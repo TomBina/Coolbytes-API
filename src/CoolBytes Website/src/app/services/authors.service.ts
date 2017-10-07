@@ -1,5 +1,5 @@
 import { environment } from '../../environments/environment';
-import { AuthorAddUpdate } from "./author-add-update";
+import { AuthorAddUpdateCommand } from "./author-add-update-command";
 import 'rxjs/add/operator/map';
 
 import { Injectable } from "@angular/core";
@@ -27,14 +27,14 @@ export class AuthorsService {
         return observable.map((response: Response) => <Author>response.json());
     }
 
-    add(author: AuthorAddUpdate): Observable<Author> {
+    add(author: AuthorAddUpdateCommand): Observable<Author> {
         let formData = this.createFormData(author);
         let observable = this._http.post(this._url, formData, this.getRequestOptions(new Headers()));
 
         return observable.map((response: Response) => <Author>response.json());
     }
 
-    update(author: AuthorAddUpdate): Observable<Author> {
+    update(author: AuthorAddUpdateCommand): Observable<Author> {
         let formData = this.createFormData(author);
         let observable = this._http.put(this._url, formData, this.getRequestOptions(new Headers()));
 

@@ -1,4 +1,4 @@
-﻿namespace CoolBytes.WebAPI.Features.BlogPosts
+﻿namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 {
     public class BlogPostTagViewModel
     {

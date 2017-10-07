@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { BlogPost } from "../../services/blog-post";
+import { BlogPostSummary } from "../../services/blog-post-summary";
 
 @Component({
     selector: "home-blog-post-intro",
@@ -8,16 +8,16 @@ import { BlogPost } from "../../services/blog-post";
 })
 export class BlogPostIntroComponent { 
     @Input()
-    blogPost: BlogPost;
+    blogPost: BlogPostSummary;
 
     @Input()
     cssClass: string;
 
     @Output()
-    onBlogPostMouseEnter = new EventEmitter<BlogPost>();
+    onBlogPostMouseEnter = new EventEmitter<BlogPostSummary>();
     
     @Output()
-    onBlogPostMouseLeave = new EventEmitter<BlogPost>();
+    onBlogPostMouseLeave = new EventEmitter<BlogPostSummary>();
 
     onBlogPostMouseEnterHandler() {
         this.onBlogPostMouseEnter.emit(this.blogPost);
