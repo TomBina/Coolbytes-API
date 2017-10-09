@@ -6,18 +6,20 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 {
     public class DeleteBlogPostCommandHandler : IAsyncRequestHandler<DeleteBlogPostCommand>
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly AppDbContext _context;
 
-        public DeleteBlogPostCommandHandler(AppDbContext appDbContext)
+        public DeleteBlogPostCommandHandler(AppDbContext context)
         {
-            _appDbContext = appDbContext;
+            _context = context;
         }
 
-        public async Task Handle(DeleteBlogPostCommand message)
+        public async Task Handle(DeleteBlogPostCommand message) => await Delete(message.Id);
+
+        private async Task Delete(int blogPostId)
         {
-            var blogPost = await _appDbContext.BlogPosts.FindAsync(message.Id);
-            _appDbContext.BlogPosts.Remove(blogPost);
-            await _appDbContext.SaveChangesAsync();
+            var blogPost = await _context.BlogPosts.FindAsync(blogPostId);
+            _context.BlogPosts.Remove(blogPost);
+            await _context.SaveChangesAsync();
         }
     }
 }

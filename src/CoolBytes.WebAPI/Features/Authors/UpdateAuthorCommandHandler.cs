@@ -14,32 +14,25 @@ namespace CoolBytes.WebAPI.Features.Authors
     public class UpdateAuthorCommandHandler : IAsyncRequestHandler<UpdateAuthorCommand, AuthorViewModel>
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IUserService _userService;
+        private readonly IAuthorService _authorService;
         private readonly IImageFactory _imageFactory;
         private bool _isImageUpdated;
 
-        public UpdateAuthorCommandHandler(AppDbContext appDbContext, IUserService userService, IImageFactory imageFactory)
+        public UpdateAuthorCommandHandler(AppDbContext appDbContext, IAuthorService authorService, IImageFactory imageFactory)
         {
             _appDbContext = appDbContext;
-            _userService = userService;
+            _authorService = authorService;
             _imageFactory = imageFactory;
         }
 
         public async Task<AuthorViewModel> Handle(UpdateAuthorCommand message)
         {
-            var author = await GetAuthor();
+            var author = await _authorService.GetAuthorWithProfile();
 
             await UpdateAuthor(author, message);
             await SaveAuthor(author);
 
             return CreateViewModel(author);
-        }
-
-        private async Task<Author> GetAuthor()
-        {
-            var user = await _userService.GetUser();
-            var author = await _appDbContext.Authors.Include(a => a.AuthorProfile).FirstOrDefaultAsync(a => a.UserId == user.Id);
-            return author;
         }
 
         private async Task UpdateAuthor(Author author, UpdateAuthorCommand message)

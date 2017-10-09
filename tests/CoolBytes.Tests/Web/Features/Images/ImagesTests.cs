@@ -1,5 +1,4 @@
 ﻿using CoolBytes.Core.Models;
-using CoolBytes.Tests.Web.Features.Authors;
 using CoolBytes.WebAPI.Features.Images;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;

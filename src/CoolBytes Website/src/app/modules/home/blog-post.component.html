@@ -20,7 +20,7 @@
         <p>
             Links
         </p>
-        <div *ngIf="blogPost.links">
+        <div *ngIf="blogPost && blogPost.links">
             <h2>More posts</h2>
             <ul>
                 <li *ngFor="let link of blogPost.links"><a>{{link.subject}}</a></li>

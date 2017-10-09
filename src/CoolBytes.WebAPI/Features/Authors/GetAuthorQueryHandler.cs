@@ -12,30 +12,19 @@ namespace CoolBytes.WebAPI.Features.Authors
     public class GetAuthorQueryHandler : IAsyncRequestHandler<GetAuthorQuery, AuthorViewModel>
     {
         private readonly AppDbContext _appDbContext;
-        private readonly IUserService _userService;
+        private readonly IAuthorService _authorService;
 
-        public GetAuthorQueryHandler(AppDbContext appDbContext, IUserService userService)
+        public GetAuthorQueryHandler(AppDbContext appDbContext, IAuthorService authorService)
         {
             _appDbContext = appDbContext;
-            _userService = userService;
+            _authorService = authorService;
         }
 
         public async Task<AuthorViewModel> Handle(GetAuthorQuery message)
         {
-            var author = await GetAuthor();
+            var author = await _authorService.GetAuthorWithProfile();
 
             return CreateViewModel(author);
-        }
-
-        private async Task<Author> GetAuthor()
-        {
-            var user = await _userService.GetUser();
-            var author = await _appDbContext.Authors.AsNoTracking()
-                .Include(a => a.AuthorProfile)
-                .Include(a => a.AuthorProfile.Image)
-                .SingleOrDefaultAsync(a => a.UserId == user.Id);
-
-            return author;
         }
 
         private AuthorViewModel CreateViewModel(Author author) => Mapper.Map<AuthorViewModel>(author);

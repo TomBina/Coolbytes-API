@@ -17,6 +17,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         public AuthorsTests(Fixture fixture) : base(fixture)
         {
             InitUserService();
+            InitAuthorService();
         }
 
         public async Task InitializeAsync() => await Task.CompletedTask;
@@ -25,7 +26,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         public async Task GetAuthorQueryHandler_ReturnsAuthor()
         {
             await AddAuthor();
-            var getAuthorQueryHandler = new GetAuthorQueryHandler(Context, UserService);
+            var getAuthorQueryHandler = new GetAuthorQueryHandler(Context, AuthorService);
             var message = new GetAuthorQuery();
 
             var result = await getAuthorQueryHandler.Handle(message);
@@ -102,7 +103,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             await AddAuthor();
 
             var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test" };
-            var handler = new UpdateAuthorCommandHandler(Context, UserService, CreateImageFactory());
+            var handler = new UpdateAuthorCommandHandler(Context, AuthorService, CreateImageFactory());
 
             var result = await handler.Handle(message);
 
@@ -115,7 +116,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             await AddAuthor();
 
             var imageFactory = CreateImageFactory();
-            var handler = new UpdateAuthorCommandHandler(Context, UserService, imageFactory);
+            var handler = new UpdateAuthorCommandHandler(Context, AuthorService, imageFactory);
 
             var file = CreateFileMock().Object;
             var message = new UpdateAuthorCommand()

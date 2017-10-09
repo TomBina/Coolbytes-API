@@ -1,21 +1,36 @@
-﻿using CoolBytes.Core.Models;
-using MediatR;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
-using CoolBytes.Core.Extensions;
+﻿using CoolBytes.Core.Interfaces;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using CoolBytes.Core.Builders;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
-    public class AddBlogPostCommand : IRequest<BlogPostSummaryViewModel>
+    public class AddBlogPostCommand : IRequest<BlogPostSummaryViewModel>, IBlogPostContent
     {
+        private IFormFile _file;
         public string Subject { get; set; }
         public string ContentIntro { get; set; }
         public string Content { get; set; }
         public IEnumerable<string> Tags { get; set; }
-        public IFormFile File { get; set; }
+        public IImageFile ImageFile { get; set; }
+        public IFormFile File
+        {
+            get => _file;
+            set
+            {
+                _file = value;
+
+                var imageFile = new ImageFile()
+                {
+                    ContentType = _file?.ContentType,
+                    FileName = _file?.FileName,
+                    OpenStream = () => _file?.OpenReadStream()
+                };
+
+                ImageFile = imageFile;
+            }
+        }
     }
 }

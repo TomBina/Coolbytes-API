@@ -15,29 +15,30 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 {
     public class GetBlogPostsQueryHandler : IAsyncRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostSummaryViewModel>>
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly AppDbContext _context;
 
         public GetBlogPostsQueryHandler(AppDbContext context)
         {
-            _appDbContext = context;
+            _context = context;
         }
 
-        public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsQuery message)
+        public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsQuery message) 
+            => await ViewModel();
+
+        private async Task<IEnumerable<BlogPostSummaryViewModel>> ViewModel()
         {
             var blogPosts = await GetBlogPosts();
 
-            return CreateViewModel(blogPosts);
+            return Mapper.Map<IEnumerable<BlogPostSummaryViewModel>>(blogPosts);
         }
 
-        private async Task<List<BlogPost>> GetBlogPosts() => 
-            await _appDbContext.BlogPosts
-                        .AsNoTracking()
-                        .Include(b => b.Author)
-                        .Include(b => b.Author.AuthorProfile)
-                        .Include(b => b.Image)
-                        .OrderByDescending(b => b.Id)
-                        .ToListAsync();
-
-        private IEnumerable<BlogPostSummaryViewModel> CreateViewModel(List<BlogPost> blogPosts) => Mapper.Map<IEnumerable<BlogPostSummaryViewModel>>(blogPosts);
+        private async Task<List<BlogPost>> GetBlogPosts() =>
+            await _context.BlogPosts
+                .AsNoTracking()
+                .Include(b => b.Author)
+                .Include(b => b.Author.AuthorProfile)
+                .Include(b => b.Image)
+                .OrderByDescending(b => b.Id)
+                .ToListAsync();
     }
 }

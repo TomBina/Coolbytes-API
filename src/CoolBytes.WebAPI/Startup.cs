@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CoolBytes.Core.Builders;
 using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
@@ -28,7 +29,10 @@ namespace CoolBytes.WebAPI
         {
             ConfigureSecurity(services);
 
+            services.AddScoped<BlogPostBuilder>();
+            services.AddScoped<ExistingBlogPostBuilder>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IAuthorValidator, AuthorValidator>();
             services.AddScoped<IImageFactory, ImageFactory>();
             services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));

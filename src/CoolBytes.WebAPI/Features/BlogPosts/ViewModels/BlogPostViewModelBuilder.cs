@@ -17,26 +17,25 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 
         public BlogPostViewModelBuilder(AppDbContext context) => _context = context;
 
-        public async Task<BlogPostViewModelBuilder> FromBlog(int id)
+        public BlogPostViewModelBuilder FromBlog(BlogPost blogPost)
         {
-            var blogPost = await _context.BlogPosts.AsNoTracking()
-                                                   .Include(b => b.Author.AuthorProfile)
-                                                   .Include(b => b.Tags)
-                                                   .Include(b => b.Image)
-                                                   .FirstOrDefaultAsync(b => b.Id == id);
+            if (blogPost == null)
+                throw new ArgumentNullException();
 
             _model = Mapper.Map<BlogPostViewModel>(blogPost);
 
             return this;
         }
 
-        public async Task<BlogPostViewModelBuilder> WithRelatedLinks()
+        public BlogPostViewModelBuilder WithRelatedLinks(List<BlogPostLinkViewModel> links)
         {
-            if (_model == null)
-                throw new InvalidOperationException();
+            if (links == null)
+                throw new ArgumentNullException();
 
-            _model.Links = await _context.BlogPosts.Where(b => b.Id != _model.Id)
-                .OrderByDescending(b => b.Id).Take(10).Select(b => new BlogPostLinkViewModel() { Id = b.Id, Date = b.Date, Subject = b.Subject }).ToListAsync();
+            if (links.Count == 0)
+                throw new ArgumentException(nameof(links));
+
+            _model.Links = links;
 
             return this;
         }

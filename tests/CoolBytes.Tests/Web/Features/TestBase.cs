@@ -1,20 +1,21 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace CoolBytes.Tests.Web.Features.Authors
+namespace CoolBytes.Tests.Web.Features
 {
     public abstract class TestBase
     {
         protected AppDbContext Context;
         protected Fixture Fixture;
         protected IUserService UserService;
+        protected IAuthorService AuthorService;
 
         protected TestBase(Fixture fixture)
         {
@@ -34,6 +35,11 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var user = new User("Test");
 
             InitUserService(user);
+        }
+
+        protected void InitAuthorService()
+        {
+            AuthorService = new AuthorService(UserService, Context);
         }
 
         protected ImageFactory CreateImageFactory()

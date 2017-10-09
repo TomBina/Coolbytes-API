@@ -1,9 +1,10 @@
 ﻿using CoolBytes.Core.Models;
-using CoolBytes.Tests.Web.Features.Authors;
 using CoolBytes.WebAPI.Features.BlogPosts;
 using CoolBytes.WebAPI.Services;
 using System.Linq;
 using System.Threading.Tasks;
+using CoolBytes.Core.Builders;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -24,13 +25,14 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
                 var authorValidator = new AuthorValidator(Context);
-                var author = Author.Create(user, authorProfile, authorValidator).Result;
+                var author = await Author.Create(user, authorProfile, authorValidator);
                 var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
 
                 context.BlogPosts.Add(blogPost);
                 await context.SaveChangesAsync();
 
                 InitUserService(user);
+                InitAuthorService();
             }
         }
 
@@ -59,7 +61,9 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task AddBlogPostCommandHandler_AddsBlog()
         {
             var imageFactory = CreateImageFactory();
-            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(Context, UserService, imageFactory);
+            var builder = new BlogPostBuilder(AuthorService, imageFactory);
+
+            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(Context, builder);
             var addBlogPostCommand = new AddBlogPostCommand()
             {
                 Subject = "Test",
@@ -76,7 +80,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task AddBlogPostCommandHandler_WithFile_AddsBlog()
         {
             var imageFactory = CreateImageFactory();
-            var handler = new AddBlogPostCommandHandler(Context, UserService, imageFactory);
+            var builder = new BlogPostBuilder(AuthorService, imageFactory);
+            var handler = new AddBlogPostCommandHandler(Context, builder);
             var fileMock = CreateFileMock();
             var file = fileMock.Object;
 
@@ -116,7 +121,9 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 ContentIntro = "Test",
                 Content = "Test"
             };
-            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(Context, null);
+
+            var builder = new ExistingBlogPostBuilder(null);
+            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(Context, builder);
 
             await updateBlogPostCommandHandler.Handle(message);
 
@@ -127,7 +134,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task UpdateBlogPostCommandHandler_WithFile_UpdatesBlog()
         {
             var imageFactory = CreateImageFactory();
-            var handler = new UpdateBlogPostCommandHandler(Context, imageFactory);
+            var builder = new ExistingBlogPostBuilder(imageFactory);
+            var handler = new UpdateBlogPostCommandHandler(Context, builder);
             var fileMock = CreateFileMock();
             var file = fileMock.Object;
 
@@ -161,9 +169,14 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task DisposeAsync()
         {
             Context.BlogPosts.RemoveRange(Context.BlogPosts.ToArray());
-            Context.Authors.RemoveRange(Context.Authors.ToArray());
+            await Context.SaveChangesAsync();
+
             Context.Users.RemoveRange(Context.Users.ToArray());
             await Context.SaveChangesAsync();
+
+            Context.Authors.RemoveRange(Context.Authors.ToArray());
+            await Context.SaveChangesAsync();
+
             Context.Dispose();
         }
     }

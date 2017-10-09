@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using CoolBytes.Core.Builders;
 using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
@@ -16,64 +17,54 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 {
     public class UpdateBlogPostCommandHandler : IAsyncRequestHandler<UpdateBlogPostCommand, BlogPostSummaryViewModel>
     {
-        private readonly AppDbContext _appDbContext;
-        private readonly IImageFactory _imageFactory;
-        private bool _isImageUpdated;
+        private readonly AppDbContext _context;
+        private readonly ExistingBlogPostBuilder _builder;
+        private int? _currentImageId;
 
-        public UpdateBlogPostCommandHandler(AppDbContext appDbContext, IImageFactory imageFactory)
+        public UpdateBlogPostCommandHandler(AppDbContext context, ExistingBlogPostBuilder builder)
         {
-            _appDbContext = appDbContext;
-            _imageFactory = imageFactory;
+            _context = context;
+            _builder = builder;
         }
 
         public async Task<BlogPostSummaryViewModel> Handle(UpdateBlogPostCommand message)
         {
-            var blogPost = await GetBlogPost(message);
+            var blogPost = await GetBlogPost(message.Id);
 
-            await UpdateBlogPost(message, blogPost);
-            await SaveBlogPost(blogPost);
+            await UpdateBlogPost(blogPost, message);
 
-            return CreateViewModel(blogPost);
+            await Save(blogPost);
+
+            return ViewModel(blogPost);
         }
 
-        private async Task<BlogPost> GetBlogPost(UpdateBlogPostCommand message)
+        private async Task<BlogPost> GetBlogPost(int blogPostId)
         {
-            var blogPost = await _appDbContext.BlogPosts.Include(b => b.Tags).SingleOrDefaultAsync(b => b.Id == message.Id);
+            var blogPost = await _context.BlogPosts
+                                         .Include(b => b.Tags)
+                                         .SingleOrDefaultAsync(b => b.Id == blogPostId);
+
+            _currentImageId = blogPost.ImageId;
+
             return blogPost;
         }
 
-        private async Task UpdateBlogPost(UpdateBlogPostCommand message, BlogPost blogPost)
+        private async Task UpdateBlogPost(BlogPost blogPost, UpdateBlogPostCommand message) 
+            => await _builder.UseBlogPost(blogPost)
+                             .WithContent(message)
+                             .WithImage(message.ImageFile)
+                             .WithTags(message.Tags)
+                             .Build();
+
+        private async Task Save(BlogPost blogPost)
         {
-            blogPost.Update(message.Subject, message.ContentIntro, message.Content);
-
-            if (message.Tags != null)
-                blogPost.UpdateTags(message.Tags.Select(s => new BlogPostTag(s)));
-
-            if (message.File == null)
-                return;
-
-            var image = await CreateImage(message.File);
-            blogPost.SetImage(image);
-        }
-
-        private async Task<Image> CreateImage(IFormFile file)
-        {
-            using (var stream = file.OpenReadStream())
-            {
-                var image = await _imageFactory.Create(stream, file.FileName, file.ContentType);
-                _isImageUpdated = true;
-                return image;
-            }
-        }
-
-        private async Task SaveBlogPost(BlogPost blogPost)
-        {
-            if (_isImageUpdated)
-                await _appDbContext.SaveChangesAsync(() => File.Delete(blogPost.Image.Path));
+            if (blogPost.Id != _currentImageId)
+                await _context.SaveChangesAsync(() => File.Delete(blogPost.Image.Path));
             else
-                await _appDbContext.SaveChangesAsync();
+                await _context.SaveChangesAsync();
         }
 
-        private BlogPostSummaryViewModel CreateViewModel(BlogPost blogPost) => Mapper.Map<BlogPostSummaryViewModel>(blogPost);
+        private BlogPostSummaryViewModel ViewModel(BlogPost blogPost)
+            => Mapper.Map<BlogPostSummaryViewModel>(blogPost);
     }
 }
