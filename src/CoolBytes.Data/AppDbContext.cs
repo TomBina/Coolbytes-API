@@ -44,10 +44,13 @@ namespace CoolBytes.Data
                 .Entity<BlogPost>(entity =>
                 {
                     entity.Property(e => e.Date).IsRequired();
-                    entity.Property(e => e.Subject).HasMaxLength(100).IsRequired();
-                    entity.Property(e => e.ContentIntro).HasMaxLength(100).IsRequired();
-                    entity.Property(e => e.Content).HasMaxLength(4000).IsRequired();
-                    entity.Property(e => e.SubjectUrl).HasMaxLength(100).IsRequired();
+
+                    var blogPostContentEntity = entity.OwnsOne(b => b.Content);
+                    blogPostContentEntity.Property(e => e.Subject).HasMaxLength(100).IsRequired();
+                    blogPostContentEntity.Property(e => e.ContentIntro).HasMaxLength(100).IsRequired();
+                    blogPostContentEntity.Property(e => e.Content).HasMaxLength(4000).IsRequired();
+                    blogPostContentEntity.Property(e => e.SubjectUrl).HasMaxLength(100).IsRequired();
+
                     entity.HasMany(b => b.Tags).WithOne(bt => bt.BlogPost).OnDelete(DeleteBehavior.Cascade);
                 })
                 .Entity<Image>(entity =>
@@ -74,7 +77,7 @@ namespace CoolBytes.Data
             }
             catch (Exception)
             {
-                onFailure();
+                onFailure?.Invoke();
                 throw;
             }
         }

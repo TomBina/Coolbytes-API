@@ -11,9 +11,10 @@ using System;
 namespace CoolBytes.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppContextModelSnapshot : ModelSnapshot
+    [Migration("20171010092529_AddedBlogPostContentAsOwnedType")]
+    partial class AddedBlogPostContentAsOwnedType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,6 +78,8 @@ namespace CoolBytes.Data.Migrations
                     b.Property<DateTime>("Date");
 
                     b.Property<int?>("ImageId");
+
+                    b.Property<DateTime?>("Updated");
 
                     b.HasKey("Id");
 
@@ -178,7 +181,7 @@ namespace CoolBytes.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ImageId");
 
-                    b.OwnsOne("CoolBytes.Core.Models.BlogPostContent", "Content", b1 =>
+                    b.OwnsOne("CoolBytes.Core.Models.BlogPostContent", "BlogPostContent", b1 =>
                         {
                             b1.Property<int>("BlogPostId");
 
@@ -198,12 +201,10 @@ namespace CoolBytes.Data.Migrations
                                 .IsRequired()
                                 .HasMaxLength(100);
 
-                            b1.Property<DateTime?>("Updated");
-
                             b1.ToTable("BlogPosts");
 
                             b1.HasOne("CoolBytes.Core.Models.BlogPost")
-                                .WithOne("Content")
+                                .WithOne("BlogPostContent")
                                 .HasForeignKey("CoolBytes.Core.Models.BlogPostContent", "BlogPostId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });

@@ -32,7 +32,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             var blogPost = await GetBlogPost(message.Id);
 
             await UpdateBlogPost(blogPost, message);
-
             await Save(blogPost);
 
             return ViewModel(blogPost);
@@ -58,7 +57,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         private async Task Save(BlogPost blogPost)
         {
-            if (blogPost.Id != _currentImageId)
+            if (blogPost.ImageId != _currentImageId)
                 await _context.SaveChangesAsync(() => File.Delete(blogPost.Image.Path));
             else
                 await _context.SaveChangesAsync();

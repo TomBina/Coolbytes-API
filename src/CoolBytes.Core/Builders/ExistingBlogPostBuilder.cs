@@ -28,7 +28,7 @@ namespace CoolBytes.Core.Builders
 
         public ExistingBlogPostBuilder WithContent(IBlogPostContent content)
         {
-            _blogPost.Update(content.Subject, content.ContentIntro, content.Content);
+            _blogPost.Content.Update(content.Subject, content.ContentIntro, content.Content);
 
             return this;
         }

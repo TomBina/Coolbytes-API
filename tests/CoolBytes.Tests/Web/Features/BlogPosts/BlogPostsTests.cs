@@ -26,7 +26,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
                 var authorValidator = new AuthorValidator(Context);
                 var author = await Author.Create(user, authorProfile, authorValidator);
-                var blogPost = new BlogPost("Testsubject", "Testintro", "Testcontent", author);
+                var blogPostContent = new BlogPostContent("Testsubject", "Testintro", "Testcontent");
+                var blogPost = new BlogPost(blogPostContent, author);
 
                 context.BlogPosts.Add(blogPost);
                 await context.SaveChangesAsync();
@@ -113,7 +114,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task UpdateBlogPostCommandHandler_UpdatesBlog()
         {
-            var blogPost = Context.BlogPosts.First();
+            var blogPost = Context.BlogPosts.AsNoTracking().First();
             var message = new UpdateBlogPostCommand()
             {
                 Id = blogPost.Id,
@@ -123,11 +124,11 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             };
 
             var builder = new ExistingBlogPostBuilder(null);
-            var updateBlogPostCommandHandler = new UpdateBlogPostCommandHandler(Context, builder);
+            var handler = new UpdateBlogPostCommandHandler(Context, builder);
 
-            await updateBlogPostCommandHandler.Handle(message);
+            var result = await handler.Handle(message);
 
-            Assert.Equal("Test new", blogPost.Subject);
+            Assert.Equal("Test new", result.Subject);
         }
 
         [Fact]
@@ -139,7 +140,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var fileMock = CreateFileMock();
             var file = fileMock.Object;
 
-            var blogPost = Context.BlogPosts.First();
+            var blogPost = Context.BlogPosts.AsNoTracking().First();
             var message = new UpdateBlogPostCommand()
             {
                 Id = blogPost.Id,
@@ -168,16 +169,9 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
         public async Task DisposeAsync()
         {
-            Context.BlogPosts.RemoveRange(Context.BlogPosts.ToArray());
-            await Context.SaveChangesAsync();
-
-            Context.Users.RemoveRange(Context.Users.ToArray());
-            await Context.SaveChangesAsync();
-
-            Context.Authors.RemoveRange(Context.Authors.ToArray());
-            await Context.SaveChangesAsync();
-
             Context.Dispose();
+
+            await Task.CompletedTask;
         }
     }
 }

@@ -1,3 +1,5 @@
+@import url("../node_modules/highlight.js/styles/vs2015.css");
+
 body {
     color:#231e1e;
     font-size: 18px;

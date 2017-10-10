@@ -29,8 +29,8 @@ namespace CoolBytes.WebAPI
         {
             ConfigureSecurity(services);
 
-            services.AddScoped<BlogPostBuilder>();
-            services.AddScoped<ExistingBlogPostBuilder>();
+            services.AddTransient<BlogPostBuilder>();
+            services.AddTransient<ExistingBlogPostBuilder>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IAuthorValidator, AuthorValidator>();

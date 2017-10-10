@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowJs": true,
     "outDir": "../wwwroot",
     "sourceMap": true,
     "declaration": false,

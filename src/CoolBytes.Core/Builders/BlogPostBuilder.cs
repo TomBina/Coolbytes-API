@@ -12,9 +12,10 @@ namespace CoolBytes.Core.Builders
         private readonly IAuthorService _authorService;
         private readonly IImageFactory _imageFactory;
 
-        private BlogPost _blogPost;
+        private BlogPostContent _blogPostContent;
         private Task<Author> _author;
         private Func<Task<Image>> _image;
+        private IEnumerable<BlogPostTag> _tags;
 
         public BlogPostBuilder(IAuthorService authorService, IImageFactory imageFactory)
         {
@@ -31,12 +32,7 @@ namespace CoolBytes.Core.Builders
 
         public BlogPostBuilder WithContent(IBlogPostContent content)
         {
-            _blogPost = new BlogPost()
-            {
-                Subject = content.Subject,
-                ContentIntro = content.ContentIntro,
-                Content = content.Content
-            };
+            _blogPostContent = new BlogPostContent(content.Subject, content.ContentIntro, content.Content);
 
             return this;
         }
@@ -57,8 +53,7 @@ namespace CoolBytes.Core.Builders
 
         public BlogPostBuilder WithTags(IEnumerable<string> tags)
         {
-            if (tags != null)
-                _blogPost.AddTags(tags.Select(s => new BlogPostTag(s)));
+            _tags = tags?.Select(s => new BlogPostTag(s));
 
             return this;
         }
@@ -66,15 +61,18 @@ namespace CoolBytes.Core.Builders
         public async Task<BlogPost> Build()
         {
             var author = await _author;
-            _blogPost.Author = author;
+            var blogPost = new BlogPost(_blogPostContent, author);
+
+            if (_tags != null)
+                blogPost.AddTags(_tags);
 
             if (_image == null)
-                return _blogPost;
+                return blogPost;
 
             var image = await _image();
-            _blogPost.SetImage(image);
+            blogPost.SetImage(image);
 
-            return _blogPost;
+            return blogPost;
         }
     }
 }
