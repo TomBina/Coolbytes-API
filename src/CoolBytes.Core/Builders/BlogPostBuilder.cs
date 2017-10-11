@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoolBytes.Core.Utils;
 
 namespace CoolBytes.Core.Builders
 {
@@ -16,6 +17,7 @@ namespace CoolBytes.Core.Builders
         private Task<Author> _author;
         private Func<Task<Image>> _image;
         private IEnumerable<BlogPostTag> _tags;
+        private IEnumerable<ExternalLink> _links;
 
         public BlogPostBuilder(IAuthorService authorService, IImageFactory imageFactory)
         {
@@ -58,20 +60,22 @@ namespace CoolBytes.Core.Builders
             return this;
         }
 
+        public BlogPostBuilder WithExternalLinks(IEnumerable<ExternalLink> links)
+        {
+            _links = links;
+
+            return this;
+        }
+
         public async Task<BlogPost> Build()
         {
             var author = await _author;
             var blogPost = new BlogPost(_blogPostContent, author);
 
-            if (_tags != null)
-                blogPost.AddTags(_tags);
-
-            if (_image == null)
-                return blogPost;
-
-            var image = await _image();
-            blogPost.SetImage(image);
-
+            await When.NotNull(_image, async () => blogPost.SetImage(await _image()) );
+            When.NotNull(_tags, () => blogPost.Tags.AddRange(_tags));
+            When.NotNull(_links, () => blogPost.ExternalLinks.AddRange(_links));
+            
             return blogPost;
         }
     }

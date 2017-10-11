@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoolBytes.Core.Utils;
 
 namespace CoolBytes.Core.Builders
 {
@@ -49,22 +50,23 @@ namespace CoolBytes.Core.Builders
 
         public ExistingBlogPostBuilder WithTags(IEnumerable<string> tags)
         {
-            if (tags != null)
-                _blogPost.UpdateTags(tags.Select(s => new BlogPostTag(s)));
+            When.NotNull(tags, () => _blogPost.Tags.Update(tags.Select(s => new BlogPostTag(s))));
+            
+            return this;
+        }
+
+        public ExistingBlogPostBuilder WithExternalLinks(IEnumerable<ExternalLink> links)
+        {
+            When.NotNull(links, () => _blogPost.ExternalLinks.Update(links));
 
             return this;
         }
 
         public async Task<BlogPost> Build()
         {
-            if (_image == null)
-                return _blogPost;
-
-            var image = await _image();
-            _blogPost.SetImage(image);
-
+            await When.NotNull(_image, async () => _blogPost.SetImage(await _image()));
+            
             return _blogPost;
-
         }
     }
 }

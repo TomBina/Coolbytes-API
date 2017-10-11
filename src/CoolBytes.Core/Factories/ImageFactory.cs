@@ -1,9 +1,8 @@
-﻿using System;
+﻿using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Models;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using CoolBytes.Core.Extensions;
-using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
 
 namespace CoolBytes.Core.Factories
 {
@@ -20,9 +19,9 @@ namespace CoolBytes.Core.Factories
 
         public async Task<Image> Create(Stream stream, string currentFileName, string contentType)
         {
-            stream.IsNotNull();
-            currentFileName.IsNotNullOrWhiteSpace();
-            contentType.IsNotNull();
+            if (stream == null) throw new ArgumentNullException(nameof(stream));
+            if (currentFileName == null) throw new ArgumentNullException(nameof(currentFileName));
+            if (contentType == null) throw new ArgumentNullException(nameof(contentType));
 
             if (!_validator.Validate(stream, contentType)) throw new ArgumentException("Image is not valid");
 

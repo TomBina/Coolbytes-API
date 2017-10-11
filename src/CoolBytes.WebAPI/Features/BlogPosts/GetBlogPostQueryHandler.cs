@@ -42,7 +42,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                                        .FirstOrDefaultAsync(b => b.Id == id);
 
         private async Task<List<BlogPostLinkViewModel>> GetRelatedLinks(int id) 
-            => await _context.BlogPosts.Where(b => b.Id != id)
+            => await _context.BlogPosts.AsNoTracking()
+                                       .Where(b => b.Id != id)
                                        .OrderByDescending(b => b.Id)
                                        .Take(10)
                                        .Select(b => 

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using CoolBytes.Core.Builders;
+using CoolBytes.Core.Models;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -32,7 +33,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
                 ImageFile = imageFile;
             }
-        }  
+        }
 
+        public IEnumerable<ExternalLink> ExternalLinks { get; set; }
     }
 }

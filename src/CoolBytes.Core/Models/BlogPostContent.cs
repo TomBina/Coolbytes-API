@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using CoolBytes.Core.Extensions;
 
 namespace CoolBytes.Core.Models
 {
@@ -51,9 +50,9 @@ namespace CoolBytes.Core.Models
 
         private static void Validate(string subject, string contentIntro, string content)
         {
-            subject.IsNotNullOrWhiteSpace();
-            contentIntro.IsNotNullOrWhiteSpace();
-            content.IsNotNullOrWhiteSpace();
+            if (subject == null) throw new ArgumentNullException(nameof(subject));
+            if (contentIntro == null) throw new ArgumentNullException(nameof(contentIntro));
+            if (content == null) throw new ArgumentNullException(nameof(content));
         }
     }
 }

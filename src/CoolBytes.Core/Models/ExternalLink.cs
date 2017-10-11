@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace CoolBytes.Core.Models
 {
-    public class BlogPostTag
+    public class ExternalLink
     {
-        private sealed class NameEqualityComparer : IEqualityComparer<BlogPostTag>
+        private sealed class NameEqualityComparer : IEqualityComparer<ExternalLink>
         {
-            public bool Equals(BlogPostTag x, BlogPostTag y)
+            public bool Equals(ExternalLink x, ExternalLink y)
             {
                 if (ReferenceEquals(x, y)) return true;
                 if (ReferenceEquals(x, null)) return false;
@@ -16,25 +16,28 @@ namespace CoolBytes.Core.Models
                 return string.Equals(x.Name, y.Name);
             }
 
-            public int GetHashCode(BlogPostTag obj)
+            public int GetHashCode(ExternalLink obj)
             {
                 return obj.Name.GetHashCode();
             }
         }
 
-        public static IEqualityComparer<BlogPostTag> NameComparer { get; } = new NameEqualityComparer();
+        public static IEqualityComparer<ExternalLink> NameComparer { get; } = new NameEqualityComparer();
 
         public int Id { get; private set; }
         public string Name { get; private set; }
+        public string Url { get; private set; }
         public BlogPost BlogPost { get; private set; }
 
-        public BlogPostTag(string name)
+        public ExternalLink(string name, string url)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
+            Url = url ?? throw new ArgumentNullException(nameof(url));
         }
 
-        private BlogPostTag()
+        private ExternalLink()
         {
+            
         }
     }
 }

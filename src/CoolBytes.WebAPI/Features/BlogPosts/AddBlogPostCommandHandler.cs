@@ -34,6 +34,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                              .WithContent(message)
                              .WithImage(message.ImageFile)
                              .WithTags(message.Tags)
+                             .WithExternalLinks(message.ExternalLinks)
                              .Build();
 
         private async Task Save(BlogPost blogPost)

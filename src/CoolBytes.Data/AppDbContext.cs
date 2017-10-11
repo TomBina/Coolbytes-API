@@ -51,7 +51,8 @@ namespace CoolBytes.Data
                     blogPostContentEntity.Property(e => e.Content).HasMaxLength(4000).IsRequired();
                     blogPostContentEntity.Property(e => e.SubjectUrl).HasMaxLength(100).IsRequired();
 
-                    entity.HasMany(b => b.Tags).WithOne(bt => bt.BlogPost).OnDelete(DeleteBehavior.Cascade);
+                    entity.HasMany(b => b.Tags).WithOne(bt => bt.BlogPost).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                    entity.HasMany(b => b.ExternalLinks).WithOne(el => el.BlogPost).IsRequired().OnDelete(DeleteBehavior.Cascade);
                 })
                 .Entity<Image>(entity =>
                 {
@@ -66,6 +67,12 @@ namespace CoolBytes.Data
                 {
                     entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
                     entity.ToTable("BlogPostTags");
+                })
+                .Entity<ExternalLink>(entity =>
+                {
+                    entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
+                    entity.Property(e => e.Url).HasMaxLength(255).IsRequired();
+                    entity.ToTable("ExternalLinks");
                 });
         }
 

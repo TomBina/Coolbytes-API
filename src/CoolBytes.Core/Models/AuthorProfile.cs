@@ -1,4 +1,4 @@
-﻿using CoolBytes.Core.Extensions;
+﻿using System;
 
 namespace CoolBytes.Core.Models
 {
@@ -23,20 +23,14 @@ namespace CoolBytes.Core.Models
 
         private void Init(string firstName, string lastName, string about)
         {
-            firstName.IsNotNullOrWhiteSpace();
-            lastName.IsNotNullOrWhiteSpace();
-            about.IsNotNullOrWhiteSpace();
-
-            FirstName = firstName;
-            LastName = lastName;
-            About = about;
+            FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
+            LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
+            About = about ?? throw new ArgumentNullException(nameof(about));
         }
 
         public void SetImage(Image image)
         {
-            image.IsNotNull();
-
-            Image = image;
+            Image = image ?? throw new ArgumentNullException(nameof(image));
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using CoolBytes.Core.Extensions;
 using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Core.Factories
@@ -16,8 +15,7 @@ namespace CoolBytes.Core.Factories
 
         public ImageFactoryOptions(string uploadPath)
         {
-            uploadPath.IsNotNullOrWhiteSpace();
-            UploadPath = uploadPath;
+            UploadPath = uploadPath ?? throw new ArgumentNullException(nameof(uploadPath));
         }
 
         public ImageFactoryOptions(string uploadPath, 
@@ -25,13 +23,8 @@ namespace CoolBytes.Core.Factories
                                    Func<string, string, string> directory, 
                                    Func<string, string> uriPath) : this(uploadPath)
         {
-            fileName.IsNotNull();
-            FileName = fileName;
-
-            directory.IsNotNull();
-            Directory = directory;
-
-            uriPath.IsNotNull();
+            FileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
+            Directory = directory ?? throw new ArgumentNullException(nameof(directory));
             UriPath = uriPath;
         }
     }
