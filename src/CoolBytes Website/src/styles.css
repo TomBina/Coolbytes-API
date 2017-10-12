@@ -56,8 +56,12 @@ input {
     box-sizing: border-box;
 }
 
-input.error {
+.ng-invalid {
     border-color:#B60E0E;
+}
+
+.ng-untouched {
+    border-color:#a0a0a0;
 }
 
 input[type="submit"] {

@@ -1,13 +1,15 @@
-﻿using AutoMapper;
+﻿using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using CoolBytes.Core.Builders;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
-using System.IO;
-using System.Threading.Tasks;
-using CoolBytes.Core.Builders;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class AddBlogPostCommandHandler : IAsyncRequestHandler<AddBlogPostCommand, BlogPostSummaryViewModel>
     {
@@ -29,13 +31,17 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             return ViewModel(blogPost);
         }
 
-        private async Task<BlogPost> CreateBlogPost(AddBlogPostCommand message) 
-            => await _builder.WrittenByCurrentAuthor()
-                             .WithContent(message)
-                             .WithImage(message.ImageFile)
-                             .WithTags(message.Tags)
-                             .WithExternalLinks(message.ExternalLinks)
-                             .Build();
+        private async Task<BlogPost> CreateBlogPost(AddBlogPostCommand message)
+        {
+            var externalLinks = message.ExternalLinks?.Select(el => new ExternalLink(el.Name, el.Url)).ToList();
+            
+            return await _builder.WrittenByCurrentAuthor()
+                                        .WithContent(message)
+                                        .WithImage(message.ImageFile)
+                                        .WithTags(message.Tags)
+                                        .WithExternalLinks(externalLinks)
+                                        .Build();
+        }
 
         private async Task Save(BlogPost blogPost)
         {

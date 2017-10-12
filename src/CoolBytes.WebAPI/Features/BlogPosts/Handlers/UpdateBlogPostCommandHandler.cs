@@ -1,19 +1,16 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Builders;
-using CoolBytes.Core.Factories;
-using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class UpdateBlogPostCommandHandler : IAsyncRequestHandler<UpdateBlogPostCommand, BlogPostSummaryViewModel>
     {
@@ -41,6 +38,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         {
             var blogPost = await _context.BlogPosts
                                          .Include(b => b.Tags)
+                                         .Include(b => b.ExternalLinks)
                                          .SingleOrDefaultAsync(b => b.Id == blogPostId);
 
             _currentImageId = blogPost.ImageId;
@@ -48,13 +46,17 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             return blogPost;
         }
 
-        private async Task UpdateBlogPost(BlogPost blogPost, UpdateBlogPostCommand message) 
-            => await _builder.UseBlogPost(blogPost)
-                             .WithContent(message)
-                             .WithImage(message.ImageFile)
-                             .WithTags(message.Tags)
-                             .WithExternalLinks(message.ExternalLinks)
-                             .Build();
+        private async Task UpdateBlogPost(BlogPost blogPost, UpdateBlogPostCommand message)
+        {
+            var externalLinks = message.ExternalLinks?.Select(el => new ExternalLink(el.Name, el.Url)).ToList();
+
+            await _builder.UseBlogPost(blogPost)
+                .WithContent(message)
+                .WithImage(message.ImageFile)
+                .WithTags(message.Tags)
+                .WithExternalLinks(externalLinks)
+                .Build();
+        }
 
         private async Task Save(BlogPost blogPost)
         {

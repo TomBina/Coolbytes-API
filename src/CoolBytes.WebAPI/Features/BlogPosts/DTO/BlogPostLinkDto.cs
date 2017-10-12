@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
+namespace CoolBytes.WebAPI.Features.BlogPosts.DTO
 {
-    public class BlogPostLinkViewModel
+    public class BlogPostLinkDto
     {
         public int Id { get; set; }
         public string Subject { get; set; }

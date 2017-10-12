@@ -60,9 +60,10 @@ export class BlogPostsService {
         formData.append("content", model.content);
 
         if (model.tags)
-            model.tags.forEach(t => {
-                formData.append("tags", t);
-            });
+            model.tags.forEach(t => formData.append("tags", t));
+
+        if (model.externalLinks)
+            formData.append("externalLinks", JSON.stringify(model.externalLinks));
 
         if (file)
             formData.append("file", file, file.name);

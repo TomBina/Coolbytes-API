@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.Authors;
+using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using CoolBytes.WebAPI.Features.Images;
 
@@ -24,12 +25,14 @@ namespace CoolBytes.WebAPI.AutoMapper
                 .ForMember(v => v.Content, exp => exp.MapFrom(b => b.Content.Content));
             CreateMap<BlogPost, BlogPostViewModel>()
                 .ForMember(v => v.Updated, exp => exp.MapFrom(b => b.Content.Updated))
-                .ForMember(v => v.Links, exp => exp.Ignore())
+                .ForMember(v => v.ExternalLinks, exp => exp.MapFrom(b => b.ExternalLinks))
                 .ForMember(v => v.Image, ResolveImageModelFromBlogPost)
                 .ForMember(v => v.Subject, exp => exp.MapFrom(b => b.Content.Subject))
                 .ForMember(v => v.ContentIntro, exp => exp.MapFrom(b => b.Content.ContentIntro))
-                .ForMember(v => v.Content, exp => exp.MapFrom(b => b.Content.Content));
-            CreateMap<BlogPostTag, BlogPostTagViewModel>();
+                .ForMember(v => v.Content, exp => exp.MapFrom(b => b.Content.Content))
+                .ForMember(v => v.RelatedLinks, exp => exp.Ignore());
+            CreateMap<BlogPostTag, BlogPostTagDto>();
+            CreateMap<ExternalLink, ExternalLinkDto>();
             CreateMap<Author, AuthorViewModel>()
                 .ForMember(v => v.FirstName, exp => exp.MapFrom(a => a.AuthorProfile.FirstName))
                 .ForMember(v => v.LastName, exp => exp.MapFrom(a => a.AuthorProfile.LastName))

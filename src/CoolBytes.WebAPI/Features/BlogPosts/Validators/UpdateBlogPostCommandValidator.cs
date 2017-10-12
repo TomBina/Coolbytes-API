@@ -1,15 +1,15 @@
-﻿using CoolBytes.Data;
-using CoolBytes.WebAPI.Services;
-using FluentValidation;
-using System.Linq;
+﻿using System.Linq;
 using CoolBytes.Core.Interfaces;
+using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
 {
     public class UpdateBlogPostCommandValidator : AbstractValidator<UpdateBlogPostCommand>
     {
-        public UpdateBlogPostCommandValidator(AppDbContext appDbContext, IUserService userService, IAuthorValidator authorValidator)
+        public UpdateBlogPostCommandValidator(AppDbContext appDbContext, IUserService userService)
         {
             RuleFor(b => b.Id).NotEmpty().CustomAsync(async (id, context, cancellationToken) =>
             {

@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
-using CoolBytes.Data;
-using CoolBytes.WebAPI.Services;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
 {
     public class AddBlogPostCommandValidator : AbstractValidator<AddBlogPostCommand>
     {
-        public AddBlogPostCommandValidator(AppDbContext appDbContext, IUserService userService, IAuthorValidator authorValidator)
+        public AddBlogPostCommandValidator(IUserService userService, IAuthorValidator authorValidator)
         {
             RuleFor(b => b.Subject).NotEmpty().MaximumLength(100);
             RuleFor(b => b.ContentIntro).NotEmpty().MaximumLength(100);

@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
-using CoolBytes.Core.Models;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class UpdateBlogPostQueryHandler : IAsyncRequestHandler<UpdateBlogPostQuery, BlogPostUpdateViewModel>
     {

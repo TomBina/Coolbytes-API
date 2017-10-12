@@ -2,29 +2,38 @@
 <div class="admin-content">
     <div class="left">
         <h1>Add blog</h1>
-        <form [formGroup]="_blogForm" (ngSubmit)="onSubmit()" >
+        <form [formGroup]="_blogForm" (ngSubmit)="onSubmit()">
             <label for="subject">Subject</label>
             <p>
-                <input formControlName="subject" id="subject" [ngClass]="inputCssClass('subject')" />
+                <input formControlName="subject" id="subject" />
             </p>
             <label for="contentIntro">Content intro:</label>
             <p>
-                <textarea formControlName="contentIntro" id="contentIntro" [ngClass]="inputCssClass('contentIntro')">
+                <textarea formControlName="contentIntro" id="contentIntro">
                 </textarea>
             </p>
             <label for="content">Content:</label>
             <p>
-                <textarea formControlName="content" id="content" [ngClass]="inputCssClass('content')"></textarea>
+                <textarea formControlName="content" id="content"></textarea>
                 <admin-images-manager [control]="_content"></admin-images-manager>
             </p>
             <label for="tag">Tags</label>
             <p>
-                <textarea formControlName="tags" id="tags" [ngClass]="inputCssClass('tags')"></textarea>
+                <textarea formControlName="tags" id="tags"></textarea>
             </p>
             <label for="image">Image</label>
             <p>
                 <input type="file" id="file" (change)="onFileChanged($event.target)" />
             </p>
+            <label>Links
+                <a (click)="addExternalLinkControl()">add external link</a>
+            </label>
+            <div formArrayName="externalLinks" *ngFor="let item of _blogForm.get('externalLinks').controls; let i = index">
+                <p [formGroupName]="i" class="flex">
+                    <input formControlName="name" placeholder="External link name" />
+                    <input formControlName="url" placeholder="External link URL" />
+                </p>
+            </div>
             <input type="submit" value="save" />
         </form>
     </div>

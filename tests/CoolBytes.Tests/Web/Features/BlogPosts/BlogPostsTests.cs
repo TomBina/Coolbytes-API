@@ -1,10 +1,12 @@
-﻿using CoolBytes.Core.Models;
+﻿using CoolBytes.Core.Builders;
+using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.BlogPosts;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Services;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using CoolBytes.Core.Builders;
-using Microsoft.EntityFrameworkCore;
+using CoolBytes.WebAPI.Features.BlogPosts.Handlers;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts

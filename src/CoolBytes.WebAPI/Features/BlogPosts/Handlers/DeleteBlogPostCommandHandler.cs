@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using MediatR;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class DeleteBlogPostCommandHandler : IAsyncRequestHandler<DeleteBlogPostCommand>
     {

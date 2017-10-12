@@ -1,16 +1,13 @@
 ﻿using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using FluentValidation;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
 {
     public class DeleteBlogPostCommandValidator : AbstractValidator<DeleteBlogPostCommand>
     {
-        private readonly AppDbContext _appDbContext;
-
         public DeleteBlogPostCommandValidator(AppDbContext appDbContext)
         {
-            _appDbContext = appDbContext;
-
             RuleFor(b => b.Id).CustomAsync(async (id, context, cancellationToken) =>
             {
                 var blogPost = await appDbContext.BlogPosts.FindAsync(keyValues: new object[] {id},

@@ -1,14 +1,15 @@
-﻿using CoolBytes.Core.Models;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CoolBytes.Core.Models;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
+using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class GetBlogPostQueryHandler : IAsyncRequestHandler<GetBlogPostQuery, BlogPostViewModel>
     {
@@ -41,13 +42,13 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                                        .Include(b => b.Image)
                                        .FirstOrDefaultAsync(b => b.Id == id);
 
-        private async Task<List<BlogPostLinkViewModel>> GetRelatedLinks(int id) 
+        private async Task<List<BlogPostLinkDto>> GetRelatedLinks(int id) 
             => await _context.BlogPosts.AsNoTracking()
                                        .Where(b => b.Id != id)
                                        .OrderByDescending(b => b.Id)
                                        .Take(10)
                                        .Select(b => 
-                                            new BlogPostLinkViewModel()
+                                            new BlogPostLinkDto()
                                             {
                                                 Id = b.Id,
                                                 Date = b.Date,

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
@@ -27,7 +28,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
             return this;
         }
 
-        public BlogPostViewModelBuilder WithRelatedLinks(List<BlogPostLinkViewModel> links)
+        public BlogPostViewModelBuilder WithRelatedLinks(List<BlogPostLinkDto> links)
         {
             if (links == null)
                 throw new ArgumentNullException();
@@ -35,7 +36,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
             if (links.Count == 0)
                 throw new ArgumentException(nameof(links));
 
-            _model.Links = links;
+            _model.RelatedLinks = links;
 
             return this;
         }

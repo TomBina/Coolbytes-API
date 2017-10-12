@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.CQ
 {
     public class GetBlogPostQuery : IRequest<BlogPostViewModel>
     {

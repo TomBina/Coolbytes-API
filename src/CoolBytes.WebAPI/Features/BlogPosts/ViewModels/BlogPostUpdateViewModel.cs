@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoolBytes.Core.Models;
+using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.Images;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
@@ -16,7 +17,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
         public string Subject { get; set; }
         public string ContentIntro { get; set; }
         public string Content { get; set; }
-        public IEnumerable<BlogPostTagViewModel> Tags { get; set; }
+        public IEnumerable<BlogPostTagDto> Tags { get; set; }
         public ImageViewModel Image { get; set; }
     }
 }

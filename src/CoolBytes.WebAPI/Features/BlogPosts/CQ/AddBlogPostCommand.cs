@@ -1,17 +1,16 @@
-﻿using CoolBytes.Core.Interfaces;
+﻿using System.Collections.Generic;
+using CoolBytes.Core.Builders;
+using CoolBytes.Core.Interfaces;
+using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using CoolBytes.Core.Builders;
-using CoolBytes.Core.Models;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts
+namespace CoolBytes.WebAPI.Features.BlogPosts.CQ
 {
-    public class UpdateBlogPostCommand : IRequest<BlogPostSummaryViewModel>, IBlogPostContent
+    public class AddBlogPostCommand : IRequest<BlogPostSummaryViewModel>, IBlogPostContent
     {
         private IFormFile _file;
-        public int Id { get; set; }
         public string Subject { get; set; }
         public string ContentIntro { get; set; }
         public string Content { get; set; }
@@ -34,7 +33,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
                 ImageFile = imageFile;
             }
         }
-
-        public IEnumerable<ExternalLink> ExternalLinks { get; set; }
+        public IEnumerable<ExternalLinkDto> ExternalLinks { get; set; }
     }
 }
