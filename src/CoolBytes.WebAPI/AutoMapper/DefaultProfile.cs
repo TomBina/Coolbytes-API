@@ -22,7 +22,8 @@ namespace CoolBytes.WebAPI.AutoMapper
                 .ForMember(v => v.Image, ResolveImageModelFromBlogPost)
                 .ForMember(v => v.Subject, exp => exp.MapFrom(b => b.Content.Subject))
                 .ForMember(v => v.ContentIntro, exp => exp.MapFrom(b => b.Content.ContentIntro))
-                .ForMember(v => v.Content, exp => exp.MapFrom(b => b.Content.Content));
+                .ForMember(v => v.Content, exp => exp.MapFrom(b => b.Content.Content))
+                .ForMember(v => v.ExternalLinks, exp => exp.MapFrom(b => b.ExternalLinks));
             CreateMap<BlogPost, BlogPostViewModel>()
                 .ForMember(v => v.Updated, exp => exp.MapFrom(b => b.Content.Updated))
                 .ForMember(v => v.ExternalLinks, exp => exp.MapFrom(b => b.ExternalLinks))
@@ -39,7 +40,12 @@ namespace CoolBytes.WebAPI.AutoMapper
                 .ForMember(v => v.About, exp => exp.MapFrom(a => a.AuthorProfile.About))
                 .ForMember(v => v.Image,
                     exp => exp.ResolveUsing((author, viewModel, image) =>
-                                                author.AuthorProfile.Image == null ? null : new ImageViewModel() { UriPath = author.AuthorProfile.Image.UriPath }));
+                                                author.AuthorProfile.Image == null ? null :
+                                                new ImageViewModel()
+                                                {
+                                                    Id = author.AuthorProfile.Image.Id,
+                                                    UriPath = author.AuthorProfile.Image.UriPath
+                                                }));
             CreateMap<Image, ImageViewModel>()
                 .ForMember(v => v.UriPath, exp => exp.MapFrom(p => p.UriPath));
         }

@@ -19,5 +19,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
         public string Content { get; set; }
         public IEnumerable<BlogPostTagDto> Tags { get; set; }
         public ImageViewModel Image { get; set; }
+        public IEnumerable<ExternalLinkDto> ExternalLinks { get; set; }
     }
 }

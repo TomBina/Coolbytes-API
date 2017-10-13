@@ -26,7 +26,7 @@ namespace CoolBytes.WebAPI.Services
         public async Task<Author> GetAuthorWithProfile()
         {
             var user = await _userService.GetUser();
-            return await _context.Authors.Include(a => a.AuthorProfile).FirstOrDefaultAsync(a => a.UserId == user.Id);
+            return await _context.Authors.Include(a => a.AuthorProfile).ThenInclude(ap => ap.Image).FirstOrDefaultAsync(a => a.UserId == user.Id);
         }
     }
 }

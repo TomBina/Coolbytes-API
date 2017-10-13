@@ -1,3 +1,4 @@
+import { ExternalLink } from './external-link';
 import { BlogPostLink } from './blog-post-link';
 import { Author } from './author';
 import { BlogPostTag } from './blog-post-tag';
@@ -14,4 +15,5 @@ export class BlogPost {
     image: Image;
     author: Author;
     links: BlogPostLink[];
+    externalLinks: ExternalLink[];
 }

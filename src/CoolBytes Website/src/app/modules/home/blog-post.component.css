@@ -18,8 +18,31 @@ aside {
     box-sizing:border-box;
 }
 
+aside a {
+    font-size:15px;
+    text-decoration: none;
+}
+
 hr {
     background-color: #F5F5F5;
+}
+
+.author {
+    display:flex;
+    align-items: center;
+}
+
+.author .about {
+    margin-left:10px;
+}
+
+.author .about a {
+    font-size:15px;
+    font-weight:700;
+}
+
+.author .about span {
+    font-size:14px;
 }
 
 .details {

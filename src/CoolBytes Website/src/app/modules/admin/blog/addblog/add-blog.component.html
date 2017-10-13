@@ -1,7 +1,7 @@
 <app-admin-menu></app-admin-menu>
 <div class="admin-content">
     <div class="left">
-        <h1>Add blog</h1>
+        <h1 class="no-top-margin">Add blog</h1>
         <form [formGroup]="_blogForm" (ngSubmit)="onSubmit()">
             <label for="subject">Subject</label>
             <p>
@@ -9,12 +9,11 @@
             </p>
             <label for="contentIntro">Content intro:</label>
             <p>
-                <textarea formControlName="contentIntro" id="contentIntro">
-                </textarea>
+                <textarea formControlName="contentIntro" id="contentIntro" (keydown)="growTextarea($event.target)"></textarea>
             </p>
             <label for="content">Content:</label>
             <p>
-                <textarea formControlName="content" id="content"></textarea>
+                <textarea formControlName="content" id="content" (keydown)="growTextarea($event.target)"></textarea>
                 <admin-images-manager [control]="_content"></admin-images-manager>
             </p>
             <label for="tag">Tags</label>

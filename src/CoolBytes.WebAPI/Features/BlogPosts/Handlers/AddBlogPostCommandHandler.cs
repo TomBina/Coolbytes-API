@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -33,12 +34,13 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
         private async Task<BlogPost> CreateBlogPost(AddBlogPostCommand message)
         {
+            var tags = message.Tags?.Select(s => new BlogPostTag(s)).ToList();
             var externalLinks = message.ExternalLinks?.Select(el => new ExternalLink(el.Name, el.Url)).ToList();
-            
+
             return await _builder.WrittenByCurrentAuthor()
                                         .WithContent(message)
                                         .WithImage(message.ImageFile)
-                                        .WithTags(message.Tags)
+                                        .WithTags(tags)
                                         .WithExternalLinks(externalLinks)
                                         .Build();
         }

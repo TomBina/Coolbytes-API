@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Models;
-using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,10 +12,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 {
     public class BlogPostViewModelBuilder
     {
-        private readonly AppDbContext _context;
         private BlogPostViewModel _model;
-
-        public BlogPostViewModelBuilder(AppDbContext context) => _context = context;
 
         public BlogPostViewModelBuilder FromBlog(BlogPost blogPost)
         {

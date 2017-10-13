@@ -54,9 +54,9 @@ namespace CoolBytes.Core.Builders
             return this;
         }
 
-        public BlogPostBuilder WithTags(IEnumerable<string> tags)
+        public BlogPostBuilder WithTags(IEnumerable<BlogPostTag> tags)
         {
-            _tags = tags?.Select(s => new BlogPostTag(s));
+            _tags = tags;
 
             return this;
         }

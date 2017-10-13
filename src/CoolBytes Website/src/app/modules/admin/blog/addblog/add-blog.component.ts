@@ -25,29 +25,13 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     private _previewBlogComponent: PreviewBlogComponent;
     private _previewObserver: Subscription
 
-    getExternalLinksControls(): FormArray {
-        return this._blogForm.get("externalLinks") as FormArray;
-    }
-
-    addExternalLinkControl() {
-        let links = this.getExternalLinksControls();
-        links.push(this.createExternalLinkFormGroup());
-    }
-
-    createExternalLinkFormGroup(): FormGroup {
-        return new FormGroup({
-            name: new FormControl("", Validators.maxLength(50)),
-            url: new FormControl("", Validators.maxLength(255))
-        })
-    }
-
     ngOnInit() {
         this._blogForm = this._fb.group(
             {
                 subject: ["", [Validators.required, Validators.maxLength(100)]],
                 contentIntro: ["", [Validators.required, Validators.maxLength(100)]],
                 content: ["", [Validators.required, Validators.maxLength(4000)]],
-                tags: ["", [Validators.required, Validators.maxLength(500)]],
+                tags: ["", [Validators.maxLength(500)]],
                 externalLinks: this._fb.array([this.createExternalLinkFormGroup()])
             }
         )
@@ -62,6 +46,26 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         if (this._previewObserver)
             this._previewObserver.unsubscribe();
+    }
+
+    growTextarea(element: HTMLTextAreaElement) {
+        element.style.height = `${element.scrollHeight+2}px`;
+    }
+
+    getExternalLinksControls(): FormArray {
+        return this._blogForm.get("externalLinks") as FormArray;
+    }
+
+    addExternalLinkControl() {
+        let links = this.getExternalLinksControls();
+        links.push(this.createExternalLinkFormGroup());
+    }
+
+    createExternalLinkFormGroup(): FormGroup {
+        return new FormGroup({
+            name: new FormControl("", Validators.maxLength(50)),
+            url: new FormControl("", Validators.maxLength(255))
+        })
     }
 
     onFileChanged(element: HTMLInputElement) {
@@ -86,7 +90,8 @@ export class AddBlogComponent implements OnInit, OnDestroy {
         let controls = this.getExternalLinksControls();
         for (let control of controls.controls) {
             let externalLink = new ExternalLink(control.get("name").value, control.get("url").value);
-            externalLinks.push(externalLink);
+            if (externalLink.name.length > 0 && externalLink.url.length > 0)
+                externalLinks.push(externalLink);
         }
 
         blogPostAdd.externalLinks = externalLinks;

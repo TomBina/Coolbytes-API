@@ -19,7 +19,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
         public async Task<BlogPostUpdateViewModel> Handle(UpdateBlogPostQuery query)
         {
-            var blogPost = await _context.BlogPosts.Include(b => b.Tags).Include(b => b.Image).FirstOrDefaultAsync(b => b.Id == query.Id);
+            var blogPost = await _context.BlogPosts.Include(b => b.Tags).Include(b => b.Image).Include(b => b.ExternalLinks).FirstOrDefaultAsync(b => b.Id == query.Id);
             return Mapper.Map<BlogPostUpdateViewModel>(blogPost);
         }
     }

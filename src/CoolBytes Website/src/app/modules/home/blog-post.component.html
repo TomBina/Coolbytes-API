@@ -1,8 +1,8 @@
 <div class="page">
     <article *ngIf="blogPost">
-        <h1>{{blogPost.subject}}</h1>
+        <h1 class="no-top-margin">{{blogPost.subject}}</h1>
         <p class="details">
-            {{blogPost.date | date}} by {{blogPost.authorName}} - estimated reading time {{blogPost.ReadingTime}}
+            {{blogPost.date | date}} by {{blogPost.author.firstName}}
         </p>
         <p>
             <md [value]="blogPost.contentIntro"></md>
@@ -10,20 +10,37 @@
         <p>
             <md [value]="blogPost.content"></md>
         </p>
-        <p>
-            Tags:
-            <a *ngFor="let tag of blogPost.tags">{{tag.name}}</a>
-        </p>
     </article>
-    <aside>
+    <aside *ngIf="blogPost">
+        <div *ngIf="_authorImage">
+            <h2 class="no-top-margin">Author</h2>
+            <div class="author">
+                <div><img [src]="_authorImage" class="author-image" /></div>
+                <div class="about">
+                    <a>{{blogPost.author.firstName}} {{blogPost.author.lastName}}</a>
+                    <br />
+                    <span>{{blogPost.author.about}}</span>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="blogPost.externalLinks.length > 0">
+            <h2>Resources</h2>
+            <ul>
+                <li *ngFor="let link of blogPost.externalLinks"><a target="_blank" [href]="link.url">{{link.name}}</a></li>
+            </ul>
+        </div>
+        <div *ngIf="blogPost.tags">
+            <h2>Tags</h2>
+            <ul>
+                <li *ngFor="let tag of blogPost.tags"><a href="">{{tag.name}}</a></li>
+            </ul>
+        </div>
         <h2>Share this post</h2>
-        <p>
-            Links
-        </p>
-        <div *ngIf="blogPost && blogPost.links">
+        <share></share>
+        <div *ngIf="blogPost.relatedLinks">
             <h2>More posts</h2>
             <ul>
-                <li *ngFor="let link of blogPost.links"><a>{{link.subject}}</a></li>
+                <li *ngFor="let link of blogPost.relatedLinks"><a href="">{{link.subject}}</a></li>
             </ul>
         </div>
     </aside>

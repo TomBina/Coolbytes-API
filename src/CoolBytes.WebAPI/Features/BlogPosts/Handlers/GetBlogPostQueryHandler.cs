@@ -25,7 +25,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
         private async Task<BlogPostViewModel> ViewModel(int blogPostId)
         {
-            var builder = new BlogPostViewModelBuilder(_context);
+            var builder = new BlogPostViewModelBuilder();
             var blogPost = await GetBlogPost(blogPostId);
             var links = await GetRelatedLinks(blogPostId);
 
@@ -38,8 +38,10 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         private async Task<BlogPost> GetBlogPost(int id) 
             => await _context.BlogPosts.AsNoTracking()
                                        .Include(b => b.Author.AuthorProfile)
+                                       .ThenInclude(ap => ap.Image)
                                        .Include(b => b.Tags)
                                        .Include(b => b.Image)
+                                       .Include(b => b.ExternalLinks)
                                        .FirstOrDefaultAsync(b => b.Id == id);
 
         private async Task<List<BlogPostLinkDto>> GetRelatedLinks(int id) 

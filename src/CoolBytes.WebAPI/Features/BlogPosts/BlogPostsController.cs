@@ -48,12 +48,12 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         private IEnumerable<ExternalLinkDto> ValidateExternalLinks(string externalLinks)
         {
+            if (externalLinks == null || externalLinks == "[]")
+                return null;
+
             var settings = new JsonSerializerSettings();
             settings.Error = (sender, args) => ModelState.AddModelError(nameof(externalLinks), "Invalid json");
             var links = JsonConvert.DeserializeObject<List<ExternalLinkDto>>(externalLinks, settings);
-
-            if (links == null)
-                return null;
 
             var validator = new ExternalLinkDtoValidator();
             var errors = links.Select(l => validator.Validate(l)).Where(r => !r.IsValid);

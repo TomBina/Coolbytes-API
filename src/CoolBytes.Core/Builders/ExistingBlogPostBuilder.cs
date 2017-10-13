@@ -48,9 +48,9 @@ namespace CoolBytes.Core.Builders
             return this;
         }
 
-        public ExistingBlogPostBuilder WithTags(IEnumerable<string> tags)
+        public ExistingBlogPostBuilder WithTags(IEnumerable<BlogPostTag> tags)
         {
-            When.NotNull(tags, () => _blogPost.Tags.Update(tags.Select(s => new BlogPostTag(s))));
+            When.NotNull(tags, () => _blogPost.Tags.Update(tags));
             
             return this;
         }

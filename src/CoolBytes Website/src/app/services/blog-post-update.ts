@@ -1,3 +1,4 @@
+import { ExternalLink } from './external-link';
 import { BlogPostTag } from './blog-post-tag';
 import { Image } from "./image";
 
@@ -10,4 +11,5 @@ export class BlogPostUpdate {
     content: string;
     tags: BlogPostTag[];
     image: Image;
+    externalLinks: ExternalLink[];
 }
