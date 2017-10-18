@@ -23,6 +23,10 @@ export class MdComponent implements OnChanges {
             else
                 return `<img src="${href}" />`
         };
+        renderer.link = (href: string, title: string, text: string) => {
+            return `<a class="md-link" href="${href}" title="${title}">${text}</a>`
+        }
+
         marked.setOptions({
             gfm: true,
             breaks: true,

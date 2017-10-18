@@ -11,9 +11,10 @@ using System;
 namespace CoolBytes.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppContextModelSnapshot : ModelSnapshot
+    [Migration("20171016152210_AddedResumeEvent")]
+    partial class AddedResumeEvent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,10 +169,6 @@ namespace CoolBytes.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(1000);
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
-
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
@@ -230,7 +227,7 @@ namespace CoolBytes.Data.Migrations
 
                             b1.Property<string>("Content")
                                 .IsRequired()
-                                .HasMaxLength(8000);
+                                .HasMaxLength(4000);
 
                             b1.Property<string>("ContentIntro")
                                 .IsRequired()

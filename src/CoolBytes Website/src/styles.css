@@ -43,6 +43,23 @@ a.button.small {
     font-size:13px;
 }
 
+a.md-link {
+    font-weight:700;
+}
+
+pre > code {
+    white-space: nowrap;
+}
+
+pre > code > .hljs {
+    white-space: pre;
+}
+
+code {
+    background-color:#383838;
+    color:#dcdcdc;
+}
+
 label {
     text-transform: uppercase;
     font-size:14px;
@@ -89,10 +106,6 @@ textarea.error {
     border-color:#B60E0E;
 }
 
-code {
-    background-color:#1e1e1e;
-    color:#dcdcdc;
-}
 
 .backdrop { 
     background-color:#000; 

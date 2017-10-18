@@ -4,6 +4,8 @@ using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using CoolBytes.WebAPI.Features.Images;
+using CoolBytes.WebAPI.Features.Resume.DTO;
+using CoolBytes.WebAPI.Features.Resume.ViewModels;
 
 namespace CoolBytes.WebAPI.AutoMapper
 {
@@ -48,6 +50,8 @@ namespace CoolBytes.WebAPI.AutoMapper
                                                 }));
             CreateMap<Image, ImageViewModel>()
                 .ForMember(v => v.UriPath, exp => exp.MapFrom(p => p.UriPath));
+            CreateMap<ResumeEvent, ResumeEventViewModel>();
+            CreateMap<DateRange, DateRangeDto>();
         }
 
         private static void ResolveImageModelFromBlogPost<T>(IMemberConfigurationExpression<BlogPost, T, ImageViewModel> exp)

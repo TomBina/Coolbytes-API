@@ -14,6 +14,7 @@ namespace CoolBytes.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Image> Images { get; set; }
+        public DbSet<ResumeEvent> ResumeEvents { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -48,11 +49,13 @@ namespace CoolBytes.Data
                     var blogPostContentEntity = entity.OwnsOne(b => b.Content);
                     blogPostContentEntity.Property(e => e.Subject).HasMaxLength(100).IsRequired();
                     blogPostContentEntity.Property(e => e.ContentIntro).HasMaxLength(100).IsRequired();
-                    blogPostContentEntity.Property(e => e.Content).HasMaxLength(4000).IsRequired();
+                    blogPostContentEntity.Property(e => e.Content).HasMaxLength(8000).IsRequired();
                     blogPostContentEntity.Property(e => e.SubjectUrl).HasMaxLength(100).IsRequired();
 
-                    entity.HasMany(b => b.Tags).WithOne(bt => bt.BlogPost).IsRequired().OnDelete(DeleteBehavior.Cascade);
-                    entity.HasMany(b => b.ExternalLinks).WithOne(el => el.BlogPost).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                    entity.HasMany(b => b.Tags).WithOne(bt => bt.BlogPost).IsRequired()
+                        .OnDelete(DeleteBehavior.Cascade);
+                    entity.HasMany(b => b.ExternalLinks).WithOne(el => el.BlogPost).IsRequired()
+                        .OnDelete(DeleteBehavior.Cascade);
                 })
                 .Entity<Image>(entity =>
                 {
@@ -73,6 +76,15 @@ namespace CoolBytes.Data
                     entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
                     entity.Property(e => e.Url).HasMaxLength(255).IsRequired();
                     entity.ToTable("ExternalLinks");
+                })
+                .Entity<ResumeEvent>(entity =>
+                {
+                    entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
+                    entity.Property(e => e.Message).HasMaxLength(1000).IsRequired();
+
+                    var dateRangeRangeEntity = entity.OwnsOne(e => e.DateRange);
+                    dateRangeRangeEntity.Property(e => e.StartDate).IsRequired();
+                    dateRangeRangeEntity.Property(e => e.EndDate).IsRequired();
                 });
         }
 

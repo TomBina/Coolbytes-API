@@ -4,12 +4,8 @@
         <p class="details">
             {{blogPost.date | date}} by {{blogPost.author.firstName}}
         </p>
-        <p>
-            <md [value]="blogPost.contentIntro"></md>
-        </p>
-        <p>
-            <md [value]="blogPost.content"></md>
-        </p>
+        <md [value]="blogPost.contentIntro"></md>
+        <md [value]="blogPost.content"></md>
     </article>
     <aside *ngIf="blogPost">
         <div *ngIf="_authorImage">

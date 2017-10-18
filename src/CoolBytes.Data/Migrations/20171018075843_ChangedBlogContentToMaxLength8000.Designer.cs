@@ -11,9 +11,10 @@ using System;
 namespace CoolBytes.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppContextModelSnapshot : ModelSnapshot
+    [Migration("20171018075843_ChangedBlogContentToMaxLength8000")]
+    partial class ChangedBlogContentToMaxLength8000
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,10 +168,6 @@ namespace CoolBytes.Data.Migrations
                     b.Property<string>("Message")
                         .IsRequired()
                         .HasMaxLength(1000);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 

@@ -20,7 +20,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
             });
             RuleFor(b => b.Subject).NotEmpty().MaximumLength(100);
             RuleFor(b => b.ContentIntro).NotEmpty().MaximumLength(100);
-            RuleFor(b => b.Content).NotEmpty().MaximumLength(4000);
+            RuleFor(b => b.Content).NotEmpty().MaximumLength(8000);
             RuleFor(b => b.Tags).Custom((tags, context) =>
             {
                 if (tags == null)
