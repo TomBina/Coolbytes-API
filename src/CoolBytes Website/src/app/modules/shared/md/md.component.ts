@@ -1,7 +1,7 @@
 import { ImagesService } from '../../../services/images.service';
 import { Component, OnChanges, Input } from "@angular/core";
 import * as marked from 'marked';
-import * as highlight from "../../../../external/highlightjs";
+import * as prism from "../../../../external/prism";
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
@@ -33,8 +33,8 @@ export class MdComponent implements OnChanges {
             renderer: renderer,
             sanitize: true,
             highlight: (c, lang) =>  {
-                let val = highlight.highlight("cs", c).value;
-                return `<div class="hljs">${highlight.highlight("cs", c).value}</div>`
+                let val = prism.highlight(c, prism.languages.csharp)
+                return `${val}`;
             }
         });
         this._marked = marked;

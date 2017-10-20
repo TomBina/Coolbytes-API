@@ -1,4 +1,4 @@
-@import url("../node_modules/highlight.js/styles/vs2015.css");
+@import url("external/prism/prism.css");
 
 body {
     color:#231e1e;
@@ -47,16 +47,18 @@ a.md-link {
     font-weight:700;
 }
 
-pre > code {
-    white-space: nowrap;
-}
-
-pre > code > .hljs {
-    white-space: pre;
-}
-
 code {
+    background-color:#dddcdc;
+}
+
+pre {
     background-color:#383838;
+    color:#dcdcdc;
+    padding:10px;
+}
+
+pre > code {
+    background-color: transparent;
     color:#dcdcdc;
 }
 

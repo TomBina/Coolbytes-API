@@ -16,10 +16,10 @@ namespace CoolBytes.WebAPI.Features.Resume
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> GetResumeEvents(GetResumeQuery message) 
+        public async Task<IActionResult> Get(GetResumeQuery message) 
             => this.OkOrNotFound(await _mediator.Send(message));
 
-        public async Task<IActionResult> AddResumeEvent(AddResumeEventCommand message)
+        public async Task<IActionResult> Add(AddResumeEventCommand message)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -27,7 +27,7 @@ namespace CoolBytes.WebAPI.Features.Resume
             return Ok(await _mediator.Send(message));
         }
 
-        public async Task<IActionResult> UpdateResumeEvent(UpdateResumeEventCommand message)
+        public async Task<IActionResult> Update(UpdateResumeEventCommand message)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
