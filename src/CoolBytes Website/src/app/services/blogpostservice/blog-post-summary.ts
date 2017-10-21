@@ -1,4 +1,5 @@
-import { Image } from "./image";
+import { Image } from '../imagesservice/image';
+
 export class BlogPostSummary {
     id: number;
     date: Date;

@@ -1,3 +1,5 @@
+import { ImagesService } from '../../services/imagesservice/images.service';
+import { AuthorsService } from '../../services/authorsservice/authors.service';
 import { PreviewBlogComponent } from './blog/previewblog/preview-blog.component';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -7,8 +9,6 @@ import { RouterModule } from '@angular/router';
 import { AdminAuthorGuardService } from '../../services/admin-author-guard.service';
 import { AdminGuardService } from '../../services/admin-guard.service';
 import { AuthService } from '../../services/auth.service';
-import { AuthorsService } from '../../services/authors.service';
-import { ImagesService } from '../../services/images.service';
 import { SharedModule } from '../shared/shared.module';
 import { AuthorComponent } from './author/author.component';
 import { AddBlogComponent } from './blog/addblog/add-blog.component';

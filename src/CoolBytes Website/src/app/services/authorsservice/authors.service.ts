@@ -1,42 +1,34 @@
-import { environment } from '../../environments/environment';
-import { AuthorAddUpdateCommand } from "./author-add-update-command";
+import { AuthorAddUpdateCommand } from './author-add-update-command';
 import 'rxjs/add/operator/map';
 
-import { Injectable } from "@angular/core";
-import { Headers, Http, RequestOptions, Response } from "@angular/http";
-import { Observable } from "rxjs/Observable";
+import { Injectable } from '@angular/core';
+import { Headers, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
-import { AuthService } from "./auth.service";
-import { Author } from "./author";
+import { environment } from '../../../environments/environment';
+import { Author } from './author';
+import { WebApiService } from './../web-api-service';
 
 @Injectable()
-export class AuthorsService {
-
-    constructor(private _http: Http, private _authService: AuthService) { }
-
+export class AuthorsService extends WebApiService {
     private _url: string = environment.apiUri + "api/authors/";
 
-    getRequestOptions(headers: Headers): RequestOptions {
-        headers = this._authService.addAuthorizationHeader(headers);
-        return new RequestOptions({ headers: headers });
-    }
-
     get(): Observable<Author> {
-        let observable = this._http.get(this._url, this.getRequestOptions(new Headers()));
+        let observable = this.http.get(this._url, this.getRequestOptions(new Headers()));
 
         return observable.map((response: Response) => <Author>response.json());
     }
 
     add(author: AuthorAddUpdateCommand): Observable<Author> {
         let formData = this.createFormData(author);
-        let observable = this._http.post(this._url, formData, this.getRequestOptions(new Headers()));
+        let observable = this.http.post(this._url, formData, this.getRequestOptions(new Headers()));
 
         return observable.map((response: Response) => <Author>response.json());
     }
 
     update(author: AuthorAddUpdateCommand): Observable<Author> {
         let formData = this.createFormData(author);
-        let observable = this._http.put(this._url, formData, this.getRequestOptions(new Headers()));
+        let observable = this.http.put(this._url, formData, this.getRequestOptions(new Headers()));
 
         return observable.map((response: Response) => <Author>response.json());
     }

@@ -1,12 +1,12 @@
+import { ExternalLink } from '../../../../services/blogpostservice/external-link';
+import { BlogPostAddCommand } from '../../../../services/blogpostservice/blog-post-add-command';
+import { BlogPostsService } from '../../../../services/blogpostservice/blog-posts.service';
+import { AuthorsService } from '../../../../services/authorsservice/authors.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { AuthorsService } from '../../../../services/authors.service';
-import { BlogPostAddCommand } from '../../../../services/blog-post-add-command';
-import { BlogPostsService } from '../../../../services/blog-posts.service';
-import { ExternalLink } from '../../../../services/external-link';
 import { BlogPostPreview } from '../previewblog/blog-post-preview';
 import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
 

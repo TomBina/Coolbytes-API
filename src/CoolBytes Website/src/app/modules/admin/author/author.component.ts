@@ -1,11 +1,10 @@
-import { ImagesService } from '../../../services/images.service';
+import { AuthorAddUpdateCommand } from '../../../services/authorsservice/author-add-update-command';
+import { Image } from '../../../services/imagesservice/image';
+import { ImagesService } from '../../../services/imagesservice/images.service';
+import { AuthorsService } from '../../../services/authorsservice/authors.service';
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-
-import { AuthorAddUpdateCommand } from "../../../services/author-add-update-command";
-import { AuthorsService } from "../../../services/authors.service";
-import { Image } from "../../../services/image";
 
 @Component({
   templateUrl: "./author.component.html"

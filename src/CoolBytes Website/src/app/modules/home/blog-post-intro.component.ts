@@ -1,5 +1,5 @@
+import { BlogPostSummary } from '../../services/blogpostservice/blog-post-summary';
 import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { BlogPostSummary } from "../../services/blog-post-summary";
 
 @Component({
     selector: "home-blog-post-intro",

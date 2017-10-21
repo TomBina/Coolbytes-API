@@ -1,7 +1,7 @@
-import { ImagesService } from '../../../services/images.service';
+import { ImagesService } from '../../../services/imagesservice/images.service';
 import { Component, OnChanges, Input } from "@angular/core";
 import * as marked from 'marked';
-import * as prism from "../../../../external/prism";
+import * as prism from '../../../../external/prism';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({

@@ -1,6 +1,6 @@
+import { ImagesService } from '../../../services/imagesservice/images.service';
+import { Image } from '../../../services/imagesservice/image';
 import { environment } from '../../../../environments/environment';
-import { Image } from "../../../services/image";
-import { ImagesService } from "../../../services/images.service";
 import { Component, OnInit, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
 

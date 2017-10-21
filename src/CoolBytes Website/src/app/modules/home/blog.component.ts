@@ -1,7 +1,7 @@
-import { BlogPostSummary } from '../../services/blog-post-summary';
+import { BlogPostSummary } from '../../services/blogpostservice/blog-post-summary';
+import { BlogPost } from '../../services/blogpostservice/blog-post';
+import { BlogPostsService } from '../../services/blogpostservice/blog-posts.service';
 import { Component, OnInit } from "@angular/core";
-import { BlogPostsService } from "../../services/blog-posts.service";
-import { BlogPost } from "../../services/blog-post";
 
 @Component({
     templateUrl: "./blog.component.html",

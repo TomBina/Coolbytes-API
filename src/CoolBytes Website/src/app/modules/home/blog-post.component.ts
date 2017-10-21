@@ -1,10 +1,8 @@
-import { ImagesService } from '../../services/images.service';
-import { BlogPost } from '../../services/blog-post';
-import { BlogPostSummary } from '../../services/blog-post-summary';
+import { ImagesService } from '../../services/imagesservice/images.service';
+import { BlogPost } from '../../services/blogpostservice/blog-post';
+import { BlogPostsService } from '../../services/blogpostservice/blog-posts.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
-import { BlogPostsService } from '../../services/blog-posts.service';
 
 @Component({
     templateUrl: "./blog-post.component.html",

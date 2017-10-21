@@ -1,18 +1,17 @@
+import { ExternalLink } from '../../../../services/blogpostservice/external-link';
+import { BlogPostUpdateCommand } from '../../../../services/blogpostservice/blog-post-update-command';
+import { BlogPostUpdate } from '../../../../services/blogpostservice/blog-post-update';
+import { Image } from '../../../../services/imagesservice/image';
+import { BlogPostSummary } from '../../../../services/blogpostservice/blog-post-summary';
+import { ImagesService } from '../../../../services/imagesservice/images.service';
+import { BlogPostsService } from '../../../../services/blogpostservice/blog-posts.service';
+import { AuthorsService } from '../../../../services/authorsservice/authors.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-
-import { AuthorsService } from '../../../../services/authors.service';
-import { BlogPostSummary } from '../../../../services/blog-post-summary';
-import { BlogPostUpdate } from '../../../../services/blog-post-update';
-import { BlogPostUpdateCommand } from '../../../../services/blog-post-update-command';
-import { BlogPostsService } from '../../../../services/blog-posts.service';
-import { Image } from '../../../../services/image';
-import { ImagesService } from '../../../../services/images.service';
 import { BlogPostPreview } from '../previewblog/blog-post-preview';
 import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
-import { ExternalLink } from '../../../../services/external-link';
 
 @Component({
     templateUrl: "./update-blog.component.html",

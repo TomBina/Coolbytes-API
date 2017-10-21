@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace CoolBytes.WebAPI.Features.Resume
 {
     [Route("api/[controller]")]
-    public class ResumeEventsController : Controller
+    public class ResumeController : Controller
     {
         private readonly IMediator _mediator;
 
-        public ResumeEventsController(IMediator mediator)
+        public ResumeController(IMediator mediator)
         {
             _mediator = mediator;
         }

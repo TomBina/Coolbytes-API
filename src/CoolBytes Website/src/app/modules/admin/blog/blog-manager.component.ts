@@ -1,9 +1,8 @@
-import { BlogPostSummary } from "../../../services/blog-post-summary";
+import { BlogPostsService } from '../../../services/blogpostservice/blog-posts.service';
+import { BlogPostSummary } from '../../../services/blogpostservice/blog-post-summary';
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { Author } from "../../../services/author";
-import { BlogPostsService } from "../../../services/blog-posts.service";
 
 @Component({
     templateUrl: "./blog-manager.component.html",
