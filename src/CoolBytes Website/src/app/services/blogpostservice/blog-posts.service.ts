@@ -1,5 +1,4 @@
-import { BlogPostUpdateCommand } from './blog-post-update-command';
-import { BlogPostAddCommand } from './blog-post-add-command';
+import { AddBlogPostCommand } from './add-blog-post-command';
 import 'rxjs/add/operator/map';
 
 import { Injectable } from '@angular/core';
@@ -11,6 +10,7 @@ import { BlogPost } from './blog-post';
 import { BlogPostSummary } from './blog-post-summary';
 import { BlogPostUpdate } from './blog-post-update';
 import { WebApiService } from './../web-api-service';
+import { UpdateBlogPostCommand } from './update-blog-post-command';
 
 @Injectable()
 export class BlogPostsService extends WebApiService {
@@ -26,8 +26,8 @@ export class BlogPostsService extends WebApiService {
         return observable.map((response: Response) => <BlogPostSummary[]>response.json());
     }
 
-    add(blogPostAdd: BlogPostAddCommand, files: FileList): Observable<BlogPostSummary> {
-        let formData = this.createFormData(blogPostAdd, files);
+    add(addBlogPostCommand: AddBlogPostCommand, files: FileList): Observable<BlogPostSummary> {
+        let formData = this.createFormData(addBlogPostCommand, files);
         let observable = this.http.post(this._url, formData, this.getAuthRequestOptions(new Headers()));
         return observable.map((response: Response) => <BlogPostSummary>response.json());
     }
@@ -37,9 +37,9 @@ export class BlogPostsService extends WebApiService {
         return observable.map((response: Response) => <BlogPostUpdate>response.json());
     }
 
-    update(blogPostUpdateCommand: BlogPostUpdateCommand, files: FileList): Observable<BlogPostSummary> {
-        let formData = this.createFormData(blogPostUpdateCommand, files);
-        formData.append("id", blogPostUpdateCommand.id.toString());
+    update(updateBlogPostCommand: UpdateBlogPostCommand, files: FileList): Observable<BlogPostSummary> {
+        let formData = this.createFormData(updateBlogPostCommand, files);
+        formData.append("id", updateBlogPostCommand.id.toString());
 
         let observable = this.http.put(`${this._url}/update/`, formData, this.getAuthRequestOptions(new Headers()));
         return observable.map((response: Response) => <BlogPostSummary>response.json());

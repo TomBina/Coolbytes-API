@@ -1,5 +1,5 @@
+import { AddBlogPostCommand } from '../../../../services/blogpostservice/add-blog-post-command';
 import { ExternalLink } from '../../../../services/blogpostservice/external-link';
-import { BlogPostAddCommand } from '../../../../services/blogpostservice/blog-post-add-command';
 import { BlogPostsService } from '../../../../services/blogpostservice/blog-posts.service';
 import { AuthorsService } from '../../../../services/authorsservice/authors.service';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -17,7 +17,7 @@ import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
 export class AddBlogComponent implements OnInit, OnDestroy {
     constructor(private _authorsService: AuthorsService, private _blogPostsService: BlogPostsService, private _router: Router, private _fb: FormBuilder) { }
 
-    private _blogForm: FormGroup;
+    private _form: FormGroup;
     private _externalLinks = [];
     private _files: FileList;
 
@@ -26,7 +26,7 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     private _previewObserver: Subscription
 
     ngOnInit() {
-        this._blogForm = this._fb.group(
+        this._form = this._fb.group(
             {
                 subject: ["", [Validators.required, Validators.maxLength(100)]],
                 contentIntro: ["", [Validators.required, Validators.maxLength(100)]],
@@ -35,11 +35,11 @@ export class AddBlogComponent implements OnInit, OnDestroy {
                 externalLinks: this._fb.array([this.createExternalLinkFormGroup()])
             }
         )
-        this._previewObserver = this._blogForm.valueChanges.subscribe(v => {
+        this._previewObserver = this._form.valueChanges.subscribe(v => {
             this._previewBlogComponent.blogPostPreview
-                = new BlogPostPreview(this._blogForm.get("subject").value,
-                    this._blogForm.get("content").value,
-                    this._blogForm.get("contentIntro").value);
+                = new BlogPostPreview(this._form.get("subject").value,
+                    this._form.get("content").value,
+                    this._form.get("contentIntro").value);
         })
     }
 
@@ -53,7 +53,7 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     }
 
     getExternalLinksControls(): FormArray {
-        return this._blogForm.get("externalLinks") as FormArray;
+        return this._form.get("externalLinks") as FormArray;
     }
 
     addExternalLinkControl() {
@@ -73,17 +73,17 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        if (!this._blogForm.valid) {
-            for (let controlName in this._blogForm.controls) {
-                this._blogForm.get(controlName).markAsTouched();
+        if (!this._form.valid) {
+            for (let controlName in this._form.controls) {
+                this._form.get(controlName).markAsTouched();
             }
             return;
         }
 
-        let blogPostAdd = new BlogPostAddCommand();
-        blogPostAdd.subject = this._blogForm.get("subject").value;
-        blogPostAdd.content = this._blogForm.get("content").value;
-        blogPostAdd.contentIntro = this._blogForm.get("contentIntro").value;
+        let addBlogPostCommand = new AddBlogPostCommand();
+        addBlogPostCommand.subject = this._form.get("subject").value;
+        addBlogPostCommand.content = this._form.get("content").value;
+        addBlogPostCommand.contentIntro = this._form.get("contentIntro").value;
 
         let externalLinks: ExternalLink[] = [];
 
@@ -94,14 +94,12 @@ export class AddBlogComponent implements OnInit, OnDestroy {
                 externalLinks.push(externalLink);
         }
 
-        blogPostAdd.externalLinks = externalLinks;
+        addBlogPostCommand.externalLinks = externalLinks;
 
-        let tags: string = this._blogForm.get("tags").value;
+        let tags: string = this._form.get("tags").value;
         if (tags.indexOf(",") !== -1 || tags.length > 0)
-            blogPostAdd.tags = tags.split(",");
+            addBlogPostCommand.tags = tags.split(",");
 
-        this._blogPostsService.add(blogPostAdd, this._files).subscribe(blogpost => {
-            this._router.navigateByUrl("admin/blogs")
-        });
+        this._blogPostsService.add(addBlogPostCommand, this._files).subscribe(b => this._router.navigateByUrl("admin/blogs"));
     }
 }

@@ -73,8 +73,8 @@ namespace CoolBytes.WebAPI
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseCors("DevPolicy");
+                app.UseDeveloperExceptionPage();
 
                 Mapper.AssertConfigurationIsValid();
             }

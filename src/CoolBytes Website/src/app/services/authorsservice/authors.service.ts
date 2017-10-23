@@ -1,4 +1,3 @@
-import { AuthorAddUpdateCommand } from './author-add-update-command';
 import 'rxjs/add/operator/map';
 
 import { Injectable } from '@angular/core';
@@ -8,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
 import { Author } from './author';
 import { WebApiService } from './../web-api-service';
+import { AddOrUpdateAuthorCommand } from './add-or-update-author-command';
 
 @Injectable()
 export class AuthorsService extends WebApiService {
@@ -19,15 +19,15 @@ export class AuthorsService extends WebApiService {
         return observable.map((response: Response) => <Author>response.json());
     }
 
-    add(author: AuthorAddUpdateCommand): Observable<Author> {
-        let formData = this.createFormData(author);
+    add(addAuthorCommand: AddOrUpdateAuthorCommand): Observable<Author> {
+        let formData = this.createFormData(addAuthorCommand);
         let observable = this.http.post(this._url, formData, this.getRequestOptions(new Headers()));
 
         return observable.map((response: Response) => <Author>response.json());
     }
 
-    update(author: AuthorAddUpdateCommand): Observable<Author> {
-        let formData = this.createFormData(author);
+    update(updateAuthorCommand: AddOrUpdateAuthorCommand): Observable<Author> {
+        let formData = this.createFormData(updateAuthorCommand);
         let observable = this.http.put(this._url, formData, this.getRequestOptions(new Headers()));
 
         return observable.map((response: Response) => <Author>response.json());

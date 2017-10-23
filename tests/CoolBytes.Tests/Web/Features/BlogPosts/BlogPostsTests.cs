@@ -46,7 +46,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery());
 
-            Assert.Equal(1, result.Count());
+            Assert.NotEmpty(result);
         }
 
         [Fact]

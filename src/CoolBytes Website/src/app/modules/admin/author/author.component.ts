@@ -1,10 +1,10 @@
-import { AuthorAddUpdateCommand } from '../../../services/authorsservice/author-add-update-command';
 import { Image } from '../../../services/imagesservice/image';
 import { ImagesService } from '../../../services/imagesservice/images.service';
 import { AuthorsService } from '../../../services/authorsservice/authors.service';
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { AddOrUpdateAuthorCommand } from '../../../services/authorsservice/add-or-update-author-command';
 
 @Component({
   templateUrl: "./author.component.html"
@@ -65,19 +65,19 @@ export class AuthorComponent implements OnInit {
       return;
     }
 
-    let model = new AuthorAddUpdateCommand();
-    model.firstName = this._firstName.value;
-    model.lastName = this._lastName.value;
-    model.about = this._about.value;
-    model.files = this._files;
+    let addOrUpdateAuthorCommand = new AddOrUpdateAuthorCommand();
+    addOrUpdateAuthorCommand.firstName = this._firstName.value;
+    addOrUpdateAuthorCommand.lastName = this._lastName.value;
+    addOrUpdateAuthorCommand.about = this._about.value;
+    addOrUpdateAuthorCommand.files = this._files;
     
     if (this._id) {
-      this._authorsService.update(model).subscribe(author => {
+      this._authorsService.update(addOrUpdateAuthorCommand).subscribe(author => {
         this._router.navigate(["admin"]);
       });
     }
     else {
-      this._authorsService.add(model).subscribe(author => {
+      this._authorsService.add(addOrUpdateAuthorCommand).subscribe(author => {
         this._router.navigate(["admin"]);
       });
     }

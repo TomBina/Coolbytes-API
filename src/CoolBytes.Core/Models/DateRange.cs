@@ -13,5 +13,16 @@ namespace CoolBytes.Core.Models
             StartDate = startDate;
             EndDate = endDate;
         }
+
+        public void Update(DateTime startDate, DateTime endDate)
+        {
+            StartDate = startDate;
+            EndDate = endDate;
+        }
+
+        private DateRange()
+        {
+            
+        }
     }
 }

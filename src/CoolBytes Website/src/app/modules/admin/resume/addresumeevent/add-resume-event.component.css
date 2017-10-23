@@ -1,0 +1,18 @@
+.left { 
+    width:50%; 
+    float:left; 
+    padding-right:20px; 
+    box-sizing: border-box; 
+    border-right:1px solid #a0a0a0;  
+}
+
+.right { 
+    width:50%; 
+    float:left; 
+    padding-left:20px; 
+    box-sizing: border-box; 
+}
+
+.flex {
+    display:flex;
+}

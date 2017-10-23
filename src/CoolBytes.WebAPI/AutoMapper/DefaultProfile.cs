@@ -4,8 +4,8 @@ using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using CoolBytes.WebAPI.Features.Images;
-using CoolBytes.WebAPI.Features.Resume.DTO;
-using CoolBytes.WebAPI.Features.Resume.ViewModels;
+using CoolBytes.WebAPI.Features.ResumeEvents.DTO;
+using CoolBytes.WebAPI.Features.ResumeEvents.ViewModels;
 
 namespace CoolBytes.WebAPI.AutoMapper
 {

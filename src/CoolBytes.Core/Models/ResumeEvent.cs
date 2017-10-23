@@ -22,8 +22,11 @@ namespace CoolBytes.Core.Models
             Validate(dateRange, name, message);
         }
 
-        public void Update(DateRange dateRange, string name, string message) 
-            => Validate(dateRange, name, message);
+        public void Update(string name, string message)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Message = message ?? throw new ArgumentNullException(nameof(message));
+        }
 
         private void Validate(DateRange dateRange, string name, string message)
         {
