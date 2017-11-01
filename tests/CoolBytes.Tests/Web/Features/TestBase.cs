@@ -15,7 +15,7 @@ namespace CoolBytes.Tests.Web.Features
         protected AppDbContext Context;
         protected Fixture Fixture;
         protected IUserService UserService;
-        protected IAuthorService AuthorService;
+        protected AuthorService AuthorService;
 
         protected TestBase(Fixture fixture)
         {

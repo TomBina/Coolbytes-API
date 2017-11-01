@@ -1,9 +1,12 @@
-<a *ngIf="!_open" (click)="open()">insert photo</a>
+<a *ngIf="!_open" (click)="open()">{{title}}</a>
 <div *ngIf="_open">
     <div class="backdrop" (click)="close()"></div>
     <div class="dialog">
+        <p>
+            <a class="button" (click)="toggleDelete()">{{_deleteImageText}}</a>
+        </p>
         <div class="files">
-            <img *ngFor="let image of _images" [src]="_imageService.getUri(image.uriPath)" (click)="insertImage(image.uriPath, image.id)" />
+            <img *ngFor="let image of _images" [src]="_imagesService.getUri(image.uriPath)" (click)="onImageClick(image)" />
         </div>
         <input type="file" class="fileInput" multiple="multiple" (change)="uploadImages($event.target)" />
     </div>

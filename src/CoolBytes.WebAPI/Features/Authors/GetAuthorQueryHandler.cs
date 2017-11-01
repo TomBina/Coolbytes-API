@@ -22,7 +22,15 @@ namespace CoolBytes.WebAPI.Features.Authors
 
         public async Task<AuthorViewModel> Handle(GetAuthorQuery message)
         {
-            var author = await _authorService.GetAuthorWithProfile();
+            Author author;
+            if (message.IncludeProfile)
+            {
+                author = await _authorService.GetAuthorWithProfile();
+            }
+            else
+            {
+                author = await _authorService.GetAuthor();
+            }
 
             return CreateViewModel(author);
         }

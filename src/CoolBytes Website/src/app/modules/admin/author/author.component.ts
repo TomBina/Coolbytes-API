@@ -1,85 +1,126 @@
+import { Author } from '../../../services/authorsservice/author';
 import { Image } from '../../../services/imagesservice/image';
 import { ImagesService } from '../../../services/imagesservice/images.service';
 import { AuthorsService } from '../../../services/authorsservice/authors.service';
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormControl, FormGroup, Validators, FormBuilder, FormArray } from "@angular/forms";
 import { Router } from "@angular/router";
-import { AddOrUpdateAuthorCommand } from '../../../services/authorsservice/add-or-update-author-command';
+import { Enumerate } from '../../../utils/enumerate';
 
 @Component({
-  templateUrl: "./author.component.html"
+  templateUrl: "./author.component.html",
+  styleUrls: ["./author.component.css"]
 })
 export class AuthorComponent implements OnInit {
 
-  constructor(private _authorsService: AuthorsService, private _router: Router, private _imagesService: ImagesService) { }
+  constructor(private _authorsService: AuthorsService, private _router: Router,
+    private _imagesService: ImagesService, private _fb: FormBuilder) { }
 
-  authorForm: FormGroup;
-
-  private _id: number;
-  private _firstName: FormControl;
-  private _lastName: FormControl;
-  private _about: FormControl;
-  private _image: Image;
-  private _files: FileList;
+  private _author: Author;
+  private _imageUri: string;
+  private _experiencesImageUris: any = {}
+  private _form: FormGroup;
 
   ngOnInit() {
-    this._firstName = new FormControl(null, [Validators.required, Validators.maxLength(50)]);
-    this._lastName = new FormControl(null, [Validators.required, Validators.maxLength(50)]);
-    this._about = new FormControl(null, [Validators.required, Validators.maxLength(500)]);
+    this.initForm();
+    this._authorsService.getWithProfile().subscribe(author => this.updateForm(author));
+  }
 
-    this.authorForm = new FormGroup({
-      firstName: this._firstName,
-      lastName: this._lastName,
-      about: this._about
+  initForm() {
+    this._form = this._fb.group({
+      firstName: ["", [Validators.required, Validators.maxLength(50)]],
+      lastName: ["", [Validators.required, Validators.maxLength(50)]],
+      about: ["", [Validators.required, Validators.maxLength(500)]],
+      imageId: [""],
+      resumeUri: ["",[Validators.maxLength(255)]],
+      linkedIn: ["",[Validators.maxLength(255)]],
+      gitHub: ["",[Validators.maxLength(255)]],
+      experiences: this._fb.array([])
     });
+  }
 
-    this._authorsService.get().subscribe(
-      author => {
-        this._id = author.id;
-        this._firstName.setValue(author.firstName);
-        this._lastName.setValue(author.lastName);
-        this._about.setValue(author.about);
-        this._image = author.image;
+  getExperiencesControls(): FormArray {
+    return this._form.get("experiences") as FormArray;
+  }
 
-        if (this._image)
-          this._image.uri = this._imagesService.getUri(this._image.uriPath);
+  addExperienceControl(): FormGroup {
+    let experiences = this.getExperiencesControls();
+    let experience = this.createExperienceFormGroup();
+    experiences.push(experience);
+
+    return experience;
+  }
+
+  createExperienceFormGroup(): FormGroup {
+    return new FormGroup({
+      id: new FormControl(""),
+      name: new FormControl("", Validators.maxLength(50)),
+      color: new FormControl("", [Validators.maxLength(6), Validators.minLength(6)]),
+      imageId: new FormControl("")
+    })
+  }
+
+  updateForm(author: Author) {
+    Enumerate.deep(author, prop => this._form.get(prop) && prop != "experiences", (prop, value) => this._form.get(prop).setValue(value));
+    this._author = author;
+
+    if (author.image) {
+      this._imageUri = this._imagesService.getUri(author.image.uriPath);
+      this._form.get("imageId").setValue(author.image.id);
+    }
+
+    if (author.experiences) {
+      let index = 0;
+      author.experiences.forEach(e => {
+        let control = this.addExperienceControl();
+        control.get("id").setValue(e.id);
+        control.get("name").setValue(e.name);
+        control.get("color").setValue(e.color);
+        control.get("imageId").setValue(e.image.id);
+        this._experiencesImageUris[`Image${index}`] = this._imagesService.getUri(e.image.uriPath);
+        index++;
       });
+    }
   }
 
-  inputCssClass(name: string) {
-    let formControl = this.authorForm.get(name);
-
-    if (!formControl.valid && formControl.touched)
-      return "error";
+  removeExperience(index) {
+    this.getExperiencesControls().removeAt(index);
   }
 
-  onFileChanged(element: HTMLInputElement) {
-    this._files = element.files;
+  onContentImageSelectedHandler(image: Image) {
+    this._form.get("about").setValue(`${this._form.get("about").value}![](${this._imagesService.getUri(image.uriPath)})`);
+  }
+
+  onMainImageSelectedHandler(image: Image) {
+    this._imageUri = this._imagesService.getUri(image.uriPath);
+    this._form.get("imageId").setValue(image.id);
+  }
+
+  onExperiencesImageSelectedHandler(image: Image, formGroup: FormGroup, index: number) {
+    this._experiencesImageUris[`Image${index}`] = this._imagesService.getUri(image.uriPath);
+    formGroup.get("imageId").setValue(image.id);
   }
 
   onSubmit() {
-    if (!this.authorForm.valid) {
-      for (let controlName in this.authorForm.controls) {
-        this.authorForm.get(controlName).markAsTouched();
+    let controls = this._form.controls;
+
+    if (!this._form.valid) {
+      for (let controlName in controls) {
+        controls[controlName].markAsTouched();
       }
       return;
     }
 
-    let addOrUpdateAuthorCommand = new AddOrUpdateAuthorCommand();
-    addOrUpdateAuthorCommand.firstName = this._firstName.value;
-    addOrUpdateAuthorCommand.lastName = this._lastName.value;
-    addOrUpdateAuthorCommand.about = this._about.value;
-    addOrUpdateAuthorCommand.files = this._files;
-    
-    if (this._id) {
-      this._authorsService.update(addOrUpdateAuthorCommand).subscribe(author => {
-        this._router.navigate(["admin"]);
-      });
+    let command: any = {};
+
+    for (let controlName in controls) {
+      if (controls[controlName].value && controls[controlName].value.length > 0)
+        command[controlName] = controls[controlName].value;
     }
-    else {
-      this._authorsService.add(addOrUpdateAuthorCommand).subscribe(author => {
-        this._router.navigate(["admin"]);
-      });
-    }
+
+    if (this._author)
+      this._authorsService.update(command).subscribe(author => this._router.navigate(["admin"]));
+    else
+      this._authorsService.add(command).subscribe(author => this._router.navigate(["admin"]));
   }
 }

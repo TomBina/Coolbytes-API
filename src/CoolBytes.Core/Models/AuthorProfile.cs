@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using CoolBytes.Core.Collections;
 
 namespace CoolBytes.Core.Models
 {
@@ -10,16 +12,25 @@ namespace CoolBytes.Core.Models
         public Image Image { get; private set; }
         public int? ImageId { get; private set; }
         public string About { get; private set; }
+        public string ResumeUri { get; private set; }
+        public SocialHandles SocialHandles { get; private set; }
+        public UpdatableCollection<Experience> Experiences { get; private set; }
         public Author Author { get; set; }
 
-        public AuthorProfile(string firstName, string lastName, string about) => Init(firstName, lastName, about);
-
-        private AuthorProfile()
+        public AuthorProfile(string firstName, string lastName, string about)
         {
-            
+            Experiences = new ExperienceCollection();
+            Init(firstName, lastName, about);
         }
 
-        public void Update(string firstName, string lastName, string about) => Init(firstName, lastName, about);
+        private AuthorProfile() 
+            => Experiences = new ExperienceCollection();
+
+        public AuthorProfile Update(string firstName, string lastName, string about)
+        {
+            Init(firstName, lastName, about);
+            return this;
+        }
 
         private void Init(string firstName, string lastName, string about)
         {
@@ -28,9 +39,30 @@ namespace CoolBytes.Core.Models
             About = about ?? throw new ArgumentNullException(nameof(about));
         }
 
-        public void SetImage(Image image)
+        public AuthorProfile WithImage(Image image)
         {
             Image = image ?? throw new ArgumentNullException(nameof(image));
+            return this;
+        }
+
+        public AuthorProfile WithSocialHandles(SocialHandles socialHandles)
+        {
+            if (SocialHandles == null)
+            {
+                SocialHandles = socialHandles;
+            }
+            else
+            {
+                SocialHandles.Update(socialHandles.LinkedIn, socialHandles.GitHub);
+            }
+
+            return this;
+        }
+
+        public AuthorProfile WithResumeUri(string resumeUri)
+        {
+            ResumeUri = resumeUri;
+            return this;
         }
     }
 }

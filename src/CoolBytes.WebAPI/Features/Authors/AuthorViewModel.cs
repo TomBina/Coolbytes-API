@@ -1,4 +1,5 @@
-﻿using CoolBytes.WebAPI.Features.Images;
+﻿using System.Collections.Generic;
+using CoolBytes.WebAPI.Features.Images;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
@@ -8,6 +9,9 @@ namespace CoolBytes.WebAPI.Features.Authors
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string About { get; set; }
+        public string ResumeUri { get; set; }
+        public SocialHandlesViewModel SocialHandles { get; set; }
         public ImageViewModel Image { get; set; }
+        public IEnumerable<ExperienceViewModel> Experiences { get; set; }
     }
 }

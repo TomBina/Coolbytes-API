@@ -1,26 +1,62 @@
 <app-admin-menu></app-admin-menu>
 <div class="admin-content">
-    <h1>Author profile</h1>
-    <form [formGroup]="authorForm" (ngSubmit)="onSubmit()">
+    <h1>Profile</h1>
+    <form [formGroup]="_form" (ngSubmit)="onSubmit()">
         <label for="firstName">First name:</label>
         <p>
-            <input formControlName="firstName" id="firstName" [ngClass]="inputCssClass('firstName')" />
+            <input formControlName="firstName" id="firstName" />
         </p>
         <label for="lastName">Last name:</label>
         <p>
-            <input formControlName="lastName" id="lastName" [ngClass]="inputCssClass('lastName')" />
+            <input formControlName="lastName" id="lastName" />
         </p>
         <label for="about">About me:</label>
         <p>
-            <textarea formControlName="about" id="about" [ngClass]="inputCssClass('about')"></textarea>
-            <admin-images-manager [control]="_about"></admin-images-manager>
+            <textarea formControlName="about" id="about"></textarea>
+            <admin-images-manager title="Insert image" (onImageSelected)="onContentImageSelectedHandler($event)"></admin-images-manager>
         </p>
-        <p *ngIf="_image && _image.uri">
-            <img [src]="_image.uri" width="200" />
+        <input formControlName="imageId" type="hidden" name="imageId" />
+        <p *ngIf="_imageUri">
+            <img [src]="_imageUri" width="200" />
+        </p>
+        <div>
+            <admin-images-manager title="Choose image" (onImageSelected)="onMainImageSelectedHandler($event)"></admin-images-manager>
+        </div>
+        <p>
+            <label for="resumeUri">Resume Url:</label>
         </p>
         <p>
-            <input type="file" id="file" (change)="onFileChanged($event.target)" />
+            <input formControlName="resumeUri" id="resumeUri" />
         </p>
-        <input type="submit" value="save" />
+        <label for="linkedIn">LinkedIn:</label>
+        <p>
+            <input formControlName="linkedIn" id="linkedIn" />
+        </p>
+        <label for="gitHub">GitHub:</label>
+        <p>
+            <input formControlName="gitHub" id="gitHub" />
+        </p>
+        <label>
+            Experience
+            <a (click)="addExperienceControl()">add experience</a>
+        </label>
+
+        <div formArrayName="experiences" *ngFor="let item of _form.get('experiences').controls; let i = index">
+            <ng-container [formGroupName]="i">
+                <p class="flex">
+                    <img [src]="_experiencesImageUris['Image' + i]" *ngIf="_experiencesImageUris['Image' + i]" />
+                    <input formControlName="id" type="hidden" />
+                    <input formControlName="name" placeholder="Name" />
+                    <input formControlName="color" placeholder="Color" />
+                    <input formControlName="imageId" type="hidden" />
+                </p>
+                <admin-images-manager title="Choose image" (onImageSelected)="onExperiencesImageSelectedHandler($event, item, i)"></admin-images-manager>
+                |
+                <a (click)="removeExperience(i)">Remove experience</a>
+            </ng-container>
+        </div>
+        <p>
+            <input type="submit" value="save" />
+        </p>
     </form>
 </div>

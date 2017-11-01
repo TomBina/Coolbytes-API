@@ -1,3 +1,5 @@
+import { ImagesService } from '../../../../services/imagesservice/images.service';
+import { Image } from '../../../../services/imagesservice/image';
 import { AddBlogPostCommand } from '../../../../services/blogpostservice/add-blog-post-command';
 import { ExternalLink } from '../../../../services/blogpostservice/external-link';
 import { BlogPostsService } from '../../../../services/blogpostservice/blog-posts.service';
@@ -15,7 +17,8 @@ import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
     styleUrls: ["./add-blog.component.css"]
 })
 export class AddBlogComponent implements OnInit, OnDestroy {
-    constructor(private _authorsService: AuthorsService, private _blogPostsService: BlogPostsService, private _router: Router, private _fb: FormBuilder) { }
+    constructor(private _authorsService: AuthorsService, private _blogPostsService: BlogPostsService, private _router: Router, private _fb: FormBuilder,
+    private _imagesService : ImagesService) { }
 
     private _form: FormGroup;
     private _externalLinks = [];
@@ -66,6 +69,10 @@ export class AddBlogComponent implements OnInit, OnDestroy {
             name: new FormControl("", Validators.maxLength(50)),
             url: new FormControl("", Validators.maxLength(255))
         })
+    }
+
+    onImageSelectedHandler(image: Image) {
+        this._form.get("content").setValue(`${this._form.get("content").value}![](${this._imagesService.getUri(image.uriPath)})`);
     }
 
     onFileChanged(element: HTMLInputElement) {

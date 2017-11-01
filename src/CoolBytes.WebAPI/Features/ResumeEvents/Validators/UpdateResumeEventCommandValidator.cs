@@ -15,7 +15,7 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents.Validators
                     validationContext.AddFailure(validationContext.PropertyName, "No ResumeEvent found");
             });
             RuleFor(c => c.DateRange).NotNull();
-            RuleFor(c => c.DateRange.EndDate).GreaterThan(cv => cv.DateRange.StartDate);
+            RuleFor(c => c.DateRange.EndDate).GreaterThanOrEqualTo(cv => cv.DateRange.StartDate);
             RuleFor(c => c.Name).NotEmpty().MaximumLength(50);
             RuleFor(c => c.Message).NotEmpty().MaximumLength(1000);
         }

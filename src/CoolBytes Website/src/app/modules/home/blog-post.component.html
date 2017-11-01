@@ -15,7 +15,7 @@
                 <div class="about">
                     <a>{{blogPost.author.firstName}} {{blogPost.author.lastName}}</a>
                     <br />
-                    <span>{{blogPost.author.about}}</span>
+                    <md [value]="blogPost.author.about"></md>
                 </div>
             </div>
         </div>

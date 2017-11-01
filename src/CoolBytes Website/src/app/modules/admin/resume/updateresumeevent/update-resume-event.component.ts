@@ -50,9 +50,14 @@ export class UpdateResumeEventComponent {
         });
     }
 
+    formatDate(jsonDate: string) {
+        let date = new Date(jsonDate);
+
+        return `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}`;
+    }
     updateForm(resumeEvent: ResumeEvent) {
-        this._form.get("startDate").setValue(new Date(resumeEvent.dateRange.startDate).toLocaleDateString());
-        this._form.get("endDate").setValue(new Date(resumeEvent.dateRange.endDate).toLocaleDateString());
+        this._form.get("startDate").setValue(this.formatDate(resumeEvent.dateRange.startDate));
+        this._form.get("endDate").setValue(this.formatDate(resumeEvent.dateRange.endDate));
         this._form.get("name").setValue(resumeEvent.name);
         this._form.get("message").setValue(resumeEvent.message);
     }

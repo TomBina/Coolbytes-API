@@ -40,7 +40,22 @@ namespace CoolBytes.Data
                     entity.Property(e => e.FirstName).HasMaxLength(50).IsRequired();
                     entity.Property(e => e.LastName).HasMaxLength(50).IsRequired();
                     entity.Property(e => e.About).HasMaxLength(500).IsRequired();
+                    entity.Property(e => e.ResumeUri).HasMaxLength(255);
+
+                    entity.HasMany(e => e.Experiences).WithOne(ex => ex.AuthorProfile).IsRequired().OnDelete(DeleteBehavior.Cascade);
+
+                    var socialHandlesEntity = entity.OwnsOne(e => e.SocialHandles);
+                    socialHandlesEntity.Property(e => e.LinkedIn).HasMaxLength(255);
+                    socialHandlesEntity.Property(e => e.GitHub).HasMaxLength(255);
+
                     entity.ToTable("AuthorsProfile");
+                })
+                .Entity<Experience>(entity =>
+                {
+                    entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
+                    entity.Property(e => e.Color).HasColumnType("CHAR(6)").IsRequired();
+                    entity.HasOne(e => e.Image).WithMany().OnDelete(DeleteBehavior.Restrict);
+                    entity.ToTable("Experiences");
                 })
                 .Entity<BlogPost>(entity =>
                 {

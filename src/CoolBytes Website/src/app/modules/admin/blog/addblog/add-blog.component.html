@@ -14,7 +14,7 @@
             <label for="content">Content:</label>
             <p>
                 <textarea formControlName="content" id="content" (keydown)="growTextarea($event.target)"></textarea>
-                <admin-images-manager [control]="_content"></admin-images-manager>
+                <admin-images-manager title="Insert image" (onImageSelected)="onImageSelectedHandler($event)"></admin-images-manager>
             </p>
             <label for="tag">Tags</label>
             <p>

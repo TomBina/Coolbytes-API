@@ -8,13 +8,13 @@ import { WebApiService } from './../web-api-service';
 
 @Injectable()
 export class ImagesService extends WebApiService {
-    private _url: string = environment.apiUri + "api/images";
+    private _url: string = environment.apiUri + "api/images/";
 
-    getAll() : Observable<Image[]> {
+    getAll(): Observable<Image[]> {
         let observable = this.http.get(this._url);
         return observable.map((response: Response) => <Image[]>response.json());
     }
-    
+
     uploadImages(files: FileList): Observable<Image> {
         let formData = new FormData();
 
@@ -23,6 +23,11 @@ export class ImagesService extends WebApiService {
 
         let observable = this.http.post(this._url, formData, this.getAuthRequestOptions(new Headers()));
         return observable.map((response: Response) => <Image>response.json());
+    }
+
+    delete(imageId: number) {
+        let observable = this.http.delete(`${this._url}?id=${imageId}`, this.getAuthRequestOptions(new Headers()));
+        return observable;
     }
 
     getUri(uriPath: string) {

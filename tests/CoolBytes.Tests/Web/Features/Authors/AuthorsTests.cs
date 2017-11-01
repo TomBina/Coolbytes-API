@@ -4,6 +4,7 @@ using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Services;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             await AddAuthor();
             var getAuthorQueryHandler = new GetAuthorQueryHandler(Context, AuthorService);
-            var message = new GetAuthorQuery();
+            var message = new GetAuthorQuery() { IncludeProfile = true };
 
             var result = await getAuthorQueryHandler.Handle(message);
 
@@ -36,7 +37,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
 
         private async Task AddAuthor()
         {
-           using (var context = Fixture.CreateNewContext())
+            using (var context = Fixture.CreateNewContext())
             {
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
                 var authorValidator = new AuthorValidator(context);
@@ -48,48 +49,51 @@ namespace CoolBytes.Tests.Web.Features.Authors
             }
         }
 
-        [Fact]
-        public async Task AddAuthorCommandHandler_ReturnsAuthor()
+        private async Task<Image> AddImage()
         {
-            var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, null);
-            var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
+            using (var context = Fixture.CreateNewContext())
+            {
+                var imageFactory = CreateImageFactory();
+                var file = CreateFileMock().Object;
+                var image = await imageFactory.Create(file.OpenReadStream(), file.FileName, file.ContentType);
 
-            var result = await addAuthorCommandHandler.Handle(message);
+                context.Images.Add(image);
+                await context.SaveChangesAsync();
 
-            Assert.NotNull(result);
+                return image;
+            }
         }
 
         [Fact]
-        public async Task AddAuthorCommandHandler_WithImage_ReturnsAuthor()
+        public async Task AddAuthorCommandHandler_WithExperiences_ReturnsAuthor()
         {
-            var imageFactory = CreateImageFactory();
-            var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, imageFactory);
-            var fileMock = CreateFileMock();
-            var file = fileMock.Object;
-
-            var message = new AddAuthorCommand()
+            var image = await AddImage();
+            var experiences = new List<ExperienceDto>();
+            var experienceDto = new ExperienceDto()
             {
-                FirstName = "Tom",
-                LastName = "Bina",
-                About = "About me",
-                File = file
+                Color = "#000000",
+                Name = "Testfile",
+                ImageId = image.Id
             };
+            experiences.Add(experienceDto);
+
+            var authorValidator = new AuthorValidator(Context);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator);
+            var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me", Experiences = experiences };
 
             var result = await addAuthorCommandHandler.Handle(message);
 
-            Assert.NotNull(result.Image.UriPath);
+            Assert.Equal("Testfile", result.Experiences.First().Name = experienceDto.Name);
         }
 
         [Fact]
         public async Task AddAuthorCommandHandler_AddingSecondTime_ThrowsException()
         {
-            var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator, null);
-            var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
+            await AddAuthor();
 
-            await addAuthorCommandHandler.Handle(message);
+            var authorValidator = new AuthorValidator(Context);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator);
+            var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
@@ -98,33 +102,40 @@ namespace CoolBytes.Tests.Web.Features.Authors
         }
 
         [Fact]
-        public async Task UpdateAuthorCommandHandler_UpdatesAuthor()
+        public async Task UpdateAuthorCommandHandler_WithExperiences_UpdatesAuthor()
         {
             await AddAuthor();
+            var image = await AddImage();
+            var experiences = new List<ExperienceDto>();
+            var experienceDto = new ExperienceDto()
+            {
+                Color = "#000000",
+                Name = "Testfile",
+                ImageId = image.Id
+            };
+            experiences.Add(experienceDto);
 
-            var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test" };
-            var handler = new UpdateAuthorCommandHandler(Context, AuthorService, CreateImageFactory());
+            var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test", Experiences = experiences };
+            var handler = new UpdateAuthorCommandHandler(Context, AuthorService);
 
             var result = await handler.Handle(message);
 
-            Assert.Equal("Test", result.FirstName);
+            Assert.Equal("Testfile", result.Experiences.First().Name = experienceDto.Name);
         }
 
         [Fact]
         public async Task UpdateAuthorCommandHandler_WithImage_ReturnsAuthor()
         {
             await AddAuthor();
+            var image = await AddImage();
+            var handler = new UpdateAuthorCommandHandler(Context, AuthorService);
 
-            var imageFactory = CreateImageFactory();
-            var handler = new UpdateAuthorCommandHandler(Context, AuthorService, imageFactory);
-
-            var file = CreateFileMock().Object;
             var message = new UpdateAuthorCommand()
             {
                 FirstName = "Tom",
                 LastName = "Bina",
                 About = "About me",
-                File = file
+                ImageId = image.Id
             };
 
             var result = await handler.Handle(message);

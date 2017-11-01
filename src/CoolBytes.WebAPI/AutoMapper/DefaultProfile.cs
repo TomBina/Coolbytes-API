@@ -4,6 +4,7 @@ using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using CoolBytes.WebAPI.Features.Images;
+using CoolBytes.WebAPI.Features.Resume;
 using CoolBytes.WebAPI.Features.ResumeEvents.DTO;
 using CoolBytes.WebAPI.Features.ResumeEvents.ViewModels;
 
@@ -12,6 +13,63 @@ namespace CoolBytes.WebAPI.AutoMapper
     public class DefaultProfile : Profile
     {
         public DefaultProfile()
+        {
+            MapBlogPost();
+            MapAuthor();
+            MapImage();
+            MapResumeEvent();
+            MapResume();
+        }
+
+        private void MapResume()
+        {
+            CreateMap<Resume, ResumeViewModel>();
+        }
+
+        private void MapImage()
+        {
+            CreateMap<Image, ImageViewModel>()
+                .ForMember(v => v.UriPath, exp => exp.MapFrom(p => p.UriPath));
+        }
+
+        private void MapResumeEvent()
+        {
+            CreateMap<ResumeEvent, ResumeEventViewModel>();
+            CreateMap<DateRange, DateRangeDto>();
+        }
+
+        private void MapAuthor()
+        {
+            CreateMap<Author, AuthorViewModel>()
+                .ForMember(v => v.FirstName, exp => exp.MapFrom(a => a.AuthorProfile.FirstName))
+                .ForMember(v => v.LastName, exp => exp.MapFrom(a => a.AuthorProfile.LastName))
+                .ForMember(v => v.About, exp => exp.MapFrom(a => a.AuthorProfile.About))
+                .ForMember(v => v.Experiences, exp => exp.MapFrom(a => a.AuthorProfile.Experiences))
+                .ForMember(v => v.ResumeUri, exp => exp.MapFrom(a => a.AuthorProfile.ResumeUri))
+                .ForMember(v => v.SocialHandles, exp => exp.MapFrom(a => a.AuthorProfile.SocialHandles))
+                .ForMember(v => v.Image,
+                    exp => exp.ResolveUsing((author, viewModel, image) =>
+                    {
+                        if (author.AuthorProfile != null)
+                        {
+                            return author.AuthorProfile.Image == null
+                                ? null
+                                : new ImageViewModel()
+                                {
+                                    Id = author.AuthorProfile.Image.Id,
+                                    UriPath = author.AuthorProfile.Image.UriPath
+                                };
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }));
+            CreateMap<SocialHandles, SocialHandlesViewModel>();
+            CreateMap<Experience, ExperienceViewModel>();
+        }
+
+        private void MapBlogPost()
         {
             CreateMap<BlogPost, BlogPostSummaryViewModel>()
                 .ForMember(v => v.AuthorName, exp => exp.MapFrom(b => b.Author.AuthorProfile.FirstName))
@@ -36,22 +94,6 @@ namespace CoolBytes.WebAPI.AutoMapper
                 .ForMember(v => v.RelatedLinks, exp => exp.Ignore());
             CreateMap<BlogPostTag, BlogPostTagDto>();
             CreateMap<ExternalLink, ExternalLinkDto>();
-            CreateMap<Author, AuthorViewModel>()
-                .ForMember(v => v.FirstName, exp => exp.MapFrom(a => a.AuthorProfile.FirstName))
-                .ForMember(v => v.LastName, exp => exp.MapFrom(a => a.AuthorProfile.LastName))
-                .ForMember(v => v.About, exp => exp.MapFrom(a => a.AuthorProfile.About))
-                .ForMember(v => v.Image,
-                    exp => exp.ResolveUsing((author, viewModel, image) =>
-                                                author.AuthorProfile.Image == null ? null :
-                                                new ImageViewModel()
-                                                {
-                                                    Id = author.AuthorProfile.Image.Id,
-                                                    UriPath = author.AuthorProfile.Image.UriPath
-                                                }));
-            CreateMap<Image, ImageViewModel>()
-                .ForMember(v => v.UriPath, exp => exp.MapFrom(p => p.UriPath));
-            CreateMap<ResumeEvent, ResumeEventViewModel>();
-            CreateMap<DateRange, DateRangeDto>();
         }
 
         private static void ResolveImageModelFromBlogPost<T>(IMemberConfigurationExpression<BlogPost, T, ImageViewModel> exp)

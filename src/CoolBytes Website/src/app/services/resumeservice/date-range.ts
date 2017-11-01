@@ -1,4 +1,4 @@
 export class DateRange {
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
 }

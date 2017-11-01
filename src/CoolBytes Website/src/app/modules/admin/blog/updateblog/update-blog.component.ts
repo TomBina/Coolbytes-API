@@ -82,6 +82,10 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
         })
     }
 
+    onImageSelectedHandler(image: Image) {
+        this._form.get("content").setValue(`${this._form.get("content").value}![](${this._imagesService.getUri(image.uriPath)})`);
+    }
+
     updateForm(blogPost: BlogPostUpdate) {
         this._id = blogPost.id;
         this._form.get("subject").setValue(blogPost.subject);

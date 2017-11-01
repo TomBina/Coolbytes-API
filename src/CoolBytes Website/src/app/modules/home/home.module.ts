@@ -1,13 +1,17 @@
-import { BlogPostsService } from '../../services/blogpostservice/blog-posts.service';
-import { SharedModule } from "../shared/shared.module";
-import { BlogPostComponent } from "./blog-post.component";
-import { NgModule } from "@angular/core";
-import { HttpModule } from "@angular/http";
-import { BrowserModule } from "@angular/platform-browser";
-import { RouterModule } from "@angular/router";
+import { AuthorComponent } from './about/author/author.component';
+import { ResumeEventComponent } from './about/resumeevent/resume-event.component';
+import { ResumeService } from '../../services/resumeservice/resume.service';
+import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
-import { BlogPostIntroComponent } from "./blog-post-intro.component";
-import { BlogComponent } from "./blog.component";
+import { BlogPostsService } from '../../services/blogpostservice/blog-posts.service';
+import { SharedModule } from '../shared/shared.module';
+import { AboutComponent } from './about/about.component';
+import { BlogPostIntroComponent } from './blog-post-intro.component';
+import { BlogPostComponent } from './blog-post.component';
+import { BlogComponent } from './blog.component';
 
 @NgModule({
     imports: [
@@ -24,6 +28,10 @@ import { BlogComponent } from "./blog.component";
             {
                 path:"post/:id/:title",
                 component:BlogPostComponent
+            },
+            {
+                path:"about",
+                component:AboutComponent
             }
         ]),
         HttpModule,
@@ -32,10 +40,14 @@ import { BlogComponent } from "./blog.component";
     declarations: [
         BlogComponent,
         BlogPostIntroComponent,
-        BlogPostComponent
+        BlogPostComponent,
+        AboutComponent,
+        ResumeEventComponent,
+        AuthorComponent
     ],
     providers: [
-        BlogPostsService
+        BlogPostsService,
+        ResumeService
     ]
 })
 export class HomeModule {

@@ -33,6 +33,7 @@ namespace CoolBytes.WebAPI
             services.AddTransient<ExistingBlogPostBuilder>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IAuthorSearchService, AuthorService>();
             services.AddScoped<IAuthorValidator, AuthorValidator>();
             services.AddScoped<IImageFactory, ImageFactory>();
             services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));

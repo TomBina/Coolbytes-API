@@ -1,0 +1,10 @@
+<div>
+    <div class="resume-event-hook"></div>
+    <div class="resume-event">
+        <h1>{{resumeEvent.name}}</h1>
+        <div class="details">
+            <p class="date">{{resumeEvent.dateRange.startDate | date}} - {{resumeEvent.dateRange.endDate | date}}</p>
+            <p class="message"><md [value]="resumeEvent.message"></md></p>
+        </div>
+    </div>
+</div>

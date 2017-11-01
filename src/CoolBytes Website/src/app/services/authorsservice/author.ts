@@ -5,4 +5,5 @@ export class Author {
     lastName: string;
     about: string;
     image: Image;
+    experiences: any;
 }

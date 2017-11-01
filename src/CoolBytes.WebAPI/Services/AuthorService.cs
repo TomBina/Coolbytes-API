@@ -1,12 +1,14 @@
-﻿using CoolBytes.Core.Interfaces;
+﻿using System.Linq;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace CoolBytes.WebAPI.Services
 {
-    public class AuthorService : IAuthorService
+    public class AuthorService : IAuthorService, IAuthorSearchService
     {
         private readonly IUserService _userService;
         private readonly AppDbContext _context;
@@ -26,7 +28,17 @@ namespace CoolBytes.WebAPI.Services
         public async Task<Author> GetAuthorWithProfile()
         {
             var user = await _userService.GetUser();
-            return await _context.Authors.Include(a => a.AuthorProfile).ThenInclude(ap => ap.Image).FirstOrDefaultAsync(a => a.UserId == user.Id);
+            return await QueryAuthorWithProfile().FirstOrDefaultAsync(a => a.UserId == user.Id);
         }
+
+        public async Task<Author> GetAuthorWithProfile(int id)
+            => await QueryAuthorWithProfile().FirstOrDefaultAsync(a => a.Id == id);
+
+        private IIncludableQueryable<Author, Image> QueryAuthorWithProfile()
+            => _context.Authors.Include(a => a.AuthorProfile)
+                               .ThenInclude(ap => ap.Image)
+                               .Include(a => a.AuthorProfile.SocialHandles)
+                               .Include(a => a.AuthorProfile.Experiences)
+                               .ThenInclude(e => e.Image);
     }
 }

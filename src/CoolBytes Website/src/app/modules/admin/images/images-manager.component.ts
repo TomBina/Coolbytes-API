@@ -1,7 +1,7 @@
 import { ImagesService } from '../../../services/imagesservice/images.service';
 import { Image } from '../../../services/imagesservice/image';
 import { environment } from '../../../../environments/environment';
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
 @Component({
@@ -13,12 +13,16 @@ export class ImagesManagerComponent implements OnInit {
     private _open;
     private _images: Image[];
     private _imagesUri;
-    
-    constructor(private _imageService: ImagesService) { 
-    }
+    private _deleteImageText = "delete image";
 
     @Input()
-    control: FormControl;
+    title: string;
+
+    @Output()
+    onImageSelected = new EventEmitter<Image>();
+    
+    constructor(private _imagesService: ImagesService) { 
+    }
 
     ngOnInit(): void {
         this.loadImages();
@@ -28,22 +32,35 @@ export class ImagesManagerComponent implements OnInit {
         if (!element.files)
             return;
 
-        this._imageService.uploadImages(element.files).subscribe(images => {
+        this._imagesService.uploadImages(element.files).subscribe(images => {
             this._images = this._images.concat(images);
             element.value = "";
         })
     }
 
     loadImages() {
-        this._imageService.getAll().subscribe(images => this._images = images);
+        this._imagesService.getAll().subscribe(images => this._images = images);
     }
 
-    insertImage(uri: string, id: number) {
-        let value: string = (this.control.value ? this.control.value : "");
-        value += `![](${uri})`;
+    onImageClick(image: Image) {
+        if (this._deleteImageText == "delete image")  {
+            this.close();
+            this.onImageSelected.emit(image);
+        }
+        else {
+            this._imagesService.delete(image.id).subscribe(response => {
+                this.loadImages();
+            })
+        }
+    }
 
-        this.control.setValue(value);
-        this.close();
+    toggleDelete() {
+        if (this._deleteImageText == "delete image") {
+            this._deleteImageText = "finished deleting";
+        }
+        else {
+            this._deleteImageText = "delete image";
+        }
     }
 
     open() {

@@ -27,7 +27,7 @@ namespace CoolBytes.WebAPI.Features.Authors
 
         [Authorize("admin")]
         [HttpPost]
-        public async Task<IActionResult> Add([FromForm] AddAuthorCommand command)
+        public async Task<IActionResult> Add([FromBody] AddAuthorCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -44,7 +44,7 @@ namespace CoolBytes.WebAPI.Features.Authors
 
         [Authorize("admin")]
         [HttpPut]
-        public async Task<IActionResult> Update([FromForm] UpdateAuthorCommand command)
+        public async Task<IActionResult> Update([FromBody] UpdateAuthorCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
