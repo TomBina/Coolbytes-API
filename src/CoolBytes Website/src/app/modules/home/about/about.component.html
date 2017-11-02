@@ -1,7 +1,7 @@
 <div class="resume">
     <home-about-author *ngIf="_author" [author]="_author"></home-about-author>
     <div class="resume-events">
-        <ng-container *ngFor="let year of _years; let index">
+        <ng-container *ngFor="let year of _years;">
             <h1>{{year}}</h1>
             <div class="year-line"></div>
             <div class="year-resume-events">

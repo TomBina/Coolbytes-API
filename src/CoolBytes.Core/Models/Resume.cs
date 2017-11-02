@@ -30,7 +30,7 @@ namespace CoolBytes.Core.Models
 
             foreach (var group in groups)
             {
-                var collection = group.ToArray();
+                var collection = group.OrderBy(r => r.DateRange.StartDate).ToArray();
                 var count = collection.Count();
                 var resumeEvent = collection.First();
 

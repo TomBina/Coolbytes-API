@@ -1,10 +1,14 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Net.Http;
+using AutoMapper;
 using CoolBytes.Core.Builders;
 using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Authorization;
+using CoolBytes.WebAPI.Extensions;
 using CoolBytes.WebAPI.Services;
+using CoolBytes.WebAPI.Services.Mailer;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,6 +17,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace CoolBytes.WebAPI
 {
@@ -31,6 +36,8 @@ namespace CoolBytes.WebAPI
 
             services.AddTransient<BlogPostBuilder>();
             services.AddTransient<ExistingBlogPostBuilder>();
+            services.AddSingleton<HttpClient, HttpClient>();
+            services.AddMailgun(_configuration);
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IAuthorSearchService, AuthorService>();

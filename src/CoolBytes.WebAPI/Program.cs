@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI
 {
@@ -14,6 +15,7 @@ namespace CoolBytes.WebAPI
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .ConfigureAppConfiguration((context, builder) => builder.AddJsonFile("mailgunsettings.json"))
                 .Build();
     }
 }
