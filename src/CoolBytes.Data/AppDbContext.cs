@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CoolBytes.Core.Models;
+using CoolBytes.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.Data
@@ -15,6 +16,8 @@ namespace CoolBytes.Data
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<ResumeEvent> ResumeEvents { get; set; }
+        public DbSet<MailProvider> MailProviders { get; private set; }
+        public DbSet<MailStat> MailStats { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -42,7 +45,8 @@ namespace CoolBytes.Data
                     entity.Property(e => e.About).HasMaxLength(500).IsRequired();
                     entity.Property(e => e.ResumeUri).HasMaxLength(255);
 
-                    entity.HasMany(e => e.Experiences).WithOne(ex => ex.AuthorProfile).IsRequired().OnDelete(DeleteBehavior.Cascade);
+                    entity.HasMany(e => e.Experiences).WithOne(ex => ex.AuthorProfile).IsRequired()
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     var socialHandlesEntity = entity.OwnsOne(e => e.SocialHandles);
                     socialHandlesEntity.Property(e => e.LinkedIn).HasMaxLength(255);
@@ -100,6 +104,11 @@ namespace CoolBytes.Data
                     var dateRangeRangeEntity = entity.OwnsOne(e => e.DateRange);
                     dateRangeRangeEntity.Property(e => e.StartDate).IsRequired();
                     dateRangeRangeEntity.Property(e => e.EndDate).IsRequired();
+                })
+                .Entity<MailProvider>(entity =>
+                {
+                    entity.Property(e => e.Name).HasMaxLength(255).IsRequired();
+                    entity.HasIndex(e => e.Name).IsUnique();
                 });
         }
 

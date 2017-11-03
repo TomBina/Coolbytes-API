@@ -1,15 +1,28 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CoolBytes.Data;
+using CoolBytes.Data.Models;
 using CoolBytes.WebAPI.Services.Mailer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Services.Mailer
 {
-    public class MailerTests
+    public class MailerTests : IClassFixture<Fixture>, IAsyncLifetime
     {
+        private readonly Fixture _fixture;
+        private readonly AppDbContext _context;
+
+        public MailerTests(Fixture fixture)
+        {
+            _fixture = fixture;
+            _context = fixture.CreateNewContext();
+        }
+
         [Fact]
         public async Task Mailer_SendsMessage()
         {
@@ -21,13 +34,57 @@ namespace CoolBytes.Tests.Web.Services.Mailer
             Assert.True(report.IsSend);
         }
 
-        private static IMailer CreateMailer()
+        [Fact]
+        public async Task Mailer_WithReachedThreshold_ThrowsInvalidOperation()
+        {
+            using (var context = _fixture.CreateNewContext())
+            {
+                var name = typeof(MailgunMailer).FullName;
+                var mailProvider = new MailProvider(name, 0);
+                var mailStat = new MailStat(mailProvider, DateTime.Now);
+
+                context.MailProviders.Add(mailProvider);
+                context.MailStats.Add(mailStat);
+                await context.SaveChangesAsync();
+            }
+
+            var mailer = CreateMailer();
+            var message = CreateMessage();
+
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await mailer.Send(message));
+        }
+
+        [Fact]
+        public async Task Mailer_WithMailStatOfYesterday_AddNewMailStat()
+        {
+            using (var context = _fixture.CreateNewContext())
+            {
+                var name = typeof(MailgunMailer).FullName;
+                var mailProvider = new MailProvider(name, 100);
+                var mailStat = new MailStat(mailProvider, DateTime.Now.AddDays(-1));
+
+                context.MailProviders.Add(mailProvider);
+                context.MailStats.Add(mailStat);
+                await context.SaveChangesAsync();
+            }
+
+            var mailer = CreateMailer();
+            var message = CreateMessage();
+
+            var result = await mailer.Send(message);
+            var lastStat = _context.MailStats.FirstOrDefaultAsync(ms => ms.Date == DateTime.Now.Date);
+
+            Assert.NotNull(lastStat);
+        }
+
+        private IMailer CreateMailer()
         {
             var httpClient = CreateHttpClient();
             var options = CreateOptions();
             var logger = new Mock<ILogger<MailgunMailer>>().Object;
+            var thresholdValidator = new ThresholdValidator(_context);
 
-            return new MailgunMailer(httpClient, options, logger);
+            return new MailgunMailer(httpClient, options, thresholdValidator, logger);
         }
 
         private static HttpClient CreateHttpClient()
@@ -54,6 +111,17 @@ namespace CoolBytes.Tests.Web.Services.Mailer
             var message = new EmailMessage(from, to, body, "Test message!");
 
             return message;
+        }
+
+        public Task InitializeAsync() => Task.CompletedTask;
+
+        public async Task DisposeAsync()
+        {
+            _context.MailProviders.RemoveRange(_context.MailProviders.ToArray());
+            _context.MailStats.RemoveRange(_context.MailStats.ToArray());
+            await _context.SaveChangesAsync();
+
+            _context.Dispose();
         }
     }
 }

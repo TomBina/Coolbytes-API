@@ -24,8 +24,9 @@ namespace CoolBytes.WebAPI.Extensions
                 var options = new MailgunMailerOptions(server, credentials, domain);
                 var httpClient = sp.GetService<HttpClient>();
                 var logger = sp.GetService<ILogger<MailgunMailer>>();
+                var sendValidator = sp.GetService<ISendValidator>();
 
-                return new MailgunMailer(httpClient, options, logger);
+                return new MailgunMailer(httpClient, options, sendValidator, logger);
             });
 
             return services;

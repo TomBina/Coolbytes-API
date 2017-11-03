@@ -15,17 +15,27 @@ namespace CoolBytes.WebAPI.Services.Mailer
     {
         private readonly HttpClient _httpClient;
         private readonly MailgunMailerOptions _options;
+        private readonly ISendValidator _validator;
         private readonly ILogger<MailgunMailer> _logger;
 
-        public MailgunMailer(HttpClient httpClient, MailgunMailerOptions options, ILogger<MailgunMailer> logger)
+        public MailgunMailer(HttpClient httpClient, MailgunMailerOptions options, ISendValidator validator, ILogger<MailgunMailer> logger)
         {
             _httpClient = httpClient;
             _options = options;
+            _validator = validator;
             _logger = logger;
         }
 
         public async Task<IMailReport> Send(EmailMessage message)
         {
+            var isSendingAllowed = await _validator.IsSendingAllowed(this);
+
+            if (!isSendingAllowed)
+            {
+                _logger.LogError("Sending not allowed");
+                throw new InvalidOperationException("Sending not allowed");
+            }
+
             using (_logger.BeginScope("Start sending message."))
             {
                 var httpMessage = CreateMessage();
