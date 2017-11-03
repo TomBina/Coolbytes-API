@@ -67,7 +67,7 @@ namespace CoolBytes.WebAPI.Services.Mailer
 
         private async Task<IMailReport> Send(HttpRequestMessage httpMessage)
         {
-            _logger.LogInformation("Sending message to socket endpoint {0}.", httpMessage.RequestUri);
+            _logger.LogInformation("Sending message to socket endpoint {endPoint}.", httpMessage.RequestUri);
 
             HttpResponseMessage response;
             try
@@ -87,7 +87,7 @@ namespace CoolBytes.WebAPI.Services.Mailer
             else
             {
                 var responseText = await response.Content.ReadAsStringAsync();
-                _logger.LogError("Unexpected response, status code {0}, body {1}.", response.StatusCode, responseText);
+                _logger.LogError("Unexpected response, status code {statusCode}, body {responseText}.", response.StatusCode, responseText);
 
                 return new MailReport(isSend: false);
             }
@@ -95,17 +95,20 @@ namespace CoolBytes.WebAPI.Services.Mailer
 
         private async Task<IMailReport> Deserialize(HttpResponseMessage response)
         {
-            _logger.LogInformation($"Deserializing response body.");
+            _logger.LogInformation("Deserializing response body.");
             var responseText = await response.Content.ReadAsStringAsync();
 
             try
             {
                 var mailgunResponse = JsonConvert.DeserializeObject<MailgunResponse>(responseText);
+
+                _logger.LogInformation("Deserializing succeeded. Message {id}.", mailgunResponse.Id);
+
                 return new MailReport(isSend: true, id: mailgunResponse.Id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Deserializing of {0} failed.", responseText);
+                _logger.LogError(ex, "Deserializing of {responseText} failed.", responseText);
                 throw;
             }
         }
