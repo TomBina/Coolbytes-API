@@ -35,7 +35,7 @@ namespace CoolBytes.Data
                 .Entity<Author>(entity =>
                 {
                     entity.HasIndex(a => a.UserId).IsUnique();
-                    entity.HasOne(a => a.AuthorProfile).WithOne(a => a.Author).OnDelete(DeleteBehavior.Cascade);
+                    entity.HasOne(a => a.AuthorProfile).WithOne(a => a.Author).OnDelete(DeleteBehavior.Cascade).IsRequired();
                     entity.ToTable("Authors");
                 })
                 .Entity<AuthorProfile>(entity =>

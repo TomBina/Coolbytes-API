@@ -1,0 +1,21 @@
+<article>
+    <h1>Contact</h1>
+    <p *ngIf="_messageSent">
+        Your messsage was send successfully.
+    </p>
+    <form [formGroup]="_form" (ngSubmit)="onSubmit()">
+        <label for="name">Name:</label>
+        <p>
+            <input formControlName="name" id="name" />
+        </p>
+        <label for="email">Email:</label>
+        <p>
+            <input formControlName="email" id="email">
+        </p>
+        <label for="message">Message:</label>
+        <p>
+            <textarea formControlName="message" id="message"></textarea>
+        </p>
+        <input type="submit" value="send message" />
+    </form>
+</article>

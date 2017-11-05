@@ -1,3 +1,5 @@
+import { ContactService } from '../../services/contactservice/contact.service';
+import { ContactComponent } from './contact/contact.component';
 import { AuthorComponent } from './about/author/author.component';
 import { ResumeEventComponent } from './about/resumeevent/resume-event.component';
 import { ResumeService } from '../../services/resumeservice/resume.service';
@@ -5,6 +7,7 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { BlogPostsService } from '../../services/blogpostservice/blog-posts.service';
 import { SharedModule } from '../shared/shared.module';
@@ -32,10 +35,15 @@ import { BlogComponent } from './blog.component';
             {
                 path:"about",
                 component:AboutComponent
+            },
+            {
+                path:"contact",
+                component:ContactComponent
             }
         ]),
         HttpModule,
-        SharedModule
+        SharedModule,
+        ReactiveFormsModule
     ],
     declarations: [
         BlogComponent,
@@ -43,11 +51,13 @@ import { BlogComponent } from './blog.component';
         BlogPostComponent,
         AboutComponent,
         ResumeEventComponent,
-        AuthorComponent
+        AuthorComponent,
+        ContactComponent
     ],
     providers: [
         BlogPostsService,
-        ResumeService
+        ResumeService,
+        ContactService
     ]
 })
 export class HomeModule {
