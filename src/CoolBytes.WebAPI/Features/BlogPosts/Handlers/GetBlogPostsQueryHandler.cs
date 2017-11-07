@@ -20,18 +20,37 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             _context = context;
         }
 
-        public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsQuery message) 
-            => await ViewModel();
+        public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsQuery message)
+            => await ViewModel(message);
 
-        private async Task<IEnumerable<BlogPostSummaryViewModel>> ViewModel()
+        private async Task<IEnumerable<BlogPostSummaryViewModel>> ViewModel(GetBlogPostsQuery message)
         {
-            var blogPosts = await GetBlogPosts();
+            IEnumerable<BlogPost> blogPosts;
+
+            if (message.Tag == null)
+            {
+                blogPosts = await QueryBlogPosts();
+            }
+            else
+            {
+                blogPosts = await QueryBlogPostsWithTag(message.Tag);
+            }
 
             return Mapper.Map<IEnumerable<BlogPostSummaryViewModel>>(blogPosts);
         }
 
-        private async Task<List<BlogPost>> GetBlogPosts() =>
-            await _context.BlogPosts
+        private Task<List<BlogPost>> QueryBlogPostsWithTag(string tag) =>
+            _context.BlogPosts
+                .AsNoTracking()
+                .Include(b => b.Author)
+                .Include(b => b.Author.AuthorProfile)
+                .Include(b => b.Image)
+                .Where(b => b.Tags.Any(t => t.Name == tag))
+                .OrderByDescending(b => b.Id)
+                .ToListAsync();
+
+        private Task<List<BlogPost>> QueryBlogPosts() =>
+            _context.BlogPosts
                 .AsNoTracking()
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)

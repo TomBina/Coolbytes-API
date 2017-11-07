@@ -6,6 +6,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.DTO
     {
         public int Id { get; set; }
         public string Subject { get; set; }
+        public string SubjectUrl { get; set; }
         public DateTime Date { get; set; }
     }
 }

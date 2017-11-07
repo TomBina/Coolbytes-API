@@ -2,6 +2,7 @@ import { BlogPostSummary } from '../../services/blogpostservice/blog-post-summar
 import { BlogPost } from '../../services/blogpostservice/blog-post';
 import { BlogPostsService } from '../../services/blogpostservice/blog-posts.service';
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
     templateUrl: "./blog.component.html",
@@ -9,13 +10,14 @@ import { Component, OnInit } from "@angular/core";
 })
 export class BlogComponent implements OnInit {
     private _blogPosts: BlogPostViewModel[];
+    private _tag: string;
 
-    constructor(private _blogpostsService: BlogPostsService) {
-
+    constructor(private _blogpostsService: BlogPostsService, private _route: ActivatedRoute) {
+        this._tag = this._route.snapshot.paramMap.get("tag");
     }
 
     ngOnInit(): void {
-        this._blogpostsService.getAll().map(blogPosts => {
+        this._blogpostsService.getAll(this._tag).map(blogPosts => {
             let blogPostsViewModel: BlogPostViewModel[] = [];
 
             blogPosts.forEach(blogPost => {

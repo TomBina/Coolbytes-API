@@ -25,6 +25,10 @@ import { BlogComponent } from './blog.component';
                 component:BlogComponent
             },
             {
+                path:"home/tag/:tag",
+                component:BlogComponent
+            },
+            {
                 path:"home",
                 component:BlogComponent
             },

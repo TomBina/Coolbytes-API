@@ -14,6 +14,7 @@ namespace CoolBytes.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
+        public DbSet<BlogPostTag> BlogPostTags { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<ResumeEvent> ResumeEvents { get; set; }
         public DbSet<MailProvider> MailProviders { get; private set; }

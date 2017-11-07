@@ -21,8 +21,8 @@ export class BlogPostsService extends WebApiService {
         return observable.map((response: Response) => <BlogPost>response.json());
     }
 
-    getAll(): Observable<BlogPostSummary[]> {
-        let observable = this.http.get(this._url);
+    getAll(tag?: string): Observable<BlogPostSummary[]> {
+        let observable = tag ? this.http.get(`${this._url}/?tag=${encodeURIComponent(tag)}`) : this.http.get(this._url);
         return observable.map((response: Response) => <BlogPostSummary[]>response.json());
     }
 

@@ -54,7 +54,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                                             {
                                                 Id = b.Id,
                                                 Date = b.Date,
-                                                Subject = b.Content.Subject
+                                                Subject = b.Content.Subject,
+                                                SubjectUrl = b.Content.SubjectUrl
                                             })
                                        .ToListAsync();
     }

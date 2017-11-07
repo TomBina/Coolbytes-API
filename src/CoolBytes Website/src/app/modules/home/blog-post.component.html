@@ -11,24 +11,32 @@
         <div *ngIf="_authorImage">
             <h2 class="no-top-margin">Author</h2>
             <div class="author">
-                <div><img [src]="_authorImage" class="author-image" /></div>
+                <div>
+                    <img [src]="_authorImage" class="author-image" />
+                </div>
                 <div class="about">
                     <a>{{blogPost.author.firstName}} {{blogPost.author.lastName}}</a>
                     <br />
-                    <md [value]="blogPost.author.about"></md>
+                    <span>
+                        <md [value]="blogPost.author.about"></md>
+                    </span>
                 </div>
             </div>
         </div>
         <div *ngIf="blogPost.externalLinks.length > 0">
             <h2>Resources</h2>
             <ul>
-                <li *ngFor="let link of blogPost.externalLinks"><a target="_blank" [href]="link.url">{{link.name}}</a></li>
+                <li *ngFor="let link of blogPost.externalLinks">
+                    <a target="_blank" [href]="link.url">{{link.name}}</a>
+                </li>
             </ul>
         </div>
         <div *ngIf="blogPost.tags">
             <h2>Tags</h2>
             <ul>
-                <li *ngFor="let tag of blogPost.tags"><a href="">{{tag.name}}</a></li>
+                <li *ngFor="let tag of blogPost.tags">
+                    <a routerLink="/home/tag/{{tag.name}}">{{tag.name}}</a>
+                </li>
             </ul>
         </div>
         <h2>Share this post</h2>
@@ -36,7 +44,9 @@
         <div *ngIf="blogPost.relatedLinks">
             <h2>More posts</h2>
             <ul>
-                <li *ngFor="let link of blogPost.relatedLinks"><a href="">{{link.subject}}</a></li>
+                <li *ngFor="let link of blogPost.relatedLinks">
+                    <a routerLink="{{link.url}}">{{link.subject}}</a>
+                </li>
             </ul>
         </div>
     </aside>
