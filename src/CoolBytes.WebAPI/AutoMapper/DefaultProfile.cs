@@ -89,6 +89,7 @@ namespace CoolBytes.WebAPI.AutoMapper
                 .ForMember(v => v.ExternalLinks, exp => exp.MapFrom(b => b.ExternalLinks))
                 .ForMember(v => v.Image, ResolveImageModelFromBlogPost)
                 .ForMember(v => v.Subject, exp => exp.MapFrom(b => b.Content.Subject))
+                .ForMember(v => v.SubjectUrl, exp => exp.MapFrom(b => b.Content.SubjectUrl))
                 .ForMember(v => v.ContentIntro, exp => exp.MapFrom(b => b.Content.ContentIntro))
                 .ForMember(v => v.Content, exp => exp.MapFrom(b => b.Content.Content))
                 .ForMember(v => v.RelatedLinks, exp => exp.Ignore());

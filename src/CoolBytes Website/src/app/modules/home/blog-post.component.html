@@ -1,9 +1,7 @@
 <div class="page">
     <article *ngIf="blogPost">
         <h1 class="no-top-margin">{{blogPost.subject}}</h1>
-        <p class="details">
-            {{blogPost.date | date}} by {{blogPost.author.firstName}}
-        </p>
+        {{blogPost.date | date}} by {{blogPost.author.firstName}}
         <md [value]="blogPost.contentIntro"></md>
         <md [value]="blogPost.content"></md>
     </article>
@@ -39,8 +37,10 @@
                 </li>
             </ul>
         </div>
-        <h2>Share this post</h2>
-        <share></share>
+        <ng-container *ngIf="_shareInfo">
+            <h2>Share this post</h2>
+            <share [shareInfo]="_shareInfo"></share>
+        </ng-container>
         <div *ngIf="blogPost.relatedLinks">
             <h2>More posts</h2>
             <ul>
