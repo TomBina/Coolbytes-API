@@ -1,11 +1,13 @@
-<h1 *ngIf="_tag">
-    Search results for {{_tag}}
-</h1>
-<h1 *ngIf="!_tag">
-    All blog posts
-</h1>
-<div class="posts">
-    <home-blog-post-intro [blogPost]="blog.blogPost" [cssClass]="blog.cssClass" (onBlogPostMouseEnter)="onBlogPostMouseEnterHandler($event)"
-        (onBlogPostMouseLeave)="onBlogPostMouseLeaveHandler($event)" *ngFor="let blog of _blogPosts">
-    </home-blog-post-intro>
-</div>
+<article>
+    <h1 *ngIf="_tag">
+        Search results for {{_tag}}
+    </h1>
+    <div class="title" *ngIf="!_tag">
+        <div><h1>Welcome to Cool Bytes</h1></div>
+        <div class="details">- Read the latest blogs about cool technologies, patterns &amp; practices on CoolBytes.io.</div>
+    </div>
+    <div class="posts">
+        <home-blog-post-intro [blogPost]="blog.blogPost" *ngFor="let blog of _blogPosts">
+        </home-blog-post-intro>
+    </div>
+</article>

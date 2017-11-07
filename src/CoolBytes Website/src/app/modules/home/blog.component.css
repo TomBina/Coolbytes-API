@@ -1,10 +1,26 @@
+article {
+    background: radial-gradient(ellipse at center, #b2bbd1 0%,#ffffff 100%);
+    padding:100px 0 30px 0px;
+}
+
+.title {
+    display:flex;
+    justify-content:center;
+}
+
+.details {
+    margin:8px 0 0 10px;
+}
+
 h1 {
-    margin-top:100px;
-    margin-left:20px;
+    font-size:25px;
+    margin:0;
+    padding:0;
 }
 
 .posts {
     display: flex;
     justify-content:center;
     flex-wrap: wrap;
+    margin-top:20px;
 }

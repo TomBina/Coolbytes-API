@@ -29,20 +29,6 @@ export class BlogComponent implements OnInit {
             return blogPostsViewModel;
         }).subscribe(blogPosts => { this._blogPosts = blogPosts; });
     }
-
-    onBlogPostMouseEnterHandler(blogPost: BlogPost) {
-        this._blogPosts.forEach(b => { 
-            if (b.blogPost.id != blogPost.id)
-                b.cssClass = "post tobackground";
-        });
-    }
-
-    onBlogPostMouseLeaveHandler(blogPost: BlogPost) {
-        this._blogPosts.forEach(b => { 
-            if (b.blogPost.id != blogPost.id)
-                b.cssClass = "post";
-        });
-    }
 }
 
 export class BlogPostViewModel {

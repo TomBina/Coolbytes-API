@@ -1,7 +1,7 @@
 <div class="page">
     <article *ngIf="blogPost">
         <h1 class="no-top-margin">{{blogPost.subject}}</h1>
-        {{blogPost.date | date}} by {{blogPost.author.firstName}}
+        <p class="post-info">{{blogPost.date | date}} by {{blogPost.author.firstName}}</p>
         <md [value]="blogPost.contentIntro"></md>
         <md [value]="blogPost.content"></md>
     </article>

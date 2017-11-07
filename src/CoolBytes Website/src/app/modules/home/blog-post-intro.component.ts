@@ -1,5 +1,6 @@
+import { ImagesService } from '../../services/imagesservice/images.service';
 import { BlogPostSummary } from '../../services/blogpostservice/blog-post-summary';
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
 @Component({
     selector: "home-blog-post-intro",
@@ -8,22 +9,16 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
 })
 export class BlogPostIntroComponent { 
     @Input()
-    blogPost: BlogPostSummary;
+    set blogPost(value: BlogPostSummary) {
+        this._blogPost = value;
 
-    @Input()
-    cssClass: string;
+        if (value.image)
+            this._imageUrl = this._imagesService.getUri(value.image.uriPath);
+    };
 
-    @Output()
-    onBlogPostMouseEnter = new EventEmitter<BlogPostSummary>();
-    
-    @Output()
-    onBlogPostMouseLeave = new EventEmitter<BlogPostSummary>();
+    private _blogPost: BlogPostSummary;
+    private _imageUrl: string;
 
-    onBlogPostMouseEnterHandler() {
-        this.onBlogPostMouseEnter.emit(this.blogPost);
-    }
-
-    onBlogPostMouseLeaveHandler() {
-        this.onBlogPostMouseLeave.emit(this.blogPost);
+    constructor(private _imagesService: ImagesService) {
     }
 }
