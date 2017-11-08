@@ -1,5 +1,5 @@
 .left { 
-    width:50%; 
+    min-width:50%; 
     float:left; 
     padding-right:20px; 
     box-sizing: border-box; 
@@ -7,10 +7,10 @@
 }
 
 .right { 
-    width:50%; 
+    clear:right;
     float:left; 
     padding-left:20px; 
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 .flex {

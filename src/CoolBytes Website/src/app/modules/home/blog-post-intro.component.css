@@ -30,6 +30,10 @@
     height:160px;
 }
 
+.image img {
+    width:318px;
+}
+
 .text {
     margin:10px;
     height: 120px;
