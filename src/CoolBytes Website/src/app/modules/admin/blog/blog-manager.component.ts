@@ -9,7 +9,7 @@ import { Router } from "@angular/router";
     styleUrls: ["./blog-manager.component.css"]
 })
 export class BlogManagerComponent implements OnInit {
-    private _blogPosts: BlogPostSummary[];
+    _blogPosts: BlogPostSummary[];
 
     constructor(private _blogPostsService: BlogPostsService) {
 

@@ -14,12 +14,12 @@ import { Router, ActivatedRoute } from '@angular/router';
     styleUrls: ["./update-resume-event.component.css"]
 })
 export class UpdateResumeEventComponent {
-    private _form: FormGroup;
+    _form: FormGroup;
 
     @ViewChild(PreviewResumeEventComponent)
-    private _previewResumeEvent: PreviewResumeEventComponent;
-    private _previewObserver: Subscription
-    private _id: number;
+    _previewResumeEvent: PreviewResumeEventComponent;
+    _previewObserver: Subscription
+    _id: number;
 
     constructor(private _fb: FormBuilder, private _resumeService: ResumeEventsService, private _router: Router, private _route: ActivatedRoute) {
 

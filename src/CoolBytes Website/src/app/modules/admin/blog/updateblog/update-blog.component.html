@@ -31,7 +31,7 @@
                 <label>links
                     <a (click)="addExternalLinkControl()">add external link</a>
                 </label>
-                <div formArrayName="externalLinks" *ngFor="let item of _form.get('externalLinks').controls; let i = index">
+                <div formArrayName="externalLinks" *ngFor="let item of _form.get('externalLinks')?.controls; let i = index">
                     <p [formGroupName]="i" class="flex">
                         <input formControlName="name" placeholder="External link name" />
                         <input formControlName="url" placeholder="External link URL" />

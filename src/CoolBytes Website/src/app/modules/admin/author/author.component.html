@@ -41,7 +41,7 @@
             <a (click)="addExperienceControl()">add experience</a>
         </label>
 
-        <div formArrayName="experiences" *ngFor="let item of _form.get('experiences').controls; let i = index">
+        <div formArrayName="experiences" *ngFor="let item of _form.get('experiences')?.controls; let i = index">
             <ng-container [formGroupName]="i">
                 <p class="flex">
                     <img [src]="_experiencesImageUris['Image' + i]" *ngIf="_experiencesImageUris['Image' + i]" />

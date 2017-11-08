@@ -9,7 +9,7 @@ import { Component, Input } from "@angular/core";
 )
 
 export class ShareComponent {
-    private _shareInfo;
+    _shareInfo;
 
     @Input()
     set shareInfo(value) {

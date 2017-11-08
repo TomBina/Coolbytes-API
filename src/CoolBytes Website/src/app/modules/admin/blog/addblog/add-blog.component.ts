@@ -20,13 +20,13 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     constructor(private _authorsService: AuthorsService, private _blogPostsService: BlogPostsService, private _router: Router, private _fb: FormBuilder,
     private _imagesService : ImagesService) { }
 
-    private _form: FormGroup;
-    private _externalLinks = [];
-    private _files: FileList;
+    _form: FormGroup;
+    _externalLinks = [];
+    _files: FileList;
 
     @ViewChild(PreviewBlogComponent)
-    private _previewBlogComponent: PreviewBlogComponent;
-    private _previewObserver: Subscription
+    _previewBlogComponent: PreviewBlogComponent;
+    _previewObserver: Subscription
 
     ngOnInit() {
         this._form = this._fb.group(

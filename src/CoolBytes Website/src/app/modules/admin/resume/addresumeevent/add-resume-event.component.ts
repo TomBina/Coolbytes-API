@@ -13,11 +13,11 @@ import { Subscription } from 'rxjs';
     styleUrls: ["./add-resume-event.component.css"]
 })
 export class AddResumeEventComponent implements OnInit, OnDestroy {
-    private _form: FormGroup;
+    _form: FormGroup;
     
     @ViewChild(PreviewResumeEventComponent)
-    private _previewResumeEvent: PreviewResumeEventComponent;
-    private _previewObserver: Subscription
+    _previewResumeEvent: PreviewResumeEventComponent;
+    _previewObserver: Subscription
 
     constructor(private _fb: FormBuilder, private _resumeService: ResumeEventsService, private _router: Router) {
 

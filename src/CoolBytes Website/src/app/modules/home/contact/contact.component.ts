@@ -7,8 +7,8 @@ import { FormBuilder, Validators, FormGroup } from "@angular/forms";
     styleUrls: ["./contact.component.css"]
 })
 export class ContactComponent implements OnInit {
-    private _form: FormGroup;
-    private _messageSent: boolean;
+    _form: FormGroup;
+    _messageSent: boolean;
 
     get messageSent() {
         return this._messageSent

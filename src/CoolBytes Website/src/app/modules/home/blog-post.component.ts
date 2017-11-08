@@ -11,10 +11,10 @@ import { Subscription } from 'rxjs';
     styleUrls: ["blog-post.component.css"]
 })
 export class BlogPostComponent implements OnInit, OnDestroy {
-    private blogPost;
-    private _authorImage: string;
-    private _onRouteChanges: Subscription;
-    private _shareInfo;
+    blogPost;
+    _authorImage: string;
+    _onRouteChanges: Subscription;
+    _shareInfo;
 
     constructor(private _blogPostsService: BlogPostsService, private _route: ActivatedRoute, private _imagesService : ImagesService) { }
 

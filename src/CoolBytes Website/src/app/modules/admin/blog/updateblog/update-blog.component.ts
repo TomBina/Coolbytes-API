@@ -26,15 +26,15 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
         private _imagesService: ImagesService,
         private _formBuilder: FormBuilder) { }
 
-    private _form: FormGroup;
-    private _id: number;
-    private _blogPost: BlogPostSummary;
-    private _image: Image;
-    private _files: FileList;
+    _form: FormGroup;
+    _id: number;
+    _blogPost: BlogPostSummary;
+    _image: Image;
+    _files: FileList;
 
     @ViewChild(PreviewBlogComponent)
-    private _previewBlogComponent: PreviewBlogComponent;
-    private _previewObserver: Subscription
+    _previewBlogComponent: PreviewBlogComponent;
+    _previewObserver: Subscription
 
     ngOnInit(): void {
         this._form = this._formBuilder.group({

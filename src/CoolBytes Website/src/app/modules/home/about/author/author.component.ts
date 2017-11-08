@@ -11,9 +11,9 @@ import { Component, Input } from "@angular/core";
     }
 )
 export class AuthorComponent {
-    private _experiences;
-    private _authorImage: string;
-    private _author: Author;
+    _experiences;
+    _authorImage: string;
+    _author: Author;
 
     @Input()
     set author(author: Author) {

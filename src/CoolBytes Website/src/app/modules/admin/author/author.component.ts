@@ -16,10 +16,10 @@ export class AuthorComponent implements OnInit {
   constructor(private _authorsService: AuthorsService, private _router: Router,
     private _imagesService: ImagesService, private _fb: FormBuilder) { }
 
-  private _author: Author;
-  private _imageUri: string;
-  private _experiencesImageUris: any = {}
-  private _form: FormGroup;
+  _author: Author;
+  _imageUri: string;
+  _experiencesImageUris: any = {}
+  _form: FormGroup;
 
   ngOnInit() {
     this.initForm();

@@ -6,7 +6,7 @@ import { ResumeEventsService } from '../../../services/resumeservice/resume-even
 
 @Component({ templateUrl: "./resume-manager.component.html", styleUrls: ["./resume-manager.component.css"] })
 export class ResumeManagerComponent implements OnInit {
-    private _resumeEvents: ResumeEvent[];
+    _resumeEvents: ResumeEvent[];
 
     constructor(private _resumeEventsService: ResumeEventsService, private _authorsService: AuthorsService) {
 

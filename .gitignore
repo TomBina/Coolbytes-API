@@ -4,6 +4,9 @@
 # Ignore keys
 mailgunsettings.json
 
+# Ignore publish profiles
+PublishProfiles/
+
 # User-specific files
 *.suo
 *.user

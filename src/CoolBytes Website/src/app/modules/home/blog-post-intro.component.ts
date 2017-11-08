@@ -16,8 +16,8 @@ export class BlogPostIntroComponent {
             this._imageUrl = this._imagesService.getUri(value.image.uriPath);
     };
 
-    private _blogPost: BlogPostSummary;
-    private _imageUrl: string;
+    _blogPost: BlogPostSummary;
+    _imageUrl: string;
 
     constructor(private _imagesService: ImagesService) {
     }

@@ -9,8 +9,8 @@ import { ActivatedRoute } from "@angular/router";
     styleUrls: ["./blog.component.css"]
 })
 export class BlogComponent implements OnInit {
-    private _blogPosts: BlogPostViewModel[];
-    private _tag: string;
+    _blogPosts: BlogPostViewModel[];
+    _tag: string;
 
     constructor(private _blogpostsService: BlogPostsService, private _route: ActivatedRoute) {
         this._tag = this._route.snapshot.paramMap.get("tag");

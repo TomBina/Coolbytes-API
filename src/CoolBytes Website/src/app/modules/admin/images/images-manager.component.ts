@@ -10,10 +10,10 @@ import { FormControl } from "@angular/forms";
     styleUrls: ["./images-manager.component.css"]
 })
 export class ImagesManagerComponent implements OnInit {
-    private _open;
-    private _images: Image[];
-    private _imagesUri;
-    private _deleteImageText = "delete image";
+    _open;
+    _images: Image[];
+    _imagesUri;
+    _deleteImageText = "delete image";
 
     @Input()
     title: string;
