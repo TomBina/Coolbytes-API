@@ -14,6 +14,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +47,7 @@ namespace CoolBytes.WebAPI
             services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
             services.AddScoped<IImageFactoryValidator, ImageFactoryValidator>();
             services.AddScoped<ISendValidator, ThresholdValidator>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
             services.AddMvc()
@@ -57,7 +59,12 @@ namespace CoolBytes.WebAPI
 
         private void ConfigureSecurity(IServiceCollection services)
         {
-            services.AddCors(o => o.AddPolicy("DevPolicy", builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().Build(); }));
+            services.AddCors(o =>
+            {
+                o.AddPolicy("ProductionPolicy", builder => builder.WithOrigins("http://coolbytes.io", "http://www.coolbytes.io").AllowAnyMethod().AllowAnyHeader().Build());
+                o.AddPolicy("DevPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().Build());
+            });
+
             services.AddAuthentication(o =>
             {
                 o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -83,9 +90,11 @@ namespace CoolBytes.WebAPI
             if (env.IsDevelopment())
             {
                 app.UseCors("DevPolicy");
-                app.UseDeveloperExceptionPage();
-
                 Mapper.AssertConfigurationIsValid();
+            }
+            else
+            {
+                app.UseCors("ProductionPolicy");
             }
 
             app.UseMvcWithDefaultRoute();

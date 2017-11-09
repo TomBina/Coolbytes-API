@@ -12,8 +12,6 @@ namespace CoolBytes.WebAPI
     {
         public static void Main(string[] args)
         {
-            //DbSetup.SeedDb();
-
             var configuration = GetConfiguration();
             StartWebHost(args, configuration);
         }
@@ -41,12 +39,15 @@ namespace CoolBytes.WebAPI
 
             try
             {
+                Log.Information("Init db");
+                DbSetup.InitDb(configuration);
+
                 Log.Information("Starting web host");
                 BuildWebHost(args, configuration).Run();
             }
             catch (Exception ex)
             {
-                Log.Fatal(ex, "Host terminated unexpectedly");
+                Log.Fatal(ex, "Start failed");
             }
             finally
             {
