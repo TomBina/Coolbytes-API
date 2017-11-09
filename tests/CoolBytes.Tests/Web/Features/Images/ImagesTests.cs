@@ -48,7 +48,7 @@ namespace CoolBytes.Tests.Web.Features.Images
         {
             var image = await AddImage();
 
-            var handler = new DeleteImageCommandHandler(Context);
+            var handler = new DeleteImageCommandHandler(Context, Fixture.Configuration);
             var message = new DeleteImageCommand() { Id = image.Id };
 
             await handler.Handle(message);

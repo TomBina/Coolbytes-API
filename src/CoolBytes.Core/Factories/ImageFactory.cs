@@ -34,14 +34,15 @@ namespace CoolBytes.Core.Factories
                 Directory.CreateDirectory(directory);
 
             var length = stream.Length;
-            
+
             using (var fileStream = File.Create(path))
             {
                 await stream.CopyToAsync(fileStream);
             }
 
             var uriPath = _options.UriPath(fileName);
-            return new Image(fileName, path, uriPath, length, contentType);
+            var pathWithoutUploadPath = path.Replace(_options.UploadPath, string.Empty);
+            return new Image(fileName, pathWithoutUploadPath, uriPath, length, contentType);
         }
     }
 }
