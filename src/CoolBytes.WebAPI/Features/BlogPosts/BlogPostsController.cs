@@ -64,7 +64,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             return links;
         }
 
-        [Authorize("Admin")]
+        [Authorize("admin")]
         [HttpGet("update/{id}")]
         public async Task<IActionResult> Update(UpdateBlogPostQuery query) => this.OkOrNotFound(await _mediator.Send(query));
 

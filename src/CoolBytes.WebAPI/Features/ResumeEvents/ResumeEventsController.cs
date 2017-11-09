@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents
 {
+    [Authorize("admin")]
     [Route("api/[controller]")]
     public class ResumeEventsController : Controller
     {
@@ -30,7 +31,6 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents
         public async Task<IActionResult> Get(GetResumeEventQuery message)
             => this.OkOrNotFound(await _mediator.Send(message));
 
-        [Authorize("admin")]
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AddResumeEventCommand message)
         {
@@ -40,7 +40,6 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents
             return Ok(await _mediator.Send(message));
         }
     
-        [Authorize("admin")]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateResumeEventCommand message)
         {
@@ -50,7 +49,6 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents
             return Ok(await _mediator.Send(message));
         }
 
-        [Authorize("admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(DeleteResumeEventCommand message)
         {

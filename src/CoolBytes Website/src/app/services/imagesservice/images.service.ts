@@ -11,7 +11,7 @@ export class ImagesService extends WebApiService {
     private _url: string = environment.apiUri + "api/images/";
 
     getAll(): Observable<Image[]> {
-        let observable = this.http.get(this._url);
+        let observable = this.http.get(this._url, this.getAuthRequestOptions(new Headers()));
         return observable.map((response: Response) => <Image[]>response.json());
     }
 

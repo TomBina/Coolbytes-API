@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using CoolBytes.WebAPI.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoolBytes.WebAPI.Features.Images
 {
+    [Authorize("admin")]
     [Route("api/[controller]")]
     public class ImagesController : Controller
     {
