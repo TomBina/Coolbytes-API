@@ -10,16 +10,16 @@ import { Title } from '@angular/platform-browser';
     styleUrls: ["./blog.component.css"]
 })
 export class BlogComponent implements OnInit {
-    _blogPosts: BlogPostViewModel[];
-    _tag: string;
+    blogPosts: BlogPostViewModel[];
+    tag: string;
 
     constructor(private _blogpostsService: BlogPostsService, private _route: ActivatedRoute, private _titleService: Title) {
-        this._tag = this._route.snapshot.paramMap.get("tag");
+        this.tag = this._route.snapshot.paramMap.get("tag");
     }
 
     ngOnInit(): void {
         this._titleService.setTitle("Cool Bytes");
-        this._blogpostsService.getAll(this._tag).map(blogPosts => {
+        this._blogpostsService.getAll(this.tag).map(blogPosts => {
             let blogPostsViewModel: BlogPostViewModel[] = [];
 
             blogPosts.forEach(blogPost => {
@@ -29,7 +29,7 @@ export class BlogComponent implements OnInit {
             });
 
             return blogPostsViewModel;
-        }).subscribe(blogPosts => { this._blogPosts = blogPosts; });
+        }).subscribe(blogPosts => { this.blogPosts = blogPosts; });
     }
 }
 

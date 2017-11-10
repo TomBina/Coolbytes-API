@@ -14,10 +14,11 @@ import { Title } from '@angular/platform-browser';
 })
 export class BlogPostComponent implements OnInit, OnDestroy {
     blogPost;
-    _authorImage: string;
-    _onRouteChanges: Subscription;
-    _shareInfo;
+    authorImage: string;
+    shareInfo;
 
+    private _onRouteChanges: Subscription;
+    
     constructor(private _blogPostsService: BlogPostsService, private _route: ActivatedRoute, private _imagesService : ImagesService, private _router: Router, private _titleService: Title) { }
 
     ngOnInit(): void {
@@ -32,7 +33,7 @@ export class BlogPostComponent implements OnInit, OnDestroy {
         this._titleService.setTitle(`${blogPost.subject} - Cool Bytes`);
         window.scrollTo(0,0);
         
-        this._shareInfo = { 
+        this.shareInfo = { 
             url: `${environment.appUri}post/${blogPost.id}/${blogPost.subjectUrl}`,
             subject: blogPost.subject
         };
@@ -43,7 +44,7 @@ export class BlogPostComponent implements OnInit, OnDestroy {
             }
         }
 
-        this._authorImage = this._imagesService.getUri(blogPost.author.image.uriPath);
+        this.authorImage = this._imagesService.getUri(blogPost.author.image.uriPath);
 
 
         this.blogPost = blogPost;

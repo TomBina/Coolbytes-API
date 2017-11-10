@@ -6,11 +6,11 @@
         <md [value]="blogPost.content"></md>
     </article>
     <aside *ngIf="blogPost">
-        <div *ngIf="_authorImage">
+        <div *ngIf="authorImage">
             <h2 class="no-top-margin">Author</h2>
             <div class="author">
                 <div>
-                    <img [src]="_authorImage" class="author-image" />
+                    <img [src]="authorImage" class="author-image" />
                 </div>
                 <div class="about">
                     <a>{{blogPost.author.firstName}} {{blogPost.author.lastName}}</a>
@@ -25,7 +25,7 @@
             <h2>Resources</h2>
             <ul>
                 <li *ngFor="let link of blogPost.externalLinks">
-                    <a target="_blank" [href]="link.url">{{link.name}}</a>
+                    <a target="blank" [href]="link.url">{{link.name}}</a>
                 </li>
             </ul>
         </div>
@@ -37,9 +37,9 @@
                 </li>
             </ul>
         </div>
-        <ng-container *ngIf="_shareInfo">
+        <ng-container *ngIf="shareInfo">
             <h2>Share this post</h2>
-            <share [shareInfo]="_shareInfo"></share>
+            <share [shareInfo]="shareInfo"></share>
         </ng-container>
         <div *ngIf="blogPost.relatedLinks">
             <h2>More posts</h2>

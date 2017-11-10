@@ -3,7 +3,7 @@
     <div class="flex">
         <div class="left">
             <h1 class="no-top-margin">Add resume event</h1>
-            <form [formGroup]="_form" (ngSubmit)="onSubmit()">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <label for="startDate">Start date:</label>
                 <p>
                     <input formControlName="startDate" id="startDate" />

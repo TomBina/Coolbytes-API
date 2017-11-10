@@ -3,7 +3,7 @@
     <div class="flex">
         <div class="left">
             <h1 class="no-top-margin">Edit blog</h1>
-            <form [formGroup]="_form" (ngSubmit)="onSubmit()">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <label for="subject">Subject</label>
                 <p>
                     <input formControlName="subject" id="subject" />
@@ -22,8 +22,8 @@
                     <textarea formControlName="tags" id="tags"></textarea>
                 </p>
                 <label for="image">Image</label>
-                <p *ngIf="_image && _image.uri">
-                    <img [src]="_image.uri" width="200" />
+                <p *ngIf="image && image.uri">
+                    <img [src]="image.uri" width="200" />
                 </p>
                 <p>
                     <input type="file" id="file" (change)="onFileChanged($event.target)" />
@@ -31,7 +31,7 @@
                 <label>links
                     <a (click)="addExternalLinkControl()">add external link</a>
                 </label>
-                <div formArrayName="externalLinks" *ngFor="let item of _form.get('externalLinks')?.controls; let i = index">
+                <div formArrayName="externalLinks" *ngFor="let item of form.get('externalLinks')?.controls; let i = index">
                     <p [formGroupName]="i" class="flex">
                         <input formControlName="name" placeholder="External link name" />
                         <input formControlName="url" placeholder="External link URL" />

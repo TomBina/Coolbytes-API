@@ -10,15 +10,15 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 )
 
 export class ShareComponent {
-    _shareInfo;
+    share;
 
     @Input()
     set shareInfo(value) {
-        this._shareInfo = {};
-        this._shareInfo.tweetMessage = encodeURIComponent(`${value.subject} - ${value.url}`);
-        this._shareInfo.url = encodeURIComponent(value.url);
-        this._shareInfo.whatsAppUrl = this._sanitizer.bypassSecurityTrustUrl(`whatsapp://send?text=${this._shareInfo.url}`);
-        this._shareInfo.subject = encodeURIComponent(value.subject);
+        this.share = {};
+        this.share.tweetMessage = encodeURIComponent(`${value.subject} - ${value.url}`);
+        this.share.url = encodeURIComponent(value.url);
+        this.share.whatsAppUrl = this._sanitizer.bypassSecurityTrustUrl(`whatsapp://send?text=${this.share.url}`);
+        this.share.subject = encodeURIComponent(value.subject);
     }
 
     constructor(private _sanitizer: DomSanitizer) {

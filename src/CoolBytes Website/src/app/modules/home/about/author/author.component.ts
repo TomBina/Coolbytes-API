@@ -11,14 +11,14 @@ import { Component, Input } from "@angular/core";
     }
 )
 export class AuthorComponent {
-    _experiences;
-    _authorImage: string;
-    _author: Author;
+    experiences;
+    authorImage: string;
+    authorForTemplate: Author;
 
     @Input()
     set author(author: Author) {
-        this._author = author;
-        this._authorImage = this._imagesService.getUri(author.image.uriPath);
+        this.authorForTemplate = author;
+        this.authorImage = this._imagesService.getUri(author.image.uriPath);
 
         if (author.experiences) {
             for (let experience of author.experiences) {
@@ -26,7 +26,7 @@ export class AuthorComponent {
                 experience.backgroundColor = `#${experience.color}`;
             }
 
-            this._experiences = author.experiences;
+            this.experiences = author.experiences;
 
         }
     }

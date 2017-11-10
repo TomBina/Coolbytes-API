@@ -7,7 +7,7 @@
             <div>Name</div>
             <div>Options</div>
         </div>
-        <div class="row" *ngFor="let resumeEvent of _resumeEvents">
+        <div class="row" *ngFor="let resumeEvent of resumeEvents">
             <div>{{resumeEvent.dateRange.startDate | date}} - {{resumeEvent.dateRange.endDate | date}}</div>
             <div>{{resumeEvent.name}}</div>
             <div>

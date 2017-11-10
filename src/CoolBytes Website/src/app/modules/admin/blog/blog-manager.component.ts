@@ -9,7 +9,7 @@ import { Router } from "@angular/router";
     styleUrls: ["./blog-manager.component.css"]
 })
 export class BlogManagerComponent implements OnInit {
-    _blogPosts: BlogPostSummary[];
+    blogPosts: BlogPostSummary[];
 
     constructor(private _blogPostsService: BlogPostsService) {
 
@@ -20,7 +20,7 @@ export class BlogManagerComponent implements OnInit {
     }
 
     getBlogs(): void {
-        this._blogPostsService.getAll().subscribe(blogPosts => this._blogPosts = blogPosts);
+        this._blogPostsService.getAll().subscribe(blogPosts => this.blogPosts = blogPosts);
     }
 
     delete(blogPostId: number): void {

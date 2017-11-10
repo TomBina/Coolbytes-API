@@ -16,10 +16,10 @@ export class AuthorComponent implements OnInit {
   constructor(private _authorsService: AuthorsService, private _router: Router,
     private _imagesService: ImagesService, private _fb: FormBuilder) { }
 
-  _author: Author;
-  _imageUri: string;
-  _experiencesImageUris: any = {}
-  _form: FormGroup;
+  private _author: Author;
+  imageUri: string;
+  experiencesImageUris: any = {}
+  form: FormGroup;
 
   ngOnInit() {
     this.initForm();
@@ -27,7 +27,7 @@ export class AuthorComponent implements OnInit {
   }
 
   initForm() {
-    this._form = this._fb.group({
+    this.form = this._fb.group({
       firstName: ["", [Validators.required, Validators.maxLength(50)]],
       lastName: ["", [Validators.required, Validators.maxLength(50)]],
       about: ["", [Validators.required, Validators.maxLength(500)]],
@@ -40,7 +40,7 @@ export class AuthorComponent implements OnInit {
   }
 
   getExperiencesControls(): FormArray {
-    return this._form.get("experiences") as FormArray;
+    return this.form.get("experiences") as FormArray;
   }
 
   addExperienceControl(): FormGroup {
@@ -61,12 +61,12 @@ export class AuthorComponent implements OnInit {
   }
 
   updateForm(author: Author) {
-    Enumerate.deep(author, prop => this._form.get(prop) && prop != "experiences", (prop, value) => this._form.get(prop).setValue(value));
+    Enumerate.deep(author, prop => this.form.get(prop) && prop != "experiences", (prop, value) => this.form.get(prop).setValue(value));
     this._author = author;
 
     if (author.image) {
-      this._imageUri = this._imagesService.getUri(author.image.uriPath);
-      this._form.get("imageId").setValue(author.image.id);
+      this.imageUri = this._imagesService.getUri(author.image.uriPath);
+      this.form.get("imageId").setValue(author.image.id);
     }
 
     if (author.experiences) {
@@ -77,7 +77,7 @@ export class AuthorComponent implements OnInit {
         control.get("name").setValue(e.name);
         control.get("color").setValue(e.color);
         control.get("imageId").setValue(e.image.id);
-        this._experiencesImageUris[`Image${index}`] = this._imagesService.getUri(e.image.uriPath);
+        this.experiencesImageUris[`Image${index}`] = this._imagesService.getUri(e.image.uriPath);
         index++;
       });
     }
@@ -88,23 +88,23 @@ export class AuthorComponent implements OnInit {
   }
 
   onContentImageSelectedHandler(image: Image) {
-    this._form.get("about").setValue(`${this._form.get("about").value}![](${this._imagesService.getUri(image.uriPath)})`);
+    this.form.get("about").setValue(`${this.form.get("about").value}![](${this._imagesService.getUri(image.uriPath)})`);
   }
 
   onMainImageSelectedHandler(image: Image) {
-    this._imageUri = this._imagesService.getUri(image.uriPath);
-    this._form.get("imageId").setValue(image.id);
+    this.imageUri = this._imagesService.getUri(image.uriPath);
+    this.form.get("imageId").setValue(image.id);
   }
 
   onExperiencesImageSelectedHandler(image: Image, formGroup: FormGroup, index: number) {
-    this._experiencesImageUris[`Image${index}`] = this._imagesService.getUri(image.uriPath);
+    this.experiencesImageUris[`Image${index}`] = this._imagesService.getUri(image.uriPath);
     formGroup.get("imageId").setValue(image.id);
   }
 
   onSubmit() {
-    let controls = this._form.controls;
+    let controls = this.form.controls;
 
-    if (!this._form.valid) {
+    if (!this.form.valid) {
       for (let controlName in controls) {
         controls[controlName].markAsTouched();
       }

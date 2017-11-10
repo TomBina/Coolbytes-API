@@ -10,14 +10,14 @@ import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 export class BlogPostIntroComponent { 
     @Input()
     set blogPost(value: BlogPostSummary) {
-        this._blogPost = value;
+        this.blogPostSummary = value;
 
         if (value.image)
-            this._imageUrl = this._imagesService.getUri(value.image.uriPath);
+            this.imageUrl = this._imagesService.getUri(value.image.uriPath);
     };
 
-    _blogPost: BlogPostSummary;
-    _imageUrl: string;
+    blogPostSummary: BlogPostSummary;
+    imageUrl: string;
 
     constructor(private _imagesService: ImagesService) {
     }

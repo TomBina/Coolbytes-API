@@ -26,18 +26,18 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
         private _imagesService: ImagesService,
         private _formBuilder: FormBuilder) { }
 
-    _form: FormGroup;
-    _id: number;
-    _blogPost: BlogPostSummary;
-    _image: Image;
-    _files: FileList;
+    form: FormGroup;
+    image: Image;
 
+    private _id: number;
+    private _blogPost: BlogPostSummary;
+    private _files: FileList;
     @ViewChild(PreviewBlogComponent)
-    _previewBlogComponent: PreviewBlogComponent;
-    _previewObserver: Subscription
+    private _previewBlogComponent: PreviewBlogComponent;
+    private _previewObserver: Subscription
 
     ngOnInit(): void {
-        this._form = this._formBuilder.group({
+        this.form = this._formBuilder.group({
             subject: ["", [Validators.required, Validators.maxLength(100)]],
             contentIntro: ["", [Validators.required, Validators.maxLength(100)]],
             content: ["", [Validators.required, Validators.maxLength(8000)]],
@@ -45,9 +45,9 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
             externalLinks: this._formBuilder.array([])
         });
 
-        this._previewObserver = this._form.valueChanges.subscribe(v => {
+        this._previewObserver = this.form.valueChanges.subscribe(v => {
             this._previewBlogComponent.blogPostPreview
-                = new BlogPostPreview(this._form.get("subject").value, this._form.get("contentIntro").value, this._form.get("content").value);
+                = new BlogPostPreview(this.form.get("subject").value, this.form.get("contentIntro").value, this.form.get("content").value);
         })
 
         let id: number = parseInt(this._route.snapshot.paramMap.get("id"));
@@ -64,7 +64,7 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
     }
 
     getExternalLinksControls(): FormArray {
-        return this._form.get("externalLinks") as FormArray;
+        return this.form.get("externalLinks") as FormArray;
     }
 
     addExternalLinkControl(): FormGroup {
@@ -83,25 +83,25 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
     }
 
     onImageSelectedHandler(image: Image) {
-        this._form.get("content").setValue(`${this._form.get("content").value}![](${this._imagesService.getUri(image.uriPath)})`);
+        this.form.get("content").setValue(`${this.form.get("content").value}![](${this._imagesService.getUri(image.uriPath)})`);
     }
 
     updateForm(blogPost: BlogPostUpdate) {
         this._id = blogPost.id;
-        this._form.get("subject").setValue(blogPost.subject);
-        this._form.get("contentIntro").setValue(blogPost.contentIntro);
-        this._form.get("content").setValue(blogPost.content);
-        this._image = blogPost.image;
+        this.form.get("subject").setValue(blogPost.subject);
+        this.form.get("contentIntro").setValue(blogPost.contentIntro);
+        this.form.get("content").setValue(blogPost.content);
+        this.image = blogPost.image;
 
-        if (this._image)
-            this._image.uri = this._imagesService.getUri(this._image.uriPath);
+        if (this.image)
+            this.image.uri = this._imagesService.getUri(this.image.uriPath);
 
         let blogPostTags: string[] = [];
         blogPost.tags.forEach(t => {
             blogPostTags.push(t.name);
         });
 
-        this._form.get("tags").setValue(blogPostTags.join(","))
+        this.form.get("tags").setValue(blogPostTags.join(","))
 
         if (blogPost.externalLinks && blogPost.externalLinks.length > 0) {
             let externalLinks = blogPost.externalLinks;
@@ -121,9 +121,9 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        if (!this._form.valid) {
-            for (let controlName in this._form.controls) {
-                this._form.get(controlName).markAsTouched();
+        if (!this.form.valid) {
+            for (let controlName in this.form.controls) {
+                this.form.get(controlName).markAsTouched();
             }
             return;
         }
@@ -131,9 +131,9 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
         let updateBlogPostCommand = new UpdateBlogPostCommand();
 
         updateBlogPostCommand.id = this._id;
-        updateBlogPostCommand.subject = this._form.get("subject").value;
-        updateBlogPostCommand.content = this._form.get("content").value;
-        updateBlogPostCommand.contentIntro = this._form.get("contentIntro").value;
+        updateBlogPostCommand.subject = this.form.get("subject").value;
+        updateBlogPostCommand.content = this.form.get("content").value;
+        updateBlogPostCommand.contentIntro = this.form.get("contentIntro").value;
 
         let externalLinks: ExternalLink[] = [];
 
@@ -146,7 +146,7 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
 
         updateBlogPostCommand.externalLinks = externalLinks;
 
-        let tags: string = this._form.get("tags").value;
+        let tags: string = this.form.get("tags").value;
 
         if (tags.indexOf(",") !== -1 || tags.length > 0) {
             updateBlogPostCommand.tags = tags.split(",");

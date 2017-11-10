@@ -8,18 +8,18 @@ import { Title } from '@angular/platform-browser';
     styleUrls: ["./contact.component.css"]
 })
 export class ContactComponent implements OnInit {
-    _form: FormGroup;
-    _messageSent: boolean;
+    form: FormGroup;
+    isMessageSent: boolean;
 
     get messageSent() {
-        return this._messageSent
+        return this.isMessageSent
     }
 
     set messageSent(value: boolean) {
-        this._messageSent = value;
-        for (let controlName in this._form.controls) {
-            this._form.get(controlName).markAsUntouched();
-            this._form.get(controlName).setValue("");
+        this.isMessageSent = value;
+        for (let controlName in this.form.controls) {
+            this.form.get(controlName).markAsUntouched();
+            this.form.get(controlName).setValue("");
         }
         return;
     }
@@ -30,7 +30,7 @@ export class ContactComponent implements OnInit {
 
     ngOnInit() {
         this._titleService.setTitle("Contact Cool Bytes");
-        this._form = this._fb.group({
+        this.form = this._fb.group({
             name: ["", Validators.required],
             email: ["", Validators.required],
             message: ["", [Validators.required, Validators.maxLength(2000)]]
@@ -38,11 +38,11 @@ export class ContactComponent implements OnInit {
     }
 
     onSubmit() {
-        var controls = this._form.controls;
+        var controls = this.form.controls;
 
-        if (!this._form.valid) {
+        if (!this.form.valid) {
             for (let controlName in controls) {
-                this._form.get(controlName).markAsTouched();
+                this.form.get(controlName).markAsTouched();
             }
             return;
         }

@@ -20,16 +20,16 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     constructor(private _authorsService: AuthorsService, private _blogPostsService: BlogPostsService, private _router: Router, private _fb: FormBuilder,
     private _imagesService : ImagesService) { }
 
-    _form: FormGroup;
-    _externalLinks = [];
-    _files: FileList;
+    form: FormGroup;
+    externalLinks = [];
+    private _files: FileList;
 
     @ViewChild(PreviewBlogComponent)
-    _previewBlogComponent: PreviewBlogComponent;
-    _previewObserver: Subscription
+    private _previewBlogComponent: PreviewBlogComponent;
+    private _previewObserver: Subscription
 
     ngOnInit() {
-        this._form = this._fb.group(
+        this.form = this._fb.group(
             {
                 subject: ["", [Validators.required, Validators.maxLength(100)]],
                 contentIntro: ["", [Validators.required, Validators.maxLength(100)]],
@@ -38,11 +38,11 @@ export class AddBlogComponent implements OnInit, OnDestroy {
                 externalLinks: this._fb.array([this.createExternalLinkFormGroup()])
             }
         )
-        this._previewObserver = this._form.valueChanges.subscribe(v => {
+        this._previewObserver = this.form.valueChanges.subscribe(v => {
             this._previewBlogComponent.blogPostPreview
-                = new BlogPostPreview(this._form.get("subject").value,
-                    this._form.get("content").value,
-                    this._form.get("contentIntro").value);
+                = new BlogPostPreview(this.form.get("subject").value,
+                    this.form.get("content").value,
+                    this.form.get("contentIntro").value);
         })
     }
 
@@ -56,7 +56,7 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     }
 
     getExternalLinksControls(): FormArray {
-        return this._form.get("externalLinks") as FormArray;
+        return this.form.get("externalLinks") as FormArray;
     }
 
     addExternalLinkControl() {
@@ -72,7 +72,7 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     }
 
     onImageSelectedHandler(image: Image) {
-        this._form.get("content").setValue(`${this._form.get("content").value}![](${this._imagesService.getUri(image.uriPath)})`);
+        this.form.get("content").setValue(`${this.form.get("content").value}![](${this._imagesService.getUri(image.uriPath)})`);
     }
 
     onFileChanged(element: HTMLInputElement) {
@@ -80,17 +80,17 @@ export class AddBlogComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        if (!this._form.valid) {
-            for (let controlName in this._form.controls) {
-                this._form.get(controlName).markAsTouched();
+        if (!this.form.valid) {
+            for (let controlName in this.form.controls) {
+                this.form.get(controlName).markAsTouched();
             }
             return;
         }
 
         let addBlogPostCommand = new AddBlogPostCommand();
-        addBlogPostCommand.subject = this._form.get("subject").value;
-        addBlogPostCommand.content = this._form.get("content").value;
-        addBlogPostCommand.contentIntro = this._form.get("contentIntro").value;
+        addBlogPostCommand.subject = this.form.get("subject").value;
+        addBlogPostCommand.content = this.form.get("content").value;
+        addBlogPostCommand.contentIntro = this.form.get("contentIntro").value;
 
         let externalLinks: ExternalLink[] = [];
 
@@ -103,7 +103,7 @@ export class AddBlogComponent implements OnInit, OnDestroy {
 
         addBlogPostCommand.externalLinks = externalLinks;
 
-        let tags: string = this._form.get("tags").value;
+        let tags: string = this.form.get("tags").value;
         if (tags.indexOf(",") !== -1 || tags.length > 0)
             addBlogPostCommand.tags = tags.split(",");
 

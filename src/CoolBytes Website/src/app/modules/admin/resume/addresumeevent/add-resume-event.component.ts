@@ -13,30 +13,30 @@ import { Subscription } from 'rxjs';
     styleUrls: ["./add-resume-event.component.css"]
 })
 export class AddResumeEventComponent implements OnInit, OnDestroy {
-    _form: FormGroup;
+    form: FormGroup;
     
     @ViewChild(PreviewResumeEventComponent)
-    _previewResumeEvent: PreviewResumeEventComponent;
-    _previewObserver: Subscription
+    private _previewResumeEvent: PreviewResumeEventComponent;
+    private _previewObserver: Subscription
 
     constructor(private _fb: FormBuilder, private _resumeService: ResumeEventsService, private _router: Router) {
 
     }
 
     ngOnInit() {
-        this._form = this._fb.group({
+        this.form = this._fb.group({
             startDate: ["", [Validators.required]],
             endDate: ["", [Validators.required]],
             name: ["", [Validators.required, Validators.maxLength(50)]],
             message: ["", [Validators.required, Validators.maxLength(1000)]]
         });
 
-        this._previewObserver = this._form.valueChanges.subscribe(v => {          
+        this._previewObserver = this.form.valueChanges.subscribe(v => {          
             let previewResumeEvent = new PreviewResumeEvent();
-            previewResumeEvent.startDate = this._form.get("startDate").value;
-            previewResumeEvent.endDate = this._form.get("endDate").value;
-            previewResumeEvent.name = this._form.get("name").value;
-            previewResumeEvent.message = this._form.get("message").value;
+            previewResumeEvent.startDate = this.form.get("startDate").value;
+            previewResumeEvent.endDate = this.form.get("endDate").value;
+            previewResumeEvent.name = this.form.get("name").value;
+            previewResumeEvent.message = this.form.get("message").value;
 
             this._previewResumeEvent.previewResumeEvent = previewResumeEvent;
         })
@@ -52,9 +52,9 @@ export class AddResumeEventComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
-        if (!this._form.valid) {
-            for (let controlName in this._form.controls) {
-                this._form.get(controlName).markAsTouched();
+        if (!this.form.valid) {
+            for (let controlName in this.form.controls) {
+                this.form.get(controlName).markAsTouched();
             }
             return;
         }
@@ -62,11 +62,11 @@ export class AddResumeEventComponent implements OnInit, OnDestroy {
         var addResumeEventCommand = new AddResumeEventCommand();
         var dateRange = new DateRange();
         
-        dateRange.startDate = this._form.get("startDate").value;
-        dateRange.endDate = this._form.get("endDate").value;
+        dateRange.startDate = this.form.get("startDate").value;
+        dateRange.endDate = this.form.get("endDate").value;
         addResumeEventCommand.dateRange = dateRange;
-        addResumeEventCommand.name = this._form.get("name").value;
-        addResumeEventCommand.message = this._form.get("message").value;
+        addResumeEventCommand.name = this.form.get("name").value;
+        addResumeEventCommand.message = this.form.get("message").value;
 
         this._resumeService.add(addResumeEventCommand).subscribe(r => this._router.navigateByUrl("admin/resume"));
     }

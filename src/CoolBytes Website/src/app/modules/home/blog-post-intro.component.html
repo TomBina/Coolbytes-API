@@ -1,17 +1,17 @@
 <div class="post">
     <div class="info">
-        {{_blogPost.date | date}} by
-        <a>{{_blogPost.authorName}}</a>
+        {{blogPostSummary.date | date}} by
+        <a>{{blogPostSummary.authorName}}</a>
     </div>
     <div class="image">
-        <a routerLink="/post/{{_blogPost.id}}/{{_blogPost.subjectUrl}}" *ngIf="_imageUrl">
-            <img [src]="_imageUrl" />
+        <a routerLink="/post/{{blogPostSummary.id}}/{{blogPostSummary.subjectUrl}}" *ngIf="imageUrl">
+            <img [src]="imageUrl" />
         </a>
     </div>
     <div class="text">
-        <a routerLink="/post/{{_blogPost.id}}/{{_blogPost.subjectUrl}}">{{_blogPost.subject}}</a>
+        <a routerLink="/post/{{blogPostSummary.id}}/{{blogPostSummary.subjectUrl}}">{{blogPostSummary.subject}}</a>
         <p>
-            <md [value]="_blogPost.contentIntro"></md>
+            <md [value]="blogPostSummary.contentIntro"></md>
         </p>
     </div>
 </div>

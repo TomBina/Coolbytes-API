@@ -1,6 +1,6 @@
 <article>
     <h1>Contact</h1>
-    <p *ngIf="_messageSent">
+    <p *ngIf="isMessageSent">
         Your messsage was send successfully.
     </p>
     <p>
@@ -12,7 +12,7 @@
     <p>
         Contact us if you have any questions, or if you would like to post blogs on Cool Bytes. We're always looking for new people!
     </p>
-    <form [formGroup]="_form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <label for="name">Name:</label>
         <p>
             <input formControlName="name" id="name" />

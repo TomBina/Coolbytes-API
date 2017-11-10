@@ -1,7 +1,7 @@
 <app-admin-menu></app-admin-menu>
 <div class="admin-content">
     <h1>Profile</h1>
-    <form [formGroup]="_form" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <label for="firstName">First name:</label>
         <p>
             <input formControlName="firstName" id="firstName" />
@@ -16,8 +16,8 @@
             <admin-images-manager title="Insert image" (onImageSelected)="onContentImageSelectedHandler($event)"></admin-images-manager>
         </p>
         <input formControlName="imageId" type="hidden" name="imageId" />
-        <p *ngIf="_imageUri">
-            <img [src]="_imageUri" width="200" />
+        <p *ngIf="imageUri">
+            <img [src]="imageUri" width="200" />
         </p>
         <div>
             <admin-images-manager title="Choose image" (onImageSelected)="onMainImageSelectedHandler($event)"></admin-images-manager>
@@ -41,10 +41,10 @@
             <a (click)="addExperienceControl()">add experience</a>
         </label>
 
-        <div formArrayName="experiences" *ngFor="let item of _form.get('experiences')?.controls; let i = index">
+        <div formArrayName="experiences" *ngFor="let item of form.get('experiences')?.controls; let i = index">
             <ng-container [formGroupName]="i">
                 <p class="flex">
-                    <img [src]="_experiencesImageUris['Image' + i]" *ngIf="_experiencesImageUris['Image' + i]" />
+                    <img [src]="experiencesImageUris['Image' + i]" *ngIf="experiencesImageUris['Image' + i]" />
                     <input formControlName="id" type="hidden" />
                     <input formControlName="name" placeholder="Name" />
                     <input formControlName="color" placeholder="Color" />

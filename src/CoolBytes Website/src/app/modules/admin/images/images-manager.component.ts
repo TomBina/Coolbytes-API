@@ -10,10 +10,9 @@ import { FormControl } from "@angular/forms";
     styleUrls: ["./images-manager.component.css"]
 })
 export class ImagesManagerComponent implements OnInit {
-    _open;
-    _images: Image[];
-    _imagesUri;
-    _deleteImageText = "delete image";
+    isOpen;
+    images: Image[];
+    deleteImageText = "delete image";
 
     @Input()
     title: string;
@@ -21,7 +20,9 @@ export class ImagesManagerComponent implements OnInit {
     @Output()
     onImageSelected = new EventEmitter<Image>();
     
-    constructor(private _imagesService: ImagesService) { 
+    private _imagesUri;
+    
+    constructor(public imagesService: ImagesService) { 
     }
 
     ngOnInit(): void {
@@ -32,42 +33,42 @@ export class ImagesManagerComponent implements OnInit {
         if (!element.files)
             return;
 
-        this._imagesService.uploadImages(element.files).subscribe(images => {
-            this._images = this._images.concat(images);
+        this.imagesService.uploadImages(element.files).subscribe(images => {
+            this.images = this.images.concat(images);
             element.value = "";
         })
     }
 
     loadImages() {
-        this._imagesService.getAll().subscribe(images => this._images = images);
+        this.imagesService.getAll().subscribe(images => this.images = images);
     }
 
     onImageClick(image: Image) {
-        if (this._deleteImageText == "delete image")  {
+        if (this.deleteImageText == "delete image")  {
             this.close();
             this.onImageSelected.emit(image);
         }
         else {
-            this._imagesService.delete(image.id).subscribe(response => {
+            this.imagesService.delete(image.id).subscribe(response => {
                 this.loadImages();
             })
         }
     }
 
     toggleDelete() {
-        if (this._deleteImageText == "delete image") {
-            this._deleteImageText = "finished deleting";
+        if (this.deleteImageText == "delete image") {
+            this.deleteImageText = "finished deleting";
         }
         else {
-            this._deleteImageText = "delete image";
+            this.deleteImageText = "delete image";
         }
     }
 
     open() {
-        this._open = true;
+        this.isOpen = true;
     }
 
     close() {
-        this._open = false;
+        this.isOpen = false;
     }
 }

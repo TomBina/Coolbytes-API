@@ -8,9 +8,9 @@ import { Title } from '@angular/platform-browser';
 
 @Component({ templateUrl: "./about.component.html", styleUrls: ["./about.component.css"] })
 export class AboutComponent implements OnInit {
-    _resumeEvents;
-    _years: string[];
-    _author: Author;
+    resumeEvents;
+    years: string[];
+    author: Author;
     
     constructor(private _resumeService: ResumeService, private _imagesService: ImagesService, private _titleService: Title) { }
 
@@ -20,15 +20,15 @@ export class AboutComponent implements OnInit {
     }
 
     updateTemplate(resume: Resume) {
-        this._author = resume.author;
-        this._resumeEvents = resume.resumeEvents;
+        this.author = resume.author;
+        this.resumeEvents = resume.resumeEvents;
         
         let years = [];
         
-        for (let year in this._resumeEvents) {
+        for (let year in this.resumeEvents) {
             years.push(year);
         }
         
-        this._years = years.sort(); 
+        this.years = years.sort(); 
     }
 }

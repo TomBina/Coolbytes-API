@@ -14,31 +14,31 @@ import { Router, ActivatedRoute } from '@angular/router';
     styleUrls: ["./update-resume-event.component.css"]
 })
 export class UpdateResumeEventComponent {
-    _form: FormGroup;
+    form: FormGroup;
 
     @ViewChild(PreviewResumeEventComponent)
-    _previewResumeEvent: PreviewResumeEventComponent;
-    _previewObserver: Subscription
-    _id: number;
+    private _previewResumeEvent: PreviewResumeEventComponent;
+    private _previewObserver: Subscription
+    private _id: number;
 
     constructor(private _fb: FormBuilder, private _resumeService: ResumeEventsService, private _router: Router, private _route: ActivatedRoute) {
 
     }
 
     ngOnInit() {
-        this._form = this._fb.group({
+        this.form = this._fb.group({
             startDate: ["", [Validators.required]],
             endDate: ["", [Validators.required]],
             name: ["", [Validators.required, Validators.maxLength(50)]],
             message: ["", [Validators.required, Validators.maxLength(1000)]]
         });
 
-        this._previewObserver = this._form.valueChanges.subscribe(v => {
+        this._previewObserver = this.form.valueChanges.subscribe(v => {
             let previewResumeEvent = new PreviewResumeEvent();
-            previewResumeEvent.startDate = this._form.get("startDate").value;
-            previewResumeEvent.endDate = this._form.get("endDate").value;
-            previewResumeEvent.name = this._form.get("name").value;
-            previewResumeEvent.message = this._form.get("message").value;
+            previewResumeEvent.startDate = this.form.get("startDate").value;
+            previewResumeEvent.endDate = this.form.get("endDate").value;
+            previewResumeEvent.name = this.form.get("name").value;
+            previewResumeEvent.message = this.form.get("message").value;
 
             this._previewResumeEvent.previewResumeEvent = previewResumeEvent;
         })
@@ -56,10 +56,10 @@ export class UpdateResumeEventComponent {
         return `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}`;
     }
     updateForm(resumeEvent: ResumeEvent) {
-        this._form.get("startDate").setValue(this.formatDate(resumeEvent.dateRange.startDate));
-        this._form.get("endDate").setValue(this.formatDate(resumeEvent.dateRange.endDate));
-        this._form.get("name").setValue(resumeEvent.name);
-        this._form.get("message").setValue(resumeEvent.message);
+        this.form.get("startDate").setValue(this.formatDate(resumeEvent.dateRange.startDate));
+        this.form.get("endDate").setValue(this.formatDate(resumeEvent.dateRange.endDate));
+        this.form.get("name").setValue(resumeEvent.name);
+        this.form.get("message").setValue(resumeEvent.message);
     }
 
     ngOnDestroy(): void {
@@ -72,9 +72,9 @@ export class UpdateResumeEventComponent {
     }
 
     onSubmit() {
-        if (!this._form.valid) {
-            for (let controlName in this._form.controls) {
-                this._form.get(controlName).markAsTouched();
+        if (!this.form.valid) {
+            for (let controlName in this.form.controls) {
+                this.form.get(controlName).markAsTouched();
             }
             return;
         }
@@ -82,12 +82,12 @@ export class UpdateResumeEventComponent {
         var updateResumeEventCommand = new UpdateResumeEventCommand();
         var dateRange = new DateRange();
 
-        dateRange.startDate = this._form.get("startDate").value;
-        dateRange.endDate = this._form.get("endDate").value;
+        dateRange.startDate = this.form.get("startDate").value;
+        dateRange.endDate = this.form.get("endDate").value;
         updateResumeEventCommand.id = this._id;
         updateResumeEventCommand.dateRange = dateRange;
-        updateResumeEventCommand.name = this._form.get("name").value;
-        updateResumeEventCommand.message = this._form.get("message").value;
+        updateResumeEventCommand.name = this.form.get("name").value;
+        updateResumeEventCommand.message = this.form.get("message").value;
 
         this._resumeService.update(updateResumeEventCommand).subscribe(r => this._router.navigateByUrl("admin/resume"));
     }
