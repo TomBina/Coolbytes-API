@@ -1,9 +1,9 @@
 <ng-container *ngIf="_author">
-    <ul class="author">
-        <li>
-            <img class="author-image" [src]="_authorImage" *ngIf="_authorImage" />
-        </li>
-        <li>
+    <div class="author">
+        <div class="author-image" *ngIf="_authorImage">
+            <img [src]="_authorImage" />
+        </div>
+        <div class="author-about">
             <h1>{{_author.firstName}} {{_author.lastName}}</h1>
             <md [value]="_author.about"></md>
             <p>
@@ -17,11 +17,12 @@
                 </ng-container>
                 <ng-container *ngIf="_author.resumeUri">
                     <img src="/assets/download.png" class="icon" width="20" />
-                    <a [href]="_author.resumeUri" target="_blank">Download resume</a>
+                    <a [href]="_author.resumeUri" target="_blank" class="resume-link-desktop">Download resume</a>
+                    <a [href]="_author.resumeUri" target="_blank" class="resume-link-mobile">Resume</a>
                 </ng-container>
             </p>
-        </li>
-    </ul>
+        </div>
+    </div>
     <h2>My technology stack</h2>
     <ul class="experiences">
         <li *ngFor="let experience of _experiences">

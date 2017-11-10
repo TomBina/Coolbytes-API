@@ -1,6 +1,6 @@
 .post {
-    width: 320px;
-    height: 320px;
+    max-width: 380px;
+    height: 340px;
     border: 1px solid #ABB0C5;
     margin: 15px 10px 15px 10px;
     box-sizing: border-box;
@@ -27,16 +27,15 @@
 
 .image { 
     background-color: #fff;
-    height:160px;
 }
 
 .image img {
-    width:318px;
+    width:100%;
 }
 
 .text {
     margin:10px;
-    height: 120px;
+    height: 140px;
     overflow:hidden;
 }
 
@@ -52,3 +51,10 @@
     font-size:14px;
     text-overflow: ellipsis;
 }
+
+
+@media screen and (max-width: 400px) {
+    .post {
+        margin:15px 15px 0px 15px;
+    }
+ }

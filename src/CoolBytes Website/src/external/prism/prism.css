@@ -1,3 +1,5 @@
+@import url("./prism-mobile.css");
+
 /* http://prismjs.com/download.html?themes=prism-dark&languages=markup+css+clike+javascript+csharp */
 /**
  * prism.js Dark theme for JavaScript, CSS and HTML
@@ -127,4 +129,3 @@ pre[class*="language-"] {
 .token.deleted {
 	color: red;
 }
-

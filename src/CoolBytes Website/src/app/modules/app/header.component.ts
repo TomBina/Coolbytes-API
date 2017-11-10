@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { AuthService } from "../../services/auth.service";
+import { Router } from "@angular/router";
 
 
 @Component({
@@ -8,7 +9,11 @@ import { AuthService } from "../../services/auth.service";
     styleUrls: ["./header.component.css"]
 })
 export class HeaderComponent {
-    constructor(public authService: AuthService) {
+    constructor(public authService: AuthService, private _router: Router) {
 
+    }
+
+    toHome() {
+        this._router.navigateByUrl("/home");
     }
 }

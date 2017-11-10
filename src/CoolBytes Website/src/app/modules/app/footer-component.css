@@ -1,8 +1,8 @@
 footer {
     background-color: #1e243d;
-    padding:20px;
+    padding:10px;
     color:#fff;
-    font-size:16px;
+    font-size:13px;
 }
 
 a {
@@ -24,3 +24,9 @@ ul li {
     margin-right:10px;
 }
 
+@media screen and (min-width: 900px) {
+    footer {
+        font-size:16px;
+        padding:18px;
+    }
+}

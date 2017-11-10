@@ -48,3 +48,28 @@ h1 {
 .author .about span {
     font-size:14px;
 }
+
+@media screen and (max-width: 900px) {
+    .page {
+        margin:0;
+        width:100%;
+        display:block;
+    }
+    
+    article {
+        width:100%;
+        padding-right:15px;
+        padding:100px 15px 5px 15px;
+        box-sizing:border-box;
+        font-size:14px;
+    }
+
+    aside {
+        width:100%;
+        background-color:#e2e7f3;
+        padding-left:0px;
+        padding:15px;
+        border-left:none;
+        box-sizing:border-box;
+    }
+}
