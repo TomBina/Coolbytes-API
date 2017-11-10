@@ -1,6 +1,7 @@
 import { ContactService } from '../../../services/contactservice/contact.service';
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { Title } from '@angular/platform-browser';
 
 @Component({
     templateUrl: "./contact.component.html",
@@ -23,11 +24,12 @@ export class ContactComponent implements OnInit {
         return;
     }
 
-    constructor(private _fb: FormBuilder, private _contactService: ContactService) {
+    constructor(private _fb: FormBuilder, private _contactService: ContactService, private _titleService: Title) {
 
     }
 
     ngOnInit() {
+        this._titleService.setTitle("Contact Cool Bytes");
         this._form = this._fb.group({
             name: ["", Validators.required],
             email: ["", Validators.required],

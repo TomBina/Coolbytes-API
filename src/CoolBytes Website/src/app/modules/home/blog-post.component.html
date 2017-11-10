@@ -45,7 +45,7 @@
             <h2>More posts</h2>
             <ul>
                 <li *ngFor="let link of blogPost.relatedLinks">
-                    <a routerLink="{{link.url}}">{{link.subject}}</a>
+                    <a [routerLink]="link.url">{{link.subject}}</a>
                 </li>
             </ul>
         </div>

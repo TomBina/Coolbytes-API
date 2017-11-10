@@ -1,7 +1,9 @@
 <article>
-    <h1 *ngIf="_tag">
-        Search results for {{_tag}}
-    </h1>
+    <div class="title" *ngIf="_tag">
+        <h1>
+            Search results for {{_tag}}
+        </h1>
+    </div>
     <div class="title" *ngIf="!_tag">
         <h1>Welcome to Cool Bytes!</h1>
         <p class="text">Read the latest blogs about cool technologies, patterns &amp; practices on CoolBytes.io.</p>

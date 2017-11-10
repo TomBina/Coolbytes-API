@@ -52,7 +52,7 @@ code {
 }
 
 pre {
-    background-color:#383838;
+    background-color:#1E1E1E;
     color:#dcdcdc;
     padding:10px;
 }
@@ -77,12 +77,14 @@ input {
     box-sizing: border-box;
 }
 
-.ng-invalid {
+input.ng-invalid, textarea.ng-invalid {
     border-color:#B60E0E;
+    background-color:rgb(243, 230, 230);
 }
 
-.ng-untouched {
+input.ng-untouched, textarea.ng-untouched {
     border-color:#a0a0a0;
+    background-color:#fff;
 }
 
 input[type="submit"] {
@@ -103,11 +105,6 @@ textarea {
     border:1px solid #a0a0a0;
     box-sizing: border-box;
 }
-
-textarea.error {
-    border-color:#B60E0E;
-}
-
 
 .backdrop { 
     background-color:#000; 

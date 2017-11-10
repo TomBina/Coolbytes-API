@@ -5,6 +5,8 @@ import { BlogPostsService } from '../../services/blogpostservice/blog-posts.serv
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
     templateUrl: "./blog-post.component.html",
@@ -16,7 +18,7 @@ export class BlogPostComponent implements OnInit, OnDestroy {
     _onRouteChanges: Subscription;
     _shareInfo;
 
-    constructor(private _blogPostsService: BlogPostsService, private _route: ActivatedRoute, private _imagesService : ImagesService) { }
+    constructor(private _blogPostsService: BlogPostsService, private _route: ActivatedRoute, private _imagesService : ImagesService, private _router: Router, private _titleService: Title) { }
 
     ngOnInit(): void {
         this._onRouteChanges = this._route.params.subscribe(changes => this._blogPostsService.get(changes.id).subscribe(blogPost => this.proccesData(blogPost)));
@@ -27,6 +29,9 @@ export class BlogPostComponent implements OnInit, OnDestroy {
     }
 
     proccesData(blogPost) {
+        this._titleService.setTitle(`${blogPost.subject} - Cool Bytes`);
+        window.scrollTo(0,0);
+        
         this._shareInfo = { 
             url: `${environment.appUri}post/${blogPost.id}/${blogPost.subjectUrl}`,
             subject: blogPost.subject

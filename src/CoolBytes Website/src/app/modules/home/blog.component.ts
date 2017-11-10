@@ -3,6 +3,7 @@ import { BlogPost } from '../../services/blogpostservice/blog-post';
 import { BlogPostsService } from '../../services/blogpostservice/blog-posts.service';
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { Title } from '@angular/platform-browser';
 
 @Component({
     templateUrl: "./blog.component.html",
@@ -12,11 +13,12 @@ export class BlogComponent implements OnInit {
     _blogPosts: BlogPostViewModel[];
     _tag: string;
 
-    constructor(private _blogpostsService: BlogPostsService, private _route: ActivatedRoute) {
+    constructor(private _blogpostsService: BlogPostsService, private _route: ActivatedRoute, private _titleService: Title) {
         this._tag = this._route.snapshot.paramMap.get("tag");
     }
 
     ngOnInit(): void {
+        this._titleService.setTitle("Cool Bytes");
         this._blogpostsService.getAll(this._tag).map(blogPosts => {
             let blogPostsViewModel: BlogPostViewModel[] = [];
 
