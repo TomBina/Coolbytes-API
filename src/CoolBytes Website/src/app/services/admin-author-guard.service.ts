@@ -1,8 +1,7 @@
+import { AuthorsService } from './authorsservice/authors.service';
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
 import { Observable } from "rxjs/Rx";
-
-import { AuthorsService } from "./authors.service";
 
 @Injectable()
 export class AdminAuthorGuardService implements CanActivate {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CoolBytes.Core.Extensions;
 
 namespace CoolBytes.Core.Models
 {
@@ -14,9 +13,7 @@ namespace CoolBytes.Core.Models
 
         public User(string identifier)
         {
-            identifier.IsNotNullOrWhiteSpace();
-
-            Identifier = identifier;
+            Identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
         }
 
         private User()

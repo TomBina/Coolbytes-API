@@ -1,3 +1,4 @@
+import { FooterComponent } from './footer.component';
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
@@ -17,7 +18,8 @@ import { HeaderComponent } from "./header.component";
   ],
   declarations: [
     AppComponent,
-    HeaderComponent
+    HeaderComponent,
+    FooterComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,16 +1,17 @@
-import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
-import { ImagesService } from '../../../../services/images.service';
-import { Image } from "../../../../services/image";
-import { Component, OnInit, ViewChild, OnDestroy } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-
-import { AuthorsService } from "../../../../services/authors.service";
-import { BlogPost } from "../../../../services/blog-post";
-import { BlogPostUpdate } from "../../../../services/blog-post-update";
-import { BlogPostsService } from "../../../../services/blog-posts.service";
+import { ExternalLink } from '../../../../services/blogpostservice/external-link';
+import { BlogPostUpdate } from '../../../../services/blogpostservice/blog-post-update';
+import { Image } from '../../../../services/imagesservice/image';
+import { BlogPostSummary } from '../../../../services/blogpostservice/blog-post-summary';
+import { ImagesService } from '../../../../services/imagesservice/images.service';
+import { BlogPostsService } from '../../../../services/blogpostservice/blog-posts.service';
+import { AuthorsService } from '../../../../services/authorsservice/authors.service';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BlogPostPreview } from '../previewblog/blog-post-preview';
+import { PreviewBlogComponent } from '../previewblog/preview-blog.component';
+import { UpdateBlogPostCommand } from '../../../../services/blogpostservice/update-blog-post-command';
 
 @Component({
     templateUrl: "./update-blog.component.html",
@@ -22,41 +23,35 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
         private _authorsService: AuthorsService,
         private _blogPostsService: BlogPostsService,
         private _router: Router,
-        private _imagesService: ImagesService) { }
+        private _imagesService: ImagesService,
+        private _formBuilder: FormBuilder) { }
 
-    private _blogForm: FormGroup;
+    form: FormGroup;
+    image: Image;
+
     private _id: number;
-    private _blogPost: BlogPost;
-    private _subject: FormControl;
-    private _contentIntro: FormControl;
-    private _content: FormControl;
-    private _tags: FormControl;
-    private _image: Image;
+    private _blogPost: BlogPostSummary;
     private _files: FileList;
-    
     @ViewChild(PreviewBlogComponent)
     private _previewBlogComponent: PreviewBlogComponent;
     private _previewObserver: Subscription
 
     ngOnInit(): void {
-        this._subject = new FormControl(null, [Validators.required, Validators.maxLength(100)]);
-        this._contentIntro = new FormControl(null, [Validators.required, Validators.maxLength(100)]);
-        this._content = new FormControl(null, [Validators.required, Validators.maxLength(4000)]);
-        this._tags = new FormControl(null, Validators.maxLength(500));
-
-        this._blogForm = new FormGroup({
-            subject: this._subject,
-            contentIntro: this._contentIntro,
-            content: this._content,
-            tags: this._tags
+        this.form = this._formBuilder.group({
+            subject: ["", [Validators.required, Validators.maxLength(100)]],
+            contentIntro: ["", [Validators.required, Validators.maxLength(100)]],
+            content: ["", [Validators.required, Validators.maxLength(8000)]],
+            tags: ["", Validators.maxLength(500)],
+            externalLinks: this._formBuilder.array([])
         });
 
-        this._previewObserver = this._blogForm.valueChanges.subscribe(v => {
-            this._previewBlogComponent.blogPostPreview = new BlogPostPreview(this._subject.value, this._contentIntro.value, this._content.value);
+        this._previewObserver = this.form.valueChanges.subscribe(v => {
+            this._previewBlogComponent.blogPostPreview
+                = new BlogPostPreview(this.form.get("subject").value, this.form.get("contentIntro").value, this.form.get("content").value);
         })
 
         let id: number = parseInt(this._route.snapshot.paramMap.get("id"));
-        this._blogPostsService.get(id).subscribe(blogPost => this.updateForm(blogPost));
+        this._blogPostsService.getUpdate(id).subscribe(blogPostUpdate => this.updateForm(blogPostUpdate));
     }
 
     ngOnDestroy(): void {
@@ -64,29 +59,61 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
             this._previewObserver.unsubscribe();
     }
 
-    updateForm(blogPost: BlogPost) {
-        this._id = blogPost.id;
-        this._subject.setValue(blogPost.subject);
-        this._contentIntro.setValue(blogPost.contentIntro);
-        this._content.setValue(blogPost.content);
-        this._image = blogPost.image;
+    growTextarea(element: HTMLTextAreaElement) {
+        element.style.height = `${element.scrollHeight+2}px`;
+    }
 
-        if (this._image)
-            this._image.uri = this._imagesService.getUri(this._image.uriPath);
+    getExternalLinksControls(): FormArray {
+        return this.form.get("externalLinks") as FormArray;
+    }
+
+    addExternalLinkControl(): FormGroup {
+        let links = this.getExternalLinksControls();
+        let link = this.createExternalLinkFormGroup();
+        links.push(link);
+
+        return link;
+    }
+
+    createExternalLinkFormGroup(): FormGroup {
+        return new FormGroup({
+            name: new FormControl("", Validators.maxLength(50)),
+            url: new FormControl("", Validators.maxLength(255))
+        })
+    }
+
+    onImageSelectedHandler(image: Image) {
+        this.form.get("content").setValue(`${this.form.get("content").value}![](${this._imagesService.getUri(image.uriPath)})`);
+    }
+
+    updateForm(blogPost: BlogPostUpdate) {
+        this._id = blogPost.id;
+        this.form.get("subject").setValue(blogPost.subject);
+        this.form.get("contentIntro").setValue(blogPost.contentIntro);
+        this.form.get("content").setValue(blogPost.content);
+        this.image = blogPost.image;
+
+        if (this.image)
+            this.image.uri = this._imagesService.getUri(this.image.uriPath);
 
         let blogPostTags: string[] = [];
         blogPost.tags.forEach(t => {
             blogPostTags.push(t.name);
         });
 
-        this._tags.setValue(blogPostTags.join(","))
-    }
+        this.form.get("tags").setValue(blogPostTags.join(","))
 
-    inputCssClass(name: string) {
-        let formControl = this._blogForm.get(name);
-
-        if (!formControl.valid && formControl.touched)
-            return "error";
+        if (blogPost.externalLinks && blogPost.externalLinks.length > 0) {
+            let externalLinks = blogPost.externalLinks;
+            externalLinks.forEach(e => {
+                let control = this.addExternalLinkControl();
+                control.get("name").setValue(e.name);
+                control.get("url").setValue(e.url);
+            });
+        }
+        else {
+            this.addExternalLinkControl();
+        }
     }
 
     onFileChanged(element: HTMLInputElement) {
@@ -94,27 +121,38 @@ export class UpdateBlogComponent implements OnInit, OnDestroy {
     }
 
     onSubmit(): void {
-        if (!this._blogForm.valid) {
-            for (let controlName in this._blogForm.controls) {
-                this._blogForm.get(controlName).markAsTouched();
+        if (!this.form.valid) {
+            for (let controlName in this.form.controls) {
+                this.form.get(controlName).markAsTouched();
             }
             return;
         }
 
-        let blogPostUpdate = new BlogPostUpdate();
+        let updateBlogPostCommand = new UpdateBlogPostCommand();
 
-        blogPostUpdate.id = this._id;
-        blogPostUpdate.subject = this._subject.value;
-        blogPostUpdate.content = this._content.value;
-        blogPostUpdate.contentIntro = this._contentIntro.value;
+        updateBlogPostCommand.id = this._id;
+        updateBlogPostCommand.subject = this.form.get("subject").value;
+        updateBlogPostCommand.content = this.form.get("content").value;
+        updateBlogPostCommand.contentIntro = this.form.get("contentIntro").value;
 
-        let tags: string = this._tags.value;
+        let externalLinks: ExternalLink[] = [];
 
-        if (tags.indexOf(",") !== -1 || tags.length > 0) {
-            blogPostUpdate.tags = tags.split(",");
+        let controls = this.getExternalLinksControls();
+        for (let control of controls.controls) {
+            let externalLink = new ExternalLink(control.get("name").value, control.get("url").value);
+            if (externalLink.name.length > 0 && externalLink.url.length > 0)
+                externalLinks.push(externalLink);
         }
 
-        this._blogPostsService.update(blogPostUpdate, this._files).subscribe(blogpost => {
+        updateBlogPostCommand.externalLinks = externalLinks;
+
+        let tags: string = this.form.get("tags").value;
+
+        if (tags.indexOf(",") !== -1 || tags.length > 0) {
+            updateBlogPostCommand.tags = tags.split(",");
+        }
+
+        this._blogPostsService.update(updateBlogPostCommand, this._files).subscribe(blogpost => {
             this._router.navigateByUrl("admin/blogs")
         });
     }

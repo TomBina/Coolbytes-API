@@ -50,6 +50,7 @@ namespace CoolBytes.Tests.Web
             configuration.Setup(c => c["ImagesUri:Scheme"]).Returns("testdata");
             configuration.Setup(c => c["ImagesUri:Host"]).Returns("testserver.com");
             configuration.Setup(c => c["ImagesUri:Port"]).Returns("80");
+            configuration.Setup(c => c["ImagesUploadPath"]).Returns(TempDirectory);
             Configuration = configuration.Object;
         }
 

@@ -1,7 +1,7 @@
+import { ImagesService } from '../../../services/imagesservice/images.service';
+import { Image } from '../../../services/imagesservice/image';
 import { environment } from '../../../../environments/environment';
-import { Image } from "../../../services/image";
-import { ImagesService } from "../../../services/images.service";
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
 @Component({
@@ -10,15 +10,20 @@ import { FormControl } from "@angular/forms";
     styleUrls: ["./images-manager.component.css"]
 })
 export class ImagesManagerComponent implements OnInit {
-    private _open;
-    private _images: Image[];
-    private _imagesUri;
-    
-    constructor(private _imageService: ImagesService) { 
-    }
+    isOpen;
+    images: Image[];
+    deleteImageText = "delete image";
 
     @Input()
-    control: FormControl;
+    title: string;
+
+    @Output()
+    onImageSelected = new EventEmitter<Image>();
+    
+    private _imagesUri;
+    
+    constructor(public imagesService: ImagesService) { 
+    }
 
     ngOnInit(): void {
         this.loadImages();
@@ -28,29 +33,42 @@ export class ImagesManagerComponent implements OnInit {
         if (!element.files)
             return;
 
-        this._imageService.uploadImages(element.files).subscribe(images => {
-            this._images = this._images.concat(images);
+        this.imagesService.uploadImages(element.files).subscribe(images => {
+            this.images = this.images.concat(images);
             element.value = "";
         })
     }
 
     loadImages() {
-        this._imageService.getAll().subscribe(images => this._images = images);
+        this.imagesService.getAll().subscribe(images => this.images = images);
     }
 
-    insertImage(uri: string, id: number) {
-        let value: string = (this.control.value ? this.control.value : "");
-        value += `![](${uri})`;
+    onImageClick(image: Image) {
+        if (this.deleteImageText == "delete image")  {
+            this.close();
+            this.onImageSelected.emit(image);
+        }
+        else {
+            this.imagesService.delete(image.id).subscribe(response => {
+                this.loadImages();
+            })
+        }
+    }
 
-        this.control.setValue(value);
-        this.close();
+    toggleDelete() {
+        if (this.deleteImageText == "delete image") {
+            this.deleteImageText = "finished deleting";
+        }
+        else {
+            this.deleteImageText = "delete image";
+        }
     }
 
     open() {
-        this._open = true;
+        this.isOpen = true;
     }
 
     close() {
-        this._open = false;
+        this.isOpen = false;
     }
 }

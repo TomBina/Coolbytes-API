@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Data;
-using CoolBytes.WebAPI.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

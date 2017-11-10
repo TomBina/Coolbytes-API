@@ -1,0 +1,30 @@
+<app-admin-menu></app-admin-menu>
+<div class="admin-content">
+    <div class="flex">
+        <div class="left">
+            <h1 class="no-top-margin">Update resume event</h1>
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <label for="startDate">Start date:</label>
+                <p>
+                    <input formControlName="startDate" id="startDate" />
+                </p>
+                <label for="endDate">End date:</label>
+                <p>
+                    <input formControlName="endDate" id="endDate" />
+                </p>
+                <label for="name">Name:</label>
+                <p>
+                    <input formControlName="name" id="name" />
+                </p>
+                <label for="message">Message:</label>
+                <p>
+                    <textarea formControlName="message" id="message" (keydown)="growTextarea($event.target)"></textarea>
+                </p>
+                <input type="submit" value="save" />
+            </form>
+        </div>
+        <div class="right">
+            <admin-preview-resume-event></admin-preview-resume-event>
+        </div>
+    </div>
+</div>

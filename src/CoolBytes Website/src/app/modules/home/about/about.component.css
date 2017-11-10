@@ -1,0 +1,42 @@
+.resume {
+    margin-top:72px;
+    background-color: #b2bbd1;
+    background: radial-gradient(ellipse at center, #b2bbd1 0%,#ffffff 100%);
+    padding-top:30px;
+}
+
+.resume-events {
+    background-color:#1e243d;
+    margin-top:30px;
+    padding-top:3px;
+    padding-bottom:30px;
+}
+
+h1 {
+    text-align: center;
+    color:#fff;
+    font-size:25px;
+    margin:10px 0 10px 0;
+}
+
+.year-line {
+    background-color:#fff;
+    height:6px;
+}
+
+.year-resume-events {
+    display:flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+@media screen and (min-width: 600px) {
+    .year-resume-events {
+        justify-content: center;
+    }
+
+    h1 {
+        font-size:35px;
+    }
+}

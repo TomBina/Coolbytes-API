@@ -25,15 +25,15 @@ namespace CoolBytes.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("AuthorProfileId");
+                    b.Property<int?>("AuthorProfileId")
+                        .IsRequired();
 
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorProfileId")
-                        .IsUnique()
-                        .HasFilter("[AuthorProfileId] IS NOT NULL");
+                        .IsUnique();
 
                     b.HasIndex("UserId")
                         .IsUnique();
@@ -60,6 +60,9 @@ namespace CoolBytes.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<string>("ResumeUri")
+                        .HasMaxLength(255);
+
                     b.HasKey("Id");
 
                     b.HasIndex("ImageId");
@@ -74,27 +77,9 @@ namespace CoolBytes.Data.Migrations
 
                     b.Property<int>("AuthorId");
 
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(4000);
-
-                    b.Property<string>("ContentIntro")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
                     b.Property<DateTime>("Date");
 
                     b.Property<int?>("ImageId");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.Property<string>("SubjectUrl")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.Property<DateTime?>("Updated");
 
                     b.HasKey("Id");
 
@@ -110,7 +95,8 @@ namespace CoolBytes.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("BlogPostId");
+                    b.Property<int?>("BlogPostId")
+                        .IsRequired();
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -121,6 +107,56 @@ namespace CoolBytes.Data.Migrations
                     b.HasIndex("BlogPostId");
 
                     b.ToTable("BlogPostTags");
+                });
+
+            modelBuilder.Entity("CoolBytes.Core.Models.Experience", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("AuthorProfileId")
+                        .IsRequired();
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("CHAR(6)");
+
+                    b.Property<int>("ImageId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorProfileId");
+
+                    b.HasIndex("ImageId");
+
+                    b.ToTable("Experiences");
+                });
+
+            modelBuilder.Entity("CoolBytes.Core.Models.ExternalLink", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("BlogPostId")
+                        .IsRequired();
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogPostId");
+
+                    b.ToTable("ExternalLinks");
                 });
 
             modelBuilder.Entity("CoolBytes.Core.Models.Image", b =>
@@ -151,6 +187,28 @@ namespace CoolBytes.Data.Migrations
                     b.ToTable("Images");
                 });
 
+            modelBuilder.Entity("CoolBytes.Core.Models.ResumeEvent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AuthorId");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(1000);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("ResumeEvents");
+                });
+
             modelBuilder.Entity("CoolBytes.Core.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -163,6 +221,43 @@ namespace CoolBytes.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CoolBytes.Data.Models.MailProvider", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("DailyThreshold");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("MailProviders");
+                });
+
+            modelBuilder.Entity("CoolBytes.Data.Models.MailStat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<int>("MailproviderId");
+
+                    b.Property<int>("Sent");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MailproviderId");
+
+                    b.ToTable("MailStats");
                 });
 
             modelBuilder.Entity("CoolBytes.Core.Models.Author", b =>
@@ -183,6 +278,24 @@ namespace CoolBytes.Data.Migrations
                     b.HasOne("CoolBytes.Core.Models.Image", "Image")
                         .WithMany()
                         .HasForeignKey("ImageId");
+
+                    b.OwnsOne("CoolBytes.Core.Models.SocialHandles", "SocialHandles", b1 =>
+                        {
+                            b1.Property<int>("AuthorProfileId");
+
+                            b1.Property<string>("GitHub")
+                                .HasMaxLength(255);
+
+                            b1.Property<string>("LinkedIn")
+                                .HasMaxLength(255);
+
+                            b1.ToTable("AuthorsProfile");
+
+                            b1.HasOne("CoolBytes.Core.Models.AuthorProfile")
+                                .WithOne("SocialHandles")
+                                .HasForeignKey("CoolBytes.Core.Models.SocialHandles", "AuthorProfileId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 
             modelBuilder.Entity("CoolBytes.Core.Models.BlogPost", b =>
@@ -195,6 +308,36 @@ namespace CoolBytes.Data.Migrations
                     b.HasOne("CoolBytes.Core.Models.Image", "Image")
                         .WithMany()
                         .HasForeignKey("ImageId");
+
+                    b.OwnsOne("CoolBytes.Core.Models.BlogPostContent", "Content", b1 =>
+                        {
+                            b1.Property<int>("BlogPostId");
+
+                            b1.Property<string>("Content")
+                                .IsRequired()
+                                .HasMaxLength(8000);
+
+                            b1.Property<string>("ContentIntro")
+                                .IsRequired()
+                                .HasMaxLength(100);
+
+                            b1.Property<string>("Subject")
+                                .IsRequired()
+                                .HasMaxLength(100);
+
+                            b1.Property<string>("SubjectUrl")
+                                .IsRequired()
+                                .HasMaxLength(100);
+
+                            b1.Property<DateTime?>("Updated");
+
+                            b1.ToTable("BlogPosts");
+
+                            b1.HasOne("CoolBytes.Core.Models.BlogPost")
+                                .WithOne("Content")
+                                .HasForeignKey("CoolBytes.Core.Models.BlogPostContent", "BlogPostId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 
             modelBuilder.Entity("CoolBytes.Core.Models.BlogPostTag", b =>
@@ -202,6 +345,59 @@ namespace CoolBytes.Data.Migrations
                     b.HasOne("CoolBytes.Core.Models.BlogPost", "BlogPost")
                         .WithMany("Tags")
                         .HasForeignKey("BlogPostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("CoolBytes.Core.Models.Experience", b =>
+                {
+                    b.HasOne("CoolBytes.Core.Models.AuthorProfile", "AuthorProfile")
+                        .WithMany("Experiences")
+                        .HasForeignKey("AuthorProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CoolBytes.Core.Models.Image", "Image")
+                        .WithMany()
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("CoolBytes.Core.Models.ExternalLink", b =>
+                {
+                    b.HasOne("CoolBytes.Core.Models.BlogPost", "BlogPost")
+                        .WithMany("ExternalLinks")
+                        .HasForeignKey("BlogPostId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("CoolBytes.Core.Models.ResumeEvent", b =>
+                {
+                    b.HasOne("CoolBytes.Core.Models.Author", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("CoolBytes.Core.Models.DateRange", "DateRange", b1 =>
+                        {
+                            b1.Property<int>("ResumeEventId");
+
+                            b1.Property<DateTime>("EndDate");
+
+                            b1.Property<DateTime>("StartDate");
+
+                            b1.ToTable("ResumeEvents");
+
+                            b1.HasOne("CoolBytes.Core.Models.ResumeEvent")
+                                .WithOne("DateRange")
+                                .HasForeignKey("CoolBytes.Core.Models.DateRange", "ResumeEventId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
+                });
+
+            modelBuilder.Entity("CoolBytes.Data.Models.MailStat", b =>
+                {
+                    b.HasOne("CoolBytes.Data.Models.MailProvider", "MailProvider")
+                        .WithMany()
+                        .HasForeignKey("MailproviderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using AutoMapper;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
@@ -12,17 +14,15 @@ namespace CoolBytes.WebAPI.Features.Authors
 {
     public class AddAuthorCommandHandler : IAsyncRequestHandler<AddAuthorCommand, AuthorViewModel>
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly AppDbContext _context;
         private readonly IUserService _userService;
         private readonly IAuthorValidator _authorValidator;
-        private readonly IImageFactory _imageFactory;
 
-        public AddAuthorCommandHandler(AppDbContext appDbContext, IUserService userService, IAuthorValidator authorValidator, IImageFactory imageFactory)
+        public AddAuthorCommandHandler(AppDbContext context, IUserService userService, IAuthorValidator authorValidator)
         {
-            _appDbContext = appDbContext;
+            _context = context;
             _userService = userService;
             _authorValidator = authorValidator;
-            _imageFactory = imageFactory;
         }
 
         public async Task<AuthorViewModel> Handle(AddAuthorCommand message)
@@ -37,33 +37,51 @@ namespace CoolBytes.WebAPI.Features.Authors
         private async Task<Author> CreateAuthor(AddAuthorCommand message)
         {
             var user = await _userService.GetUser();
-            var authorProfile = new AuthorProfile(message.FirstName, message.LastName, message.About);
+            var authorProfile = await CreateAuthorProfile(message);
             var author = await Author.Create(user, authorProfile, _authorValidator);
 
-            if (message.File == null)
-                return author;
+            if (message.Experiences != null)
+                await CreateExperiences(message, author);
 
-            var image = await CreateImage(message.File);
-            author.AuthorProfile.SetImage(image);
             return author;
         }
 
-        private async Task<Image> CreateImage(IFormFile file)
+        private async Task<AuthorProfile> CreateAuthorProfile(AddAuthorCommand message)
         {
-            using (var stream = file.OpenReadStream())
-                return await _imageFactory.Create(stream, file.FileName, file.ContentType);
+            var socialHandles = new SocialHandles(message.LinkedIn, message.GitHub);
+            var authorProfile = new AuthorProfile(message.FirstName, message.LastName, message.About);
+
+            authorProfile.WithSocialHandles(socialHandles).WithResumeUri(message.ResumeUri);
+
+            if (message.ImageId != null)
+            {
+                var image = await _context.Images.FindAsync(message.ImageId);
+                authorProfile.WithImage(image);
+            }
+
+            return authorProfile;
+        }
+
+        private async Task CreateExperiences(AddAuthorCommand message, Author author)
+        {
+            var experiences = new List<Experience>();
+
+            foreach (var experience in message.Experiences)
+            {
+                var image = await _context.Images.FindAsync(experience.ImageId);
+                experiences.Add(new Experience(experience.Id, experience.Name, experience.Color, image));
+            }
+
+            author.AuthorProfile.Experiences.Update(experiences);
         }
 
         private async Task SaveAuthor(Author author)
         {
-            _appDbContext.Authors.Add(author);
-
-            if (author.AuthorProfile.Image != null)
-                await _appDbContext.SaveChangesAsync(() => File.Delete(author.AuthorProfile.Image.Path));
-            else
-                await _appDbContext.SaveChangesAsync();
+            _context.Authors.Add(author);
+            await _context.SaveChangesAsync();
         }
 
-        private AuthorViewModel CreateViewModel(Author author) => Mapper.Map<AuthorViewModel>(author);
+        private AuthorViewModel CreateViewModel(Author author) 
+            => Mapper.Map<AuthorViewModel>(author);
     }
 }

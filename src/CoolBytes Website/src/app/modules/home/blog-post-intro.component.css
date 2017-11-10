@@ -1,16 +1,15 @@
 .post {
-    width: 320px;
-    height: 320px;
+    max-width: 380px;
+    height: 340px;
     border: 1px solid #ABB0C5;
     margin: 15px 10px 15px 10px;
     box-sizing: border-box;
     overflow:hidden;
-    transition: background-color 500ms, opacity 1s;
+    background-color:#fff;
 }
 
 .post:hover {
     border: 1px solid #1e243d;
-    background-color:#EFF1F7;
     box-shadow:-2px 6px 20px -1px #CECECE;
 }
 
@@ -27,13 +26,16 @@
 }
 
 .image { 
-    background-color: #ABB0C5;
-    height:160px;
+    background-color: #fff;
+}
+
+.image img {
+    width:100%;
 }
 
 .text {
     margin:10px;
-    height: 120px;
+    height: 140px;
     overflow:hidden;
 }
 
@@ -49,3 +51,11 @@
     font-size:14px;
     text-overflow: ellipsis;
 }
+
+
+@media screen and (max-width: 900px) {
+    .post {
+        margin:15px 15px 0px 15px;
+        box-shadow:-2px 6px 20px -1px #CECECE;
+    }
+ }

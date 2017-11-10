@@ -1,0 +1,30 @@
+<article>
+    <h1>Contact</h1>
+    <p *ngIf="isMessageSent">
+        Your messsage was send successfully.
+    </p>
+    <p>
+        Cool Bytes is a product of Bina Holding BV.<br />
+        Dirkjespeer 13<br />2635MA Den Hoorn<br />
+        Zuid Holland - The Netherlands
+    </p>
+    <h1>Contact us</h1>
+    <p>
+        Contact us if you have any questions, or if you would like to post blogs on Cool Bytes. We're always looking for new people!
+    </p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <label for="name">Name:</label>
+        <p>
+            <input formControlName="name" id="name" />
+        </p>
+        <label for="email">Email:</label>
+        <p>
+            <input formControlName="email" id="email">
+        </p>
+        <label for="message">Message:</label>
+        <p>
+            <textarea formControlName="message" id="message"></textarea>
+        </p>
+        <input type="submit" value="send message" />
+    </form>
+</article>

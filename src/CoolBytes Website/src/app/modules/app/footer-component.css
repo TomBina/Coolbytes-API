@@ -1,0 +1,32 @@
+footer {
+    background-color: #1e243d;
+    padding:10px;
+    color:#fff;
+    font-size:13px;
+}
+
+a {
+    color: #fff;
+    font-weight:700;
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin:0;
+    padding:0;
+}
+
+ul li {
+    margin-right:10px;
+}
+
+@media screen and (min-width: 900px) {
+    footer {
+        font-size:16px;
+        padding:18px;
+    }
+}

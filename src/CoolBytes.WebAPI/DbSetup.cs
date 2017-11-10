@@ -2,17 +2,35 @@
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoolBytes.WebAPI
 {
-    public class DbSetup
+    public static class DbSetup
     {
-        public static void SeedDb()
+        public static void InitDb(IConfiguration configuration)
         {
             var services = new ServiceCollection();
             services.AddDbContext<AppDbContext>(o =>
-                o.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=CoolBytes;Trusted_Connection=True"));
+                o.UseSqlServer(configuration.GetConnectionString("Default")));
+
+            var serviceProvider = services.BuildServiceProvider();
+
+            using (serviceProvider.CreateScope())
+            {
+                var context = serviceProvider.GetService<AppDbContext>();
+               
+                context.Database.Migrate();
+            }
+            serviceProvider.Dispose();
+        }
+
+        public static void SeedDb(IConfiguration configuration)
+        {
+            var services = new ServiceCollection();
+            services.AddDbContext<AppDbContext>(o =>
+                o.UseSqlServer(configuration.GetConnectionString("Default")));
 
             var serviceProvider = services.BuildServiceProvider();
 
@@ -26,7 +44,8 @@ namespace CoolBytes.WebAPI
 
                 for (var i = 0; i < 20; i++)
                 {
-                    var blogPost = new BlogPost("This is a test subject.", "Let's begin with a test intro", "And here's the test content", author);
+                    var blogPostContent = new BlogPostContent("This is a test subject.", "Let's begin with a test intro", "And here's the test content");
+                    var blogPost = new BlogPost(blogPostContent, author);
                     context.BlogPosts.Add(blogPost);
                 }
 

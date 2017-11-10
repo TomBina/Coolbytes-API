@@ -1,10 +1,17 @@
-<div [ngClass]="cssClass" (mouseenter)="onBlogPostMouseEnterHandler()" (mouseleave)="onBlogPostMouseLeaveHandler()">
+<div class="post">
     <div class="info">
-        {{blogPost.date | date}} by <a>{{blogPost.authorName}}</a>
+        {{blogPostSummary.date | date}} by
+        <a>{{blogPostSummary.authorName}}</a>
     </div>
-    <div class="image"></div>
+    <div class="image">
+        <a routerLink="/post/{{blogPostSummary.id}}/{{blogPostSummary.subjectUrl}}" *ngIf="imageUrl">
+            <img [src]="imageUrl" />
+        </a>
+    </div>
     <div class="text">
-        <a routerLink="/post/{{blogPost.id}}/{{blogPost.subjectUrl}}">{{blogPost.subject}}</a>
-        <p><md [value]="blogPost.contentIntro"></md></p>
+        <a routerLink="/post/{{blogPostSummary.id}}/{{blogPostSummary.subjectUrl}}">{{blogPostSummary.subject}}</a>
+        <p>
+            <md [value]="blogPostSummary.contentIntro"></md>
+        </p>
     </div>
 </div>

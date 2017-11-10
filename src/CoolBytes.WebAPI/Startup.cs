@@ -1,17 +1,24 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Net.Http;
+using AutoMapper;
+using CoolBytes.Core.Builders;
 using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Authorization;
+using CoolBytes.WebAPI.Extensions;
 using CoolBytes.WebAPI.Services;
+using CoolBytes.WebAPI.Services.Mailer;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace CoolBytes.WebAPI
 {
@@ -28,11 +35,19 @@ namespace CoolBytes.WebAPI
         {
             ConfigureSecurity(services);
 
+            services.AddTransient<BlogPostBuilder>();
+            services.AddTransient<ExistingBlogPostBuilder>();
+            services.AddSingleton<HttpClient, HttpClient>();
+            services.AddMailgun(_configuration);
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IAuthorSearchService, AuthorService>();
             services.AddScoped<IAuthorValidator, AuthorValidator>();
             services.AddScoped<IImageFactory, ImageFactory>();
             services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
             services.AddScoped<IImageFactoryValidator, ImageFactoryValidator>();
+            services.AddScoped<ISendValidator, ThresholdValidator>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
             services.AddMvc()
@@ -44,7 +59,12 @@ namespace CoolBytes.WebAPI
 
         private void ConfigureSecurity(IServiceCollection services)
         {
-            services.AddCors(o => o.AddPolicy("DevPolicy", builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().Build(); }));
+            services.AddCors(o =>
+            {
+                o.AddPolicy("ProductionPolicy", builder => builder.WithOrigins("http://coolbytes.io", "http://www.coolbytes.io").AllowAnyMethod().AllowAnyHeader().Build());
+                o.AddPolicy("DevPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().Build());
+            });
+
             services.AddAuthentication(o =>
             {
                 o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -69,10 +89,12 @@ namespace CoolBytes.WebAPI
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseCors("DevPolicy");
-
                 Mapper.AssertConfigurationIsValid();
+            }
+            else
+            {
+                app.UseCors("ProductionPolicy");
             }
 
             app.UseMvcWithDefaultRoute();

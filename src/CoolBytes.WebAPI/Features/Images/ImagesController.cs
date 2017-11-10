@@ -1,10 +1,12 @@
 ﻿using System.Threading.Tasks;
 using CoolBytes.WebAPI.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoolBytes.WebAPI.Features.Images
 {
+    [Authorize("admin")]
     [Route("api/[controller]")]
     public class ImagesController : Controller
     {
@@ -16,7 +18,7 @@ namespace CoolBytes.WebAPI.Features.Images
         public async Task<IActionResult> Get(GetImagesQuery query) => this.OkOrNotFound(await _mediator.Send(query));
 
         [HttpPost]
-        public async Task<IActionResult> UploadImage([FromForm]UploadImagesCommand command)
+        public async Task<IActionResult> Upload([FromForm]UploadImagesCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -25,7 +27,7 @@ namespace CoolBytes.WebAPI.Features.Images
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteImage(DeleteImageCommand command)
+        public async Task<IActionResult> Delete(DeleteImageCommand command)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

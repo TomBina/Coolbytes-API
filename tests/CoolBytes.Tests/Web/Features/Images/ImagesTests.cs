@@ -1,5 +1,4 @@
 ﻿using CoolBytes.Core.Models;
-using CoolBytes.Tests.Web.Features.Authors;
 using CoolBytes.WebAPI.Features.Images;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
@@ -49,12 +48,12 @@ namespace CoolBytes.Tests.Web.Features.Images
         {
             var image = await AddImage();
 
-            var handler = new DeleteImageCommandHandler(Context);
+            var handler = new DeleteImageCommandHandler(Context, Fixture.Configuration);
             var message = new DeleteImageCommand() { Id = image.Id };
 
             await handler.Handle(message);
 
-            Assert.Equal(0, Context.Images.Count());
+            Assert.Equal(null, await Context.Images.FindAsync(image.Id));
         }
 
         private async Task<Image> AddImage()

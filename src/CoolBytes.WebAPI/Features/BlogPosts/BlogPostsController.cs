@@ -1,10 +1,18 @@
-﻿using System.Security.Claims;
+﻿using System.Collections;
 using CoolBytes.WebAPI.Extensions;
+using CoolBytes.WebAPI.Features.BlogPosts.CQ;
+using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CoolBytes.Core.Utils;
+using CoolBytes.WebAPI.Features.BlogPosts.Validators;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -26,20 +34,50 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpPost]
-        public async Task<IActionResult> Post([FromForm] AddBlogPostCommand command)
+        public async Task<IActionResult> Add([FromForm] AddBlogPostCommand command, [FromForm] string externalLinks)
         {
+            var links = ValidateExternalLinks(externalLinks);
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            command.ExternalLinks = links;
 
             return Ok(await _mediator.Send(command));
         }
 
-        [Authorize("admin")]
-        [HttpPut]
-        public async Task<IActionResult> Put([FromForm] UpdateBlogPostCommand command)
+        private IEnumerable<ExternalLinkDto> ValidateExternalLinks(string externalLinks)
         {
+            if (externalLinks == null || externalLinks == "[]")
+                return null;
+
+            var settings = new JsonSerializerSettings();
+            settings.Error = (sender, args) => ModelState.AddModelError(nameof(externalLinks), "Invalid json");
+            var links = JsonConvert.DeserializeObject<List<ExternalLinkDto>>(externalLinks, settings);
+
+            var validator = new ExternalLinkDtoValidator();
+            var errors = links.Select(l => validator.Validate(l)).Where(r => !r.IsValid);
+
+            foreach (var error in errors)
+                error.AddToModelState(ModelState, nameof(externalLinks));
+
+            return links;
+        }
+
+        [Authorize("admin")]
+        [HttpGet("update/{id}")]
+        public async Task<IActionResult> Update(UpdateBlogPostQuery query) => this.OkOrNotFound(await _mediator.Send(query));
+
+        [Authorize("admin")]
+        [HttpPut("update")]
+        public async Task<IActionResult> Update([FromForm] UpdateBlogPostCommand command, [FromForm] string externalLinks)
+        {
+            var links = ValidateExternalLinks(externalLinks);
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            command.ExternalLinks = links;
 
             return Ok(await _mediator.Send(command));
         }

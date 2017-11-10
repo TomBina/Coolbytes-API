@@ -1,0 +1,33 @@
+<ng-container *ngIf="authorForTemplate">
+    <div class="author">
+        <div class="author-image" *ngIf="authorImage">
+            <img [src]="authorImage" />
+        </div>
+        <div class="author-about">
+            <h1>{{authorForTemplate.firstName}} {{authorForTemplate.lastName}}</h1>
+            <md [value]="authorForTemplate.about"></md>
+            <p>
+                <ng-container *ngIf="authorForTemplate.socialHandles.linkedIn">
+                    <img src="/assets/linkedin.png" width="20" />
+                    <a [href]="authorForTemplate.socialHandles.linkedIn" target="blank">LinkedIn</a>
+                </ng-container>
+                <ng-container *ngIf="authorForTemplate.socialHandles.gitHub">
+                    <img src="/assets/github.png" class="icon" width="20" />
+                    <a [href]="authorForTemplate.socialHandles.gitHub" target="blank">GitHub</a>
+                </ng-container>
+                <ng-container *ngIf="authorForTemplate.resumeUri">
+                    <img src="/assets/download.png" class="icon" width="20" />
+                    <a [href]="authorForTemplate.resumeUri" target="blank" class="resume-link-desktop">Download resume</a>
+                    <a [href]="authorForTemplate.resumeUri" target="blank" class="resume-link-mobile">Resume</a>
+                </ng-container>
+            </p>
+        </div>
+    </div>
+    <h2>My technology stack</h2>
+    <ul class="experiences">
+        <li *ngFor="let experience of experiences">
+            <img [src]="experience.uri" [style.background-color]="experience.backgroundColor" />
+            <p>{{experience.name}}</p>
+        </li>
+    </ul>
+</ng-container>

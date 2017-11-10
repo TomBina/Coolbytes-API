@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using CoolBytes.Core.Extensions;
 using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Core.Models
@@ -14,10 +13,10 @@ namespace CoolBytes.Core.Models
 
         public static async Task<Author> Create(User user, AuthorProfile authorProfile, IAuthorValidator authorValidator)
         {
-            user.IsNotNull();
-            authorProfile.IsNotNull();
-            authorValidator.IsNotNull();
-
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (authorProfile == null) throw new ArgumentNullException(nameof(authorProfile));
+            if (authorValidator == null) throw new ArgumentNullException(nameof(authorValidator));
+            
             if (await authorValidator.Exists(user))
                 throw new InvalidOperationException("Only one author can be created per user.");
 

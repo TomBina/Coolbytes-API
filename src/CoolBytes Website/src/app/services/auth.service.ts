@@ -1,5 +1,4 @@
 import { environment } from '../../environments/environment';
-import { AuthorsService } from "./authors.service";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Headers } from "@angular/http";

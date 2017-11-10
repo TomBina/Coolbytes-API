@@ -28,10 +28,8 @@ namespace CoolBytes.Core.Models
         public string Name { get; private set; }
         public BlogPost BlogPost { get; private set; }
 
-        public BlogPostTag(string name)
-        {
-            Name = name;
-        }
+        public BlogPostTag(string name) 
+            => Name = name.Trim() ?? throw new ArgumentNullException(nameof(name));
 
         private BlogPostTag()
         {

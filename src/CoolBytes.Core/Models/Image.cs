@@ -1,4 +1,4 @@
-﻿using CoolBytes.Core.Extensions;
+﻿using System;
 
 namespace CoolBytes.Core.Models
 {
@@ -13,16 +13,11 @@ namespace CoolBytes.Core.Models
 
         public Image(string fileName, string path, string uriPath, long length, string contentType)
         {
-            fileName.IsNotNullOrWhiteSpace();
-            path.IsNotNullOrWhiteSpace();
-            uriPath.IsNotNullOrWhiteSpace();
-            contentType.IsNotNullOrWhiteSpace();
-
-            FileName = fileName;
-            Path = path;
-            UriPath = uriPath;
+            FileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
+            Path = path ?? throw new ArgumentNullException(nameof(path));
+            UriPath = uriPath ?? throw new ArgumentNullException(nameof(uriPath));
             Length = length;
-            ContentType = contentType;
+            ContentType = contentType ?? throw new ArgumentNullException(nameof(contentType));
         }
 
         private Image()

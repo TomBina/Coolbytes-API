@@ -1,3 +1,5 @@
+@import url("external/prism/prism.css");
+
 body {
     color:#231e1e;
     font-size: 18px;
@@ -10,6 +12,16 @@ h1 {
     font-size:28px;
     color:#1e243d;
     font-weight:700;
+}
+
+h2 {
+    font-size:20px;
+    color:#1e243d;
+    font-weight:700;
+}
+
+h1.no-top-margin, h2.no-top-margin {
+    margin-top:0px;
 }
 
 a {
@@ -31,6 +43,25 @@ a.button.small {
     font-size:13px;
 }
 
+a.md-link {
+    font-weight:700;
+}
+
+code {
+    background-color:#dddcdc;
+}
+
+pre {
+    background-color:#1E1E1E;
+    color:#dcdcdc;
+    padding:10px;
+}
+
+pre > code {
+    background-color: transparent;
+    color:#dcdcdc;
+}
+
 label {
     text-transform: uppercase;
     font-size:14px;
@@ -46,8 +77,14 @@ input {
     box-sizing: border-box;
 }
 
-input.error {
+input.ng-invalid, textarea.ng-invalid {
     border-color:#B60E0E;
+    background-color:rgb(243, 230, 230);
+}
+
+input.ng-untouched, textarea.ng-untouched {
+    border-color:#a0a0a0;
+    background-color:#fff;
 }
 
 input[type="submit"] {
@@ -69,10 +106,6 @@ textarea {
     box-sizing: border-box;
 }
 
-textarea.error {
-    border-color:#B60E0E;
-}
-
 .backdrop { 
     background-color:#000; 
     opacity:0.65; 
@@ -86,7 +119,7 @@ textarea.error {
 
 .dialog { 
     background-color:#fff; 
-    position:absolute; 
+    position:fixed; 
     z-index:1001; 
     transform:translate(-50%,-50%); 
     top:50%; 
@@ -97,7 +130,18 @@ textarea.error {
     box-shadow:-2px 6px 42px -1px #494949;
 }
 
+.author-image {
+    width:70px;
+    border-radius:50%;
+}
+
 .admin-content {
     margin:152px 20px 20px 20px;
     font-size:15px;
+}
+
+@media screen and (max-width: 900px) {
+    body {
+        font-size:14px;
+    }
 }

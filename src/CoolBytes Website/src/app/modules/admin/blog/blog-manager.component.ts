@@ -1,16 +1,15 @@
-import { BlogPost } from "../../../services/blog-post";
+import { BlogPostsService } from '../../../services/blogpostservice/blog-posts.service';
+import { BlogPostSummary } from '../../../services/blogpostservice/blog-post-summary';
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { Author } from "../../../services/author";
-import { BlogPostsService } from "../../../services/blog-posts.service";
 
 @Component({
     templateUrl: "./blog-manager.component.html",
     styleUrls: ["./blog-manager.component.css"]
 })
 export class BlogManagerComponent implements OnInit {
-    private _blogPosts: BlogPost[];
+    blogPosts: BlogPostSummary[];
 
     constructor(private _blogPostsService: BlogPostsService) {
 
@@ -21,7 +20,7 @@ export class BlogManagerComponent implements OnInit {
     }
 
     getBlogs(): void {
-        this._blogPostsService.getAll().subscribe(blogPosts => this._blogPosts = blogPosts);
+        this._blogPostsService.getAll().subscribe(blogPosts => this.blogPosts = blogPosts);
     }
 
     delete(blogPostId: number): void {

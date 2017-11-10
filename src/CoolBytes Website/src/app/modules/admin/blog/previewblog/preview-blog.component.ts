@@ -5,7 +5,7 @@ import { Component, Input, OnChanges } from '@angular/core';
     {
         selector: 'admin-preview-blog',
         template: `<div *ngIf="blogPostPreview">
-                        <h1>{{blogPostPreview.subject}}</h1>
+                        <h1 class="no-top-margin">{{blogPostPreview.subject}}</h1>
                         <md [value]="blogPostPreview.contentIntro"></md>
                         <md [value]="blogPostPreview.content"></md>
                    </div>

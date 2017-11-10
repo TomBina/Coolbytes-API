@@ -1,4 +1,4 @@
-﻿using CoolBytes.Core.Extensions;
+﻿using System;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +23,9 @@ namespace CoolBytes.WebAPI.Services
         public async Task<User> GetUser()
         {
             var identifier = _httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            identifier.IsNotNullOrWhiteSpace();
+
+            if (string.IsNullOrWhiteSpace(identifier))
+                throw new ArgumentException(nameof(identifier));
 
             var user = await _appDbContext.Users.SingleOrDefaultAsync(u => u.Identifier == identifier);
             if (user != null)

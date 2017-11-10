@@ -1,0 +1,40 @@
+.resume-event-hook {
+    width:5px;
+    height:10px;
+    background-color:#fff;
+    margin:0 auto 0 auto;
+}
+
+.resume-event {
+    min-width:300px;
+    max-width:700px;
+    box-sizing: border-box;
+    background-color: #fff;
+    padding:15px;
+    margin:0 10px 0 10px;
+    flex-shrink:0;
+}
+
+h1 {
+    margin:0 0 10px 0;
+    font-size:20px;
+}
+
+p {
+    line-height: 8px;
+}
+
+.details {
+    border-left:3px solid #c9c9c9;
+    padding-left:10px;
+}
+.date {
+    font-size:12px;
+    text-transform: uppercase;
+}
+
+.message {
+    line-height:normal;
+    font-size:15px;
+    margin-bottom:0px;
+}

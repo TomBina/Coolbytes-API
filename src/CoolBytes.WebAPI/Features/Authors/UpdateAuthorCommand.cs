@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Features.Authors
@@ -8,6 +9,10 @@ namespace CoolBytes.WebAPI.Features.Authors
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string About { get; set; }
-        public IFormFile File { get; set; }
+        public int? ImageId { get; set; }
+        public string ResumeUri { get; set; }
+        public string LinkedIn { get; set; }
+        public string GitHub { get; set; }
+        public IEnumerable<ExperienceDto> Experiences { get; set; }
     }
 }

@@ -1,0 +1,20 @@
+<app-admin-menu></app-admin-menu>
+<div class="admin-content">
+    <h1>Resume</h1>
+    <div class="table">
+        <div class="row-head">
+            <div>Date</div>
+            <div>Name</div>
+            <div>Options</div>
+        </div>
+        <div class="row" *ngFor="let resumeEvent of resumeEvents">
+            <div>{{resumeEvent.dateRange.startDate | date}} - {{resumeEvent.dateRange.endDate | date}}</div>
+            <div>{{resumeEvent.name}}</div>
+            <div>
+                <a class="button small" routerLink="/admin/resume/event/{{resumeEvent.id}}">edit</a>
+                <a class="button small" (click)="delete(resumeEvent.id)">delete</a>
+            </div>
+        </div>
+    </div>
+    <a class="button" routerLink="/admin/resume/addevent">add new event</a>
+</div>

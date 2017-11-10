@@ -1,0 +1,30 @@
+.icons {
+    display:flex;
+    list-style: none;
+    margin:0;
+    padding:0;
+}
+
+.icons div {
+    margin-right:6px;
+}
+
+.icon {
+    width:40px;
+    height:40px; 
+    padding:10px; 
+    box-sizing:border-box; 
+    border-radius:50%
+}
+
+.icon.twitter {
+    background-color:#1da1f2; 
+}
+
+.icon.fb {
+    background-color:#3b569d; 
+}
+
+.icon.wp {
+    background-color:#00a859;
+}
