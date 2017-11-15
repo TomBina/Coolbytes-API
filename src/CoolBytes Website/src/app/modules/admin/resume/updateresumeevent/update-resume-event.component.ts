@@ -53,7 +53,7 @@ export class UpdateResumeEventComponent {
     formatDate(jsonDate: string) {
         let date = new Date(jsonDate);
 
-        return `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}`;
+        return `${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}`;
     }
     updateForm(resumeEvent: ResumeEvent) {
         this.form.get("startDate").setValue(this.formatDate(resumeEvent.dateRange.startDate));

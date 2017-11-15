@@ -18,7 +18,7 @@ export class ResumeEventsService extends WebApiService {
     }
     
     get(resumeEventId: number) : Observable<ResumeEvent> {
-        let observable = this.http.get(`${this._url}/event/${resumeEventId}/`);
+        let observable = this.http.get(`${this._url}/event/${resumeEventId}/`, this.getAuthRequestOptions(new Headers()));
         return observable.map((response: Response) => <ResumeEvent>response.json());
     }
     

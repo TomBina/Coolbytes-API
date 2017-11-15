@@ -32,7 +32,7 @@ export class AddBlogComponent implements OnInit, OnDestroy {
         this.form = this._fb.group(
             {
                 subject: ["", [Validators.required, Validators.maxLength(100)]],
-                contentIntro: ["", [Validators.required, Validators.maxLength(100)]],
+                contentIntro: ["", [Validators.required, Validators.maxLength(120)]],
                 content: ["", [Validators.required, Validators.maxLength(4000)]],
                 tags: ["", [Validators.maxLength(500)]],
                 externalLinks: this._fb.array([this.createExternalLinkFormGroup()])
@@ -41,8 +41,8 @@ export class AddBlogComponent implements OnInit, OnDestroy {
         this._previewObserver = this.form.valueChanges.subscribe(v => {
             this._previewBlogComponent.blogPostPreview
                 = new BlogPostPreview(this.form.get("subject").value,
-                    this.form.get("content").value,
-                    this.form.get("contentIntro").value);
+                    this.form.get("contentIntro").value,
+                    this.form.get("content").value);
         })
     }
 
