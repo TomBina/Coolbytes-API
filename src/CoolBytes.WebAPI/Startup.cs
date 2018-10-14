@@ -53,7 +53,6 @@ namespace CoolBytes.WebAPI
             services.AddMvc()
                         .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                         .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
-            services.AddAutoMapper(typeof(Startup));
             services.AddMediatR(typeof(Startup));
         }
 

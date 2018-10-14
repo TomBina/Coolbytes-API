@@ -17,9 +17,14 @@ aside {
     box-sizing:border-box;
 }
 
-aside a {
-    font-size:15px;
+a {
+    font-weight:700;
     text-decoration: none;
+}
+
+aside a {
+    font-weight:normal;
+    font-size:15px;
 }
 
 h1 {

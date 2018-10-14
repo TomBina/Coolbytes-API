@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.Resume;
@@ -57,7 +58,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
             };
             var handler = new GetResumeQueryHandler(Context, AuthorService);
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.NotNull(result);
         }

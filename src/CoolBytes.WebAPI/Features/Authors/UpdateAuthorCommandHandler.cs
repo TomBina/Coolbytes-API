@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Collections;
@@ -14,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
-    public class UpdateAuthorCommandHandler : IAsyncRequestHandler<UpdateAuthorCommand, AuthorViewModel>
+    public class UpdateAuthorCommandHandler : IRequestHandler<UpdateAuthorCommand, AuthorViewModel>
     {
         private readonly AppDbContext _context;
         private readonly IAuthorService _authorService;
@@ -25,7 +26,7 @@ namespace CoolBytes.WebAPI.Features.Authors
             _authorService = authorService;
         }
 
-        public async Task<AuthorViewModel> Handle(UpdateAuthorCommand message)
+        public async Task<AuthorViewModel> Handle(UpdateAuthorCommand message, CancellationToken cancellationToken)
         {
             var author = await _authorService.GetAuthorWithProfile();
 

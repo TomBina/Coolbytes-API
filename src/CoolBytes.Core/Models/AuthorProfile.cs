@@ -15,7 +15,8 @@ namespace CoolBytes.Core.Models
         public string ResumeUri { get; private set; }
         public SocialHandles SocialHandles { get; private set; }
         public UpdatableCollection<Experience> Experiences { get; private set; }
-        public Author Author { get; set; }
+        public Author Author { get; private set; }
+        public int AuthorId { get; private set; }
 
         public AuthorProfile(string firstName, string lastName, string about)
         {

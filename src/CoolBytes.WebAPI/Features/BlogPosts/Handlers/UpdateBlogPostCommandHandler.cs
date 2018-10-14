@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Builders;
@@ -13,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
-    public class UpdateBlogPostCommandHandler : IAsyncRequestHandler<UpdateBlogPostCommand, BlogPostSummaryViewModel>
+    public class UpdateBlogPostCommandHandler : IRequestHandler<UpdateBlogPostCommand, BlogPostSummaryViewModel>
     {
         private readonly AppDbContext _context;
         private readonly ExistingBlogPostBuilder _builder;
@@ -25,7 +26,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             _builder = builder;
         }
 
-        public async Task<BlogPostSummaryViewModel> Handle(UpdateBlogPostCommand message)
+        public async Task<BlogPostSummaryViewModel> Handle(UpdateBlogPostCommand message, CancellationToken cancellationToken)
         {
             var blogPost = await GetBlogPost(message.Id);
 

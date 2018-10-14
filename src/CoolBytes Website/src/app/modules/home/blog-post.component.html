@@ -4,6 +4,7 @@
         <p class="post-info">{{blogPost.date | date}} by {{blogPost.author.firstName}}</p>
         <md [value]="blogPost.contentIntro"></md>
         <md [value]="blogPost.content"></md>
+        <a target="blank" href="https://github.com/TomBina/CbCode">View the code on github</a>.
     </article>
     <aside *ngIf="blogPost">
         <div *ngIf="authorImage">
@@ -21,11 +22,14 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="blogPost.externalLinks.length > 0">
+        <div>
             <h2>Resources</h2>
             <ul>
                 <li *ngFor="let link of blogPost.externalLinks">
                     <a target="blank" [href]="link.url">{{link.name}}</a>
+                </li>
+                <li>
+                    <a target="blank" href="https://github.com/TomBina/CbCode">View the code on github</a>
                 </li>
             </ul>
         </div>

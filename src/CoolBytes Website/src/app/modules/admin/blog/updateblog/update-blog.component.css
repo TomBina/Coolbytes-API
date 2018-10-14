@@ -11,6 +11,7 @@
     float:left; 
     padding-left:20px; 
     box-sizing: border-box;
+    flex:1;
 }
 
 .flex {

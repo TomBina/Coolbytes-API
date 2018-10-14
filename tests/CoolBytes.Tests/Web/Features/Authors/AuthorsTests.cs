@@ -6,6 +6,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SQLitePCL;
@@ -30,7 +31,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var getAuthorQueryHandler = new GetAuthorQueryHandler(Context, AuthorService);
             var message = new GetAuthorQuery() { IncludeProfile = true };
 
-            var result = await getAuthorQueryHandler.Handle(message);
+            var result = await getAuthorQueryHandler.Handle(message, CancellationToken.None);
 
             Assert.Equal("Tom", result.FirstName);
         }
@@ -81,7 +82,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me", Experiences = experiences };
 
-            var result = await addAuthorCommandHandler.Handle(message);
+            var result = await addAuthorCommandHandler.Handle(message, CancellationToken.None);
 
             Assert.Equal("Testfile", result.Experiences.First().Name = experienceDto.Name);
         }
@@ -97,7 +98,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
-                await addAuthorCommandHandler.Handle(message);
+                await addAuthorCommandHandler.Handle(message, CancellationToken.None);
             });
         }
 
@@ -118,7 +119,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test", Experiences = experiences };
             var handler = new UpdateAuthorCommandHandler(Context, AuthorService);
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.Equal("Testfile", result.Experiences.First().Name = experienceDto.Name);
         }
@@ -138,7 +139,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
                 ImageId = image.Id
             };
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.NotNull(result.Image);
         }

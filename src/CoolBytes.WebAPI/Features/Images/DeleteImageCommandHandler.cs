@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.Data;
 using MediatR;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CoolBytes.WebAPI.Features.Images
 {
-    public class DeleteImageCommandHandler : IAsyncRequestHandler<DeleteImageCommand>
+    public class DeleteImageCommandHandler : AsyncRequestHandler<DeleteImageCommand>
     {
         private readonly AppDbContext _context;
         private readonly IConfiguration _configuration;
@@ -17,7 +18,7 @@ namespace CoolBytes.WebAPI.Features.Images
             _configuration = configuration;
         }
 
-        public async Task Handle(DeleteImageCommand message)
+        protected override async Task Handle(DeleteImageCommand message, CancellationToken cancellationToken)
         {
             var image = await _context.Images.FindAsync(message.Id);
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
-    public class GetAuthorQueryHandler : IAsyncRequestHandler<GetAuthorQuery, AuthorViewModel>
+    public class GetAuthorQueryHandler : IRequestHandler<GetAuthorQuery, AuthorViewModel>
     {
         private readonly AppDbContext _appDbContext;
         private readonly IAuthorService _authorService;
@@ -20,7 +21,7 @@ namespace CoolBytes.WebAPI.Features.Authors
             _authorService = authorService;
         }
 
-        public async Task<AuthorViewModel> Handle(GetAuthorQuery message)
+        public async Task<AuthorViewModel> Handle(GetAuthorQuery message, CancellationToken cancellationToken)
         {
             Author author;
             if (message.IncludeProfile)
