@@ -3,7 +3,9 @@ using CoolBytes.WebAPI.Features.Images;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Images
@@ -22,7 +24,7 @@ namespace CoolBytes.Tests.Web.Features.Images
             var handler = new GetImagesQueryHandler(Context);
             var message = new GetImagesQuery();
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.Equal(1, result.Count());
         }
@@ -37,7 +39,7 @@ namespace CoolBytes.Tests.Web.Features.Images
             var files = new List<IFormFile>() { file1, file2 };
             var message = new UploadImagesCommand() { Files = files };
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.NotNull(result);
             Assert.Equal(2, Context.Images.Count());
@@ -48,10 +50,10 @@ namespace CoolBytes.Tests.Web.Features.Images
         {
             var image = await AddImage();
 
-            var handler = new DeleteImageCommandHandler(Context, Fixture.Configuration);
+            IRequestHandler<DeleteImageCommand> handler = new DeleteImageCommandHandler(Context, Fixture.Configuration);
             var message = new DeleteImageCommand() { Id = image.Id };
 
-            await handler.Handle(message);
+            await handler.Handle(message, CancellationToken.None);
 
             Assert.Equal(null, await Context.Images.FindAsync(image.Id));
         }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Data;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
 {
-    public class GetResumeEventsQueryHandler : IAsyncRequestHandler<GetResumeEventsQuery, IEnumerable<ResumeEventViewModel>>
+    public class GetResumeEventsQueryHandler : IRequestHandler<GetResumeEventsQuery, IEnumerable<ResumeEventViewModel>>
     {
         private readonly AppDbContext _context;
 
@@ -19,7 +20,7 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
             _context = context;
         }
 
-        public async Task<IEnumerable<ResumeEventViewModel>> Handle(GetResumeEventsQuery message)
+        public async Task<IEnumerable<ResumeEventViewModel>> Handle(GetResumeEventsQuery message, CancellationToken cancellationToken)
         {
             var author = await _context.Authors.FirstOrDefaultAsync(a => a.Id == message.AuthorId);
             var resumeEvents = await _context.ResumeEvents.Where(r => r.AuthorId == author.Id)

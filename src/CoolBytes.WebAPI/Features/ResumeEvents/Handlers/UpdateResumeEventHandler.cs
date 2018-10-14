@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Models;
@@ -9,7 +10,7 @@ using MediatR;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
 {
-    public class UpdateResumeEventHandler : IAsyncRequestHandler<UpdateResumeEventCommand, ResumeEventViewModel>
+    public class UpdateResumeEventHandler : IRequestHandler<UpdateResumeEventCommand, ResumeEventViewModel>
     {
         private readonly AppDbContext _context;
 
@@ -18,7 +19,7 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
             _context = context;
         }
 
-        public async Task<ResumeEventViewModel> Handle(UpdateResumeEventCommand message)
+        public async Task<ResumeEventViewModel> Handle(UpdateResumeEventCommand message, CancellationToken cancellationToken)
         {
             var resumeEvent = GetResumeEvent(message);
 

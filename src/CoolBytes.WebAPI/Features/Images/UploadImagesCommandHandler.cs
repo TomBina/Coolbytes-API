@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Interfaces;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Features.Images
 {
-    public class UploadImagesCommandHandler : IAsyncRequestHandler<UploadImagesCommand, IEnumerable<ImageViewModel>>
+    public class UploadImagesCommandHandler : IRequestHandler<UploadImagesCommand, IEnumerable<ImageViewModel>>
     {
         private readonly IImageFactory _imageFactory;
         private readonly AppDbContext _context;
@@ -21,7 +22,7 @@ namespace CoolBytes.WebAPI.Features.Images
             _imageFactory = imageFactory;
         }
 
-        public async Task<IEnumerable<ImageViewModel>> Handle(UploadImagesCommand message)
+        public async Task<IEnumerable<ImageViewModel>> Handle(UploadImagesCommand message, CancellationToken cancellationToken)
         {
             var viewModel = new List<ImageViewModel>();
 

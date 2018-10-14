@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
@@ -11,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
-    public class GetBlogPostQueryHandler : IAsyncRequestHandler<GetBlogPostQuery, BlogPostViewModel>
+    public class GetBlogPostQueryHandler : IRequestHandler<GetBlogPostQuery, BlogPostViewModel>
     {
         private readonly AppDbContext _context;
 
@@ -20,7 +21,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             _context = context;
         }
 
-        public async Task<BlogPostViewModel> Handle(GetBlogPostQuery message) 
+        public async Task<BlogPostViewModel> Handle(GetBlogPostQuery message, CancellationToken cancellationToken) 
             => await ViewModel(message.Id);
 
         private async Task<BlogPostViewModel> ViewModel(int blogPostId)

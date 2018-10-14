@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Data;
@@ -8,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.Resume
 {
-    public class GetResumeQueryHandler : IAsyncRequestHandler<GetResumeQuery, ResumeViewModel>
+    public class GetResumeQueryHandler : IRequestHandler<GetResumeQuery, ResumeViewModel>
     {
         private readonly AppDbContext _context;
         private readonly IAuthorSearchService _authorSearchService;
@@ -19,7 +20,7 @@ namespace CoolBytes.WebAPI.Features.Resume
             _authorSearchService = authorSearchService;
         }
 
-        public async Task<ResumeViewModel> Handle(GetResumeQuery message)
+        public async Task<ResumeViewModel> Handle(GetResumeQuery message, CancellationToken cancellationToken)
         {
             var resume = await CreateResume(message);
 

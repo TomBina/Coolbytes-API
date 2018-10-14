@@ -5,8 +5,10 @@ using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.WebAPI.Features.BlogPosts.Handlers;
+using MediatR;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -44,7 +46,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context);
 
-            var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery());
+            var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
 
             Assert.NotEmpty(result);
         }
@@ -55,7 +57,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var blogPostId = Context.BlogPosts.First().Id;
             var blogPostQueryHandler = new GetBlogPostQueryHandler(Context);
 
-            var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId });
+            var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
 
             Assert.NotNull(result);
         }
@@ -74,7 +76,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 Content = "Test"
             };
 
-            var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand);
+            var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand, CancellationToken.None);
 
             Assert.NotNull(result.Id);
         }
@@ -96,7 +98,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 File = file
             };
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.NotNull(result.Image.UriPath);
         }
@@ -108,7 +110,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var query = new UpdateBlogPostQuery() { Id = blog.Id };
             var handler = new UpdateBlogPostQueryHandler(Context);
 
-            var result = await handler.Handle(query);
+            var result = await handler.Handle(query, CancellationToken.None);
 
             Assert.NotNull(result);
         }
@@ -128,7 +130,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var builder = new ExistingBlogPostBuilder(null);
             var handler = new UpdateBlogPostCommandHandler(Context, builder);
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.Equal("Test new", result.Subject);
         }
@@ -152,7 +154,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 File = file
             };
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.NotNull(result.Image.UriPath);
         }
@@ -162,9 +164,9 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var blogPost = Context.BlogPosts.First();
             var deleteBlogPostCommand = new DeleteBlogPostCommand() { Id = blogPost.Id };
-            var deleteBlogPostCommandHandler = new DeleteBlogPostCommandHandler(Context);
+            IRequestHandler<DeleteBlogPostCommand> deleteBlogPostCommandHandler = new DeleteBlogPostCommandHandler(Context);
 
-            await deleteBlogPostCommandHandler.Handle(deleteBlogPostCommand);
+            await deleteBlogPostCommandHandler.Handle(deleteBlogPostCommand, CancellationToken.None);
 
             Assert.Null(await Context.BlogPosts.FindAsync(blogPost.Id));
         }

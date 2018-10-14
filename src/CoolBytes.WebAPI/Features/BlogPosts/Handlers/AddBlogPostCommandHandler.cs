@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Core.Builders;
@@ -12,7 +13,7 @@ using MediatR;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
-    public class AddBlogPostCommandHandler : IAsyncRequestHandler<AddBlogPostCommand, BlogPostSummaryViewModel>
+    public class AddBlogPostCommandHandler : IRequestHandler<AddBlogPostCommand, BlogPostSummaryViewModel>
     {
         private readonly AppDbContext _context;
         private readonly BlogPostBuilder _builder;
@@ -23,7 +24,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             _builder = builder;
         }
 
-        public async Task<BlogPostSummaryViewModel> Handle(AddBlogPostCommand message)
+        public async Task<BlogPostSummaryViewModel> Handle(AddBlogPostCommand message, CancellationToken cancellationToken)
         {
             var blogPost = await CreateBlogPost(message);
 

@@ -25,6 +25,9 @@ namespace CoolBytes.Tests.Web
         public string TempDirectory { get; } = Path.Combine(Environment.CurrentDirectory, $"dir{Random.Next()}");
         private DbContextOptions<AppDbContext> _options;
 
+        private static bool _initialized;
+        private static readonly object _mutex = new object();
+
         public IConfiguration Configuration { get; private set; }
 
         public Fixture()
@@ -41,7 +44,15 @@ namespace CoolBytes.Tests.Web
 
         private static void InitAutoMapper()
         {
-            Mapper.Initialize(config => config.AddProfile(new DefaultProfile()));
+            lock (_mutex)
+            {
+                if (_initialized)
+                    return;
+
+                Mapper.Initialize(config => config.AddProfile(new DefaultProfile()));
+                _initialized = true;
+
+            }
         }
 
         private void InitConfiguration()

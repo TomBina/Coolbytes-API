@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using AutoMapper;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
-    public class AddAuthorCommandHandler : IAsyncRequestHandler<AddAuthorCommand, AuthorViewModel>
+    public class AddAuthorCommandHandler : IRequestHandler<AddAuthorCommand, AuthorViewModel>
     {
         private readonly AppDbContext _context;
         private readonly IUserService _userService;
@@ -25,7 +26,7 @@ namespace CoolBytes.WebAPI.Features.Authors
             _authorValidator = authorValidator;
         }
 
-        public async Task<AuthorViewModel> Handle(AddAuthorCommand message)
+        public async Task<AuthorViewModel> Handle(AddAuthorCommand message, CancellationToken cancellationToken)
         {
             var author = await CreateAuthor(message);
 

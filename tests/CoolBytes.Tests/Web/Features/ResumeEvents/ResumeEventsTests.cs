@@ -6,8 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.WebAPI.Services;
+using MediatR;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.ResumeEvents
@@ -45,7 +47,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var message = new GetResumeEventsQuery() { AuthorId = authorId };
             var handler = new GetResumeEventsQueryHandler(Context);
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.Equal(2, result.Count());
         }
@@ -59,7 +61,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var message = new GetResumeEventQuery() { Id = resumeEvent.Id };
             var handler = new GetResumeEventQueryHandler(Context);
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.Equal(resumeEvent.Name, result.Name);
         }
@@ -79,7 +81,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             };
             var handler = new AddResumeEventCommandHandler(Context, AuthorService);
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.NotNull(result);
         }
@@ -104,7 +106,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             };
             var handler = new UpdateResumeEventHandler(Context);
 
-            var result = await handler.Handle(message);
+            var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.Equal("Updated message", result.Message);
         }
@@ -115,9 +117,9 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var resumeEvents = await SeedData();
             var currentCount = resumeEvents.Count;
             var message = new DeleteResumeEventCommand { Id = resumeEvents.First().Id };
-            var handler = new DeleteResumeEventCommandHandler(Context);
+            IRequestHandler<DeleteResumeEventCommand> handler = new DeleteResumeEventCommandHandler(Context);
 
-            await handler.Handle(message);
+            await handler.Handle(message, CancellationToken.None);
             var newCount = (await Context.ResumeEvents.ToListAsync()).Count;
             Assert.Equal(currentCount - 1, newCount);
         }
