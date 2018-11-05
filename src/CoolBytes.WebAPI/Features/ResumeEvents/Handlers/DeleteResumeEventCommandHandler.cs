@@ -1,10 +1,9 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using CoolBytes.Core.Models;
-using CoolBytes.Data;
+﻿using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
 {

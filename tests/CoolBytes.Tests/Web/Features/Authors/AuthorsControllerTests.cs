@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoolBytes.Core.Factories;
-using CoolBytes.Core.Interfaces;
+﻿using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI;
@@ -16,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
@@ -35,7 +30,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var userService = new Mock<IUserService>();
             var user = new User("test");
             userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
-            serviceCollection.AddSingleton<IUserService>(userService.Object);
+            serviceCollection.AddSingleton(userService.Object);
 
             serviceCollection.AddMediatR(typeof(Startup));
             _serviceProvider = serviceCollection.BuildServiceProvider();

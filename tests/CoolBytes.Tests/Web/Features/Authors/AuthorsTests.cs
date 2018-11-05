@@ -1,15 +1,11 @@
-﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
+﻿using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Services;
-using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SQLitePCL;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
@@ -28,7 +24,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         public async Task GetAuthorQueryHandler_ReturnsAuthor()
         {
             await AddAuthor();
-            var getAuthorQueryHandler = new GetAuthorQueryHandler(Context, AuthorService);
+            var getAuthorQueryHandler = new GetAuthorQueryHandler(AuthorService);
             var message = new GetAuthorQuery() { IncludeProfile = true };
 
             var result = await getAuthorQueryHandler.Handle(message, CancellationToken.None);

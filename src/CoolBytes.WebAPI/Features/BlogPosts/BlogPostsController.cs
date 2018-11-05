@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using CoolBytes.WebAPI.Extensions;
+﻿using CoolBytes.WebAPI.Extensions;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
+using CoolBytes.WebAPI.Features.BlogPosts.Validators;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoolBytes.Core.Utils;
-using CoolBytes.WebAPI.Features.BlogPosts.Validators;
-using FluentValidation.AspNetCore;
-using FluentValidation.Results;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {

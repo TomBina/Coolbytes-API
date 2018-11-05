@@ -1,10 +1,9 @@
-﻿using System;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using CoolBytes.Core.Models;
+﻿using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.Resume;
 using CoolBytes.WebAPI.Services;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Resume

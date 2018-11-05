@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CoolBytes.Core.Models
+﻿namespace CoolBytes.Core.Models
 {
     public class SocialHandles
     {

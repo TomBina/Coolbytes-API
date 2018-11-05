@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoolBytes.WebAPI.Extensions;
-using CoolBytes.WebAPI.Features.BlogPosts;
+﻿using CoolBytes.WebAPI.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Extensions
@@ -38,7 +32,7 @@ namespace CoolBytes.Tests.Web.Extensions
         public void OkOrNotFound_WithIEnumberable_ReturnsOkObjectResult()
         {
             var testController = new TestController();
-            var testObject = new [] {1,2,3};
+            var testObject = new[] { 1, 2, 3 };
 
             var result = testController.OkOrNotFound(testObject);
 
@@ -49,7 +43,7 @@ namespace CoolBytes.Tests.Web.Extensions
         public void OkOrNotFound_WithIEnumberableEmpty_ReturnsNotFoundResult()
         {
             var testController = new TestController();
-            var testObject = new List<string>();
+            var testObject = Enumerable.Empty<string>();
 
             var result = testController.OkOrNotFound(testObject);
 

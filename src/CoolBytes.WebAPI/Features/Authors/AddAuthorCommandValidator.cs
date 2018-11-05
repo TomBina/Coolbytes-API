@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoolBytes.Data;
+﻿using CoolBytes.Data;
 using FluentValidation;
 using FluentValidation.Validators;
-using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
@@ -31,7 +26,7 @@ namespace CoolBytes.WebAPI.Features.Authors
             RuleFor(a => a.ResumeUri).Custom(ValidateUri);
             RuleFor(a => a.LinkedIn).Custom(ValidateUri);
             RuleFor(a => a.GitHub).Custom(ValidateUri);
-            RuleFor(a => a.Experiences).SetCollectionValidator(new ExperienceDtoValidator(context));
+            RuleForEach(a => a.Experiences).SetValidator(new ExperienceDtoValidator(context));
         }
 
         private void ValidateUri(string uri, CustomContext context)

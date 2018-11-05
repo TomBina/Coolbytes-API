@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoolBytes.WebAPI.Features.Authors
+﻿namespace CoolBytes.WebAPI.Features.Authors
 {
     public class SocialHandlesViewModel
     {

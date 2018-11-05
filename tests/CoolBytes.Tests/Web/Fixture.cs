@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using CoolBytes.Core.Factories;
-using CoolBytes.Core.Models;
+﻿using AutoMapper;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.AutoMapper;
-using CoolBytes.WebAPI.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Moq;
-using Xunit;
+using System;
+using System.IO;
 
 namespace CoolBytes.Tests.Web
 {
@@ -26,7 +16,7 @@ namespace CoolBytes.Tests.Web
         private DbContextOptions<AppDbContext> _options;
 
         private static bool _initialized;
-        private static readonly object _mutex = new object();
+        private static readonly object Mutex = new object();
 
         public IConfiguration Configuration { get; private set; }
 
@@ -44,7 +34,7 @@ namespace CoolBytes.Tests.Web
 
         private static void InitAutoMapper()
         {
-            lock (_mutex)
+            lock (Mutex)
             {
                 if (_initialized)
                     return;

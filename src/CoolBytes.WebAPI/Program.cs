@@ -1,12 +1,11 @@
-﻿using System;
-using System.IO;
-using AutoMapper;
+﻿using AutoMapper;
 using CoolBytes.WebAPI.AutoMapper;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
-using Serilog.Events;
+using System;
+using System.IO;
 
 namespace CoolBytes.WebAPI
 {

@@ -1,12 +1,11 @@
-﻿using System.IO;
-using CoolBytes.Core.Factories;
+﻿using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.IO;
 
 namespace CoolBytes.Tests.Web.Features
 {

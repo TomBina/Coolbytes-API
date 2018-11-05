@@ -1,10 +1,9 @@
 ﻿using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
+using CoolBytes.Core.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using CoolBytes.Core.Utils;
 
 namespace CoolBytes.Core.Builders
 {

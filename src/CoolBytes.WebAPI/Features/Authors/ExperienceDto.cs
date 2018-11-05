@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace CoolBytes.WebAPI.Features.Authors
+﻿namespace CoolBytes.WebAPI.Features.Authors
 {
     public class ExperienceDto
     {

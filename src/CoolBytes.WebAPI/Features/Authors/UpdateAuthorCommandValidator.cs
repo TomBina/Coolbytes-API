@@ -28,7 +28,7 @@ namespace CoolBytes.WebAPI.Features.Authors
             RuleFor(a => a.ResumeUri).Custom(ValidateUri);
             RuleFor(a => a.LinkedIn).Custom(ValidateUri);
             RuleFor(a => a.GitHub).Custom(ValidateUri);
-            RuleFor(a => a.Experiences).SetCollectionValidator(new ExperienceDtoValidator(context));
+            RuleForEach(a => a.Experiences).SetValidator(new ExperienceDtoValidator(context));
             RuleFor(a => a).CustomAsync(async (command, validationContext, token) =>
             {
                 var user = await userService.GetUser();

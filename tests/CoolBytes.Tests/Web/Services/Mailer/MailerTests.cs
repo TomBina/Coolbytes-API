@@ -71,7 +71,7 @@ namespace CoolBytes.Tests.Web.Services.Mailer
             var mailer = CreateMailer();
             var message = CreateMessage();
 
-            var result = await mailer.Send(message);
+            await mailer.Send(message);
             var lastStat = _context.MailStats.FirstOrDefaultAsync(ms => ms.Date == DateTime.Now.Date);
 
             Assert.NotNull(lastStat);

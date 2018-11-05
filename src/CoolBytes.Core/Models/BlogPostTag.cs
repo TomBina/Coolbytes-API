@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CoolBytes.Core.Models
 {
@@ -29,7 +28,7 @@ namespace CoolBytes.Core.Models
         public BlogPost BlogPost { get; private set; }
 
         public BlogPostTag(string name) 
-            => Name = name.Trim() ?? throw new ArgumentNullException(nameof(name));
+            => Name = name.Trim();
 
         private BlogPostTag()
         {

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoolBytes.WebAPI.Services.Mailer;
+﻿using CoolBytes.WebAPI.Services.Mailer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Contact
 {
@@ -32,7 +28,7 @@ namespace CoolBytes.WebAPI.Features.Contact
             var body = $"{command.Name} ({command.Email}) send the following: {command.Message}<br />";
             var message = new EmailMessage(from, to, "Message from website", body);
 
-            var report = await _mailer.Send(message);
+            await _mailer.Send(message);
 
             return Ok();
         }
