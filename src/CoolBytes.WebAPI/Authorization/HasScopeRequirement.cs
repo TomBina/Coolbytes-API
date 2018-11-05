@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authorization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace CoolBytes.WebAPI.Authorization
 {
@@ -14,8 +11,8 @@ namespace CoolBytes.WebAPI.Authorization
 
         public HasScopeRequirement(string scope, string issuer)
         {
-            this._scope = scope;
-            this._issuer = issuer;
+            _scope = scope;
+            _issuer = issuer;
         }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, HasScopeRequirement requirement)

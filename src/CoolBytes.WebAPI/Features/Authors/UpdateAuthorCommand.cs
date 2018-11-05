@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using MediatR;
-using Microsoft.AspNetCore.Http;
+﻿using MediatR;
+using System.Collections.Generic;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {

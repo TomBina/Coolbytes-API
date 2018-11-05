@@ -1,25 +1,19 @@
-﻿using CoolBytes.Core.Models;
+﻿using CoolBytes.Core.Factories;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using CoolBytes.Core;
-using CoolBytes.Core.Factories;
-using Microsoft.Win32.SafeHandles;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace CoolBytes.Tests.Core
 {
     public class ImageFactoryTests : IDisposable
     {
-        private readonly ITestOutputHelper _output;
         private readonly string _uploadPath = Environment.CurrentDirectory + "/uploads";
         private readonly ImageFactoryOptions _imageFactoryOptions;
         private readonly ImageFactoryValidator _imageFactoryValidator;
 
-        public ImageFactoryTests(ITestOutputHelper output)
+        public ImageFactoryTests()
         {
-            _output = output;
             _imageFactoryOptions = new ImageFactoryOptions(_uploadPath);
             _imageFactoryValidator = new ImageFactoryValidator();
         }

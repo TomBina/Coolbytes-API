@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoolBytes.Core.Interfaces;
+﻿using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
-using CoolBytes.WebAPI.Services;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 

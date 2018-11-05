@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 {

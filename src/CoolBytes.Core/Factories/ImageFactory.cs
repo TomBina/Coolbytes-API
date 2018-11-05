@@ -25,7 +25,7 @@ namespace CoolBytes.Core.Factories
 
             if (!_validator.Validate(stream, contentType)) throw new ArgumentException("Image is not valid");
 
-            var extension = Path.GetExtension(currentFileName) ?? throw new ArgumentNullException(nameof(currentFileName));
+            var extension = Path.GetExtension(currentFileName);
             var fileName = _options.FileName(extension);
             var directory = _options.Directory(_options.UploadPath, fileName);
             var path = Path.Combine(directory, fileName);

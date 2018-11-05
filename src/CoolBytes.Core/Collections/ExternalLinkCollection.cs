@@ -1,9 +1,7 @@
-﻿using System;
+﻿using CoolBytes.Core.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoolBytes.Core.Models;
 
 namespace CoolBytes.Core.Collections
 {
@@ -18,6 +16,6 @@ namespace CoolBytes.Core.Collections
         }
 
         public override bool Exists(ExternalLink item)
-            => this.Items.Any(externalLink => externalLink.Name.Equals(item.Name, StringComparison.OrdinalIgnoreCase));
+            => Items.Any(externalLink => externalLink.Name.Equals(item.Name, StringComparison.OrdinalIgnoreCase));
     }
 }

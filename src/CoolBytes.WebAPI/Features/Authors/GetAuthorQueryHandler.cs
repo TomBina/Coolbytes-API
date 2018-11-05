@@ -1,23 +1,18 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
-using CoolBytes.Data;
-using CoolBytes.WebAPI.Services;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
     public class GetAuthorQueryHandler : IRequestHandler<GetAuthorQuery, AuthorViewModel>
     {
-        private readonly AppDbContext _appDbContext;
         private readonly IAuthorService _authorService;
 
-        public GetAuthorQueryHandler(AppDbContext appDbContext, IAuthorService authorService)
+        public GetAuthorQueryHandler(IAuthorService authorService)
         {
-            _appDbContext = appDbContext;
             _authorService = authorService;
         }
 

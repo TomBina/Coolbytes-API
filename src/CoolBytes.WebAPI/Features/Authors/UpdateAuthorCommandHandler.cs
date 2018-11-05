@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using CoolBytes.Core.Collections;
+﻿using AutoMapper;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
@@ -32,7 +27,7 @@ namespace CoolBytes.WebAPI.Features.Authors
 
             await UpdateAuthorProfile(author, message);
 
-            await SaveAuthor(author);
+            await SaveAuthor();
 
             return CreateViewModel(author);
         }
@@ -74,7 +69,7 @@ namespace CoolBytes.WebAPI.Features.Authors
             author.AuthorProfile.Experiences.Update(experiences);
         }
 
-        private async Task SaveAuthor(Author author)
+        private async Task SaveAuthor()
             => await _context.SaveChangesAsync();
 
         private AuthorViewModel CreateViewModel(Author author)

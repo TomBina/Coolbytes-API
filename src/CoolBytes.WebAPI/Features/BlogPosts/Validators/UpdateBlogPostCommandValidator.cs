@@ -28,7 +28,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
 
                 var invalidTags = tags.Where(tag => string.IsNullOrWhiteSpace(tag));
 
-                foreach (var invalidTag in invalidTags)
+                foreach (var _ in invalidTags)
                 {
                     context.AddFailure(nameof(tags), "Empty tag not allowed.");
                 }

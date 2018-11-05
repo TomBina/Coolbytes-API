@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using AutoMapper;
+﻿using AutoMapper;
 using CoolBytes.Core.Builders;
 using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
@@ -18,7 +16,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using System.Net.Http;
 
 namespace CoolBytes.WebAPI
 {

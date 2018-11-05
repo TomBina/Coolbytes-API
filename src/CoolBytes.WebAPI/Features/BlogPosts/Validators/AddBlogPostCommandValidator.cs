@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using CoolBytes.Core.Interfaces;
+﻿using CoolBytes.Core.Interfaces;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using FluentValidation;
+using System.Linq;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
 {
@@ -19,7 +19,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
 
                 var invalidTags = tags.Where(tag => string.IsNullOrWhiteSpace(tag));
 
-                foreach (var invalidTag in invalidTags)
+                foreach (var _ in invalidTags)
                 {
                     context.AddFailure(nameof(tags), "Empty tag not allowed.");
                 }

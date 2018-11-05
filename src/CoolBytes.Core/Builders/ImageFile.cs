@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CoolBytes.Core.Interfaces;
+using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Core.Builders
 {

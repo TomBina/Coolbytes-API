@@ -1,9 +1,8 @@
-﻿using CoolBytes.Core.Models;
+﻿using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.Images;
 using System;
 using System.Collections.Generic;
-using CoolBytes.WebAPI.Features.Authors;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 {

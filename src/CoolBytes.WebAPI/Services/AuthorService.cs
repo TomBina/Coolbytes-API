@@ -1,10 +1,9 @@
-﻿using System.Linq;
-using CoolBytes.Core.Interfaces;
+﻿using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Query;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Services
 {

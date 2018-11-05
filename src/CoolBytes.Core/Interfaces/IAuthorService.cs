@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using CoolBytes.Core.Models;
 using System.Threading.Tasks;
-using CoolBytes.Core.Models;
 
 namespace CoolBytes.Core.Interfaces
 {

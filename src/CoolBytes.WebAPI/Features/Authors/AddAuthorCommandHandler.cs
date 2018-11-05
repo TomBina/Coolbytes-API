@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading;
-using AutoMapper;
+﻿using AutoMapper;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using MediatR;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Factories;
-using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {

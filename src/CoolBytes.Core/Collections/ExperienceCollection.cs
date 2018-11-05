@@ -1,7 +1,6 @@
-﻿using System;
+﻿using CoolBytes.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
-using CoolBytes.Core.Models;
 
 namespace CoolBytes.Core.Collections
 {
