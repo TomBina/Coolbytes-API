@@ -35,7 +35,12 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             var query = new GetBlogPostQuery() { Id = id };
             var blogPost = await _mediator.Send(query);
 
-            return this.OkOrNotFound(blogPost);
+            if (!blogPost)
+            {
+                return NotFound();
+            }
+
+            return blogPost.Payload;
         }
 
         [Authorize("admin")]
