@@ -17,6 +17,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
+using NJsonSchema;
+using NSwag.AspNetCore;
 
 namespace CoolBytes.WebAPI
 {
@@ -49,9 +52,11 @@ namespace CoolBytes.WebAPI
 
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
             services.AddMvc()
+                        .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                         .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                         .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
             services.AddMediatR(typeof(Startup));
+            services.AddSwagger();
         }
 
         private void ConfigureSecurity(IServiceCollection services)
@@ -83,6 +88,12 @@ namespace CoolBytes.WebAPI
         {
             app.UseAuthentication();
             app.UseStaticFiles();
+
+            app.UseSwaggerUi3WithApiExplorer(settings =>
+            {
+                settings.GeneratorSettings.DefaultPropertyNameHandling =
+                    PropertyNameHandling.CamelCase;
+            });
 
             if (env.IsDevelopment())
             {

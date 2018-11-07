@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CoolBytes.WebAPI.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -6,36 +8,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoolBytes.WebAPI.Features.Images
 {
+    [ApiController]
     [Authorize("admin")]
     [Route("api/[controller]")]
-    public class ImagesController : Controller
+    public class ImagesController : ControllerBase
     {
         private readonly IMediator _mediator;
 
         public ImagesController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet]
-        public async Task<IActionResult> Get(GetImagesQuery query) => this.OkOrNotFound(await _mediator.Send(query));
+        public async Task<ActionResult<IEnumerable<ImageViewModel>>> Get() 
+            => this.OkOrNotFound(await _mediator.Send(new GetImagesQuery()));
 
         [HttpPost]
-        public async Task<IActionResult> Upload([FromForm]UploadImagesCommand command)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return Ok(await _mediator.Send(command));
-        }
+        public async Task<ActionResult<IEnumerable<ImageViewModel>>> Upload([FromForm] UploadImagesCommand command)
+            => (await _mediator.Send(command)).ToList();
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(DeleteImageCommand command)
+        public async Task<ActionResult> Delete(DeleteImageCommand command)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             await _mediator.Send(command);
 
             return NoContent();
         }
-
     }
 }

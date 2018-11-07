@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Resume
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class ResumeController : Controller
+    public class ResumeController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -15,8 +16,12 @@ namespace CoolBytes.WebAPI.Features.Resume
             _mediator = mediator;
         }
 
-        [HttpGet("{authorid}")]
-        public async Task<IActionResult> Get(GetResumeQuery message) 
-            => this.OkOrNotFound(await _mediator.Send(message));
+        [HttpGet("{authorId}")]
+        public async Task<ActionResult<ResumeViewModel>> Get(int authorId)
+        {
+            var query = new GetResumeQuery() { AuthorId = authorId };
+
+            return this.OkOrNotFound(await _mediator.Send(query));
+        }
     }
 }

@@ -10,11 +10,13 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class BlogPostsController : Controller
+    public class BlogPostsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -24,14 +26,21 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(GetBlogPostsQuery query) => this.OkOrNotFound(await _mediator.Send(query));
+        public async Task<ActionResult<IEnumerable<BlogPostSummaryViewModel>>> Get([FromQuery]GetBlogPostsQuery query)
+            => this.OkOrNotFound(await _mediator.Send(query));
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(GetBlogPostQuery query) => this.OkOrNotFound(await _mediator.Send(query));
+        public async Task<ActionResult<BlogPostViewModel>> Get(int id)
+        {
+            var query = new GetBlogPostQuery() { Id = id };
+            var blogPost = await _mediator.Send(query);
+
+            return this.OkOrNotFound(blogPost);
+        }
 
         [Authorize("admin")]
         [HttpPost]
-        public async Task<IActionResult> Add([FromForm] AddBlogPostCommand command, [FromForm] string externalLinks)
+        public async Task<ActionResult<BlogPostSummaryViewModel>> Add([FromForm] AddBlogPostCommand command, [FromForm] string externalLinks)
         {
             var links = ValidateExternalLinks(externalLinks);
 
@@ -40,7 +49,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
             command.ExternalLinks = links;
 
-            return Ok(await _mediator.Send(command));
+            return await _mediator.Send(command);
         }
 
         private IEnumerable<ExternalLinkDto> ValidateExternalLinks(string externalLinks)
@@ -63,11 +72,16 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpGet("update/{id}")]
-        public async Task<IActionResult> Update(UpdateBlogPostQuery query) => this.OkOrNotFound(await _mediator.Send(query));
+        public async Task<ActionResult<BlogPostUpdateViewModel>> Update(int id)
+        {
+            var command = new UpdateBlogPostQuery() { Id = id };
+
+            return this.OkOrNotFound(await _mediator.Send(command));
+        }
 
         [Authorize("admin")]
         [HttpPut("update")]
-        public async Task<IActionResult> Update([FromForm] UpdateBlogPostCommand command, [FromForm] string externalLinks)
+        public async Task<ActionResult<BlogPostSummaryViewModel>> Update([FromForm] UpdateBlogPostCommand command, [FromForm] string externalLinks)
         {
             var links = ValidateExternalLinks(externalLinks);
 
@@ -76,15 +90,14 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
             command.ExternalLinks = links;
 
-            return Ok(await _mediator.Send(command));
+            return await _mediator.Send(command);
         }
 
         [Authorize("admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(DeleteBlogPostCommand command)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var command = new DeleteBlogPostCommand() { Id = id };
 
             await _mediator.Send(command);
 
