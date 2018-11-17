@@ -12,6 +12,7 @@ namespace CoolBytes.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<BlogPostTag> BlogPostTags { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<ResumeEvent> ResumeEvents { get; set; }
         public DbSet<MailProvider> MailProviders { get; private set; }
@@ -33,7 +34,8 @@ namespace CoolBytes.Data
                 .Entity<Author>(entity =>
                 {
                     entity.HasIndex(a => a.UserId).IsUnique();
-                    entity.HasOne(a => a.AuthorProfile).WithOne(a => a.Author).OnDelete(DeleteBehavior.Cascade).IsRequired();
+                    entity.HasOne(a => a.AuthorProfile).WithOne(a => a.Author).OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                     entity.ToTable("Authors");
                 })
                 .Entity<AuthorProfile>(entity =>
@@ -107,7 +109,13 @@ namespace CoolBytes.Data
                 {
                     entity.Property(e => e.Name).HasMaxLength(255).IsRequired();
                     entity.HasIndex(e => e.Name).IsUnique();
+                })
+                .Entity<Category>(entity =>
+                {
+                    entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
+                    entity.HasIndex(e => e.Name).IsUnique();
                 });
+
         }
 
         public async Task<int> SaveChangesAsync(Action onFailure)

@@ -1,12 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using CoolBytes.WebAPI.Extensions;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
+using CoolBytes.WebAPI.Features.ResumeEvents.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents
 {
+    [ApiController]
     [Authorize("admin")]
     [Route("api/[controller]")]
     public class ResumeEventsController : Controller
@@ -19,43 +22,34 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents
         }
 
         [HttpGet("{authorid}")]
-        public async Task<IActionResult> Get(GetResumeEventsQuery message)
+        public async Task<ActionResult<IEnumerable<ResumeEventViewModel>>> GetByAuthorId(int authorId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var query = new GetResumeEventsQuery() { AuthorId = authorId };
 
-            return this.OkOrNotFound(await _mediator.Send(message));
+            return this.OkOrNotFound(await _mediator.Send(query));
         }
 
         [HttpGet("event/{id}")]
-        public async Task<IActionResult> Get(GetResumeEventQuery message)
-            => this.OkOrNotFound(await _mediator.Send(message));
+        public async Task<ActionResult<ResumeEventViewModel>> GetById(int id)
+        {
+            var query = new GetResumeEventQuery() { Id = id };
+            return this.OkOrNotFound(await _mediator.Send(query));
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AddResumeEventCommand message)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+        public async Task<ActionResult<ResumeEventViewModel>> Add(AddResumeEventCommand message)
+            => await _mediator.Send(message);
 
-            return Ok(await _mediator.Send(message));
-        }
-    
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateResumeEventCommand message)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return Ok(await _mediator.Send(message));
-        }
+        public async Task<ResumeEventViewModel> Update(UpdateResumeEventCommand message)
+            => await _mediator.Send(message);
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(DeleteResumeEventCommand message)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var command = new DeleteResumeEventCommand() { Id = id };
 
-            await _mediator.Send(message);
+            await _mediator.Send(command);
 
             return NoContent();
         }

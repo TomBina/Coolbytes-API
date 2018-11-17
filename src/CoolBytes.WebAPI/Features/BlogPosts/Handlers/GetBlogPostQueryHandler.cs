@@ -7,12 +7,13 @@ using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using CoolBytes.WebAPI.Utils;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
-    public class GetBlogPostQueryHandler : IRequestHandler<GetBlogPostQuery, BlogPostViewModel>
+    public class GetBlogPostQueryHandler : IRequestHandler<GetBlogPostQuery, Result<BlogPostViewModel>>
     {
         private readonly AppDbContext _context;
 
@@ -21,19 +22,23 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             _context = context;
         }
 
-        public async Task<BlogPostViewModel> Handle(GetBlogPostQuery message, CancellationToken cancellationToken) 
+        public async Task<Result<BlogPostViewModel>> Handle(GetBlogPostQuery message, CancellationToken cancellationToken) 
             => await ViewModel(message.Id);
 
-        private async Task<BlogPostViewModel> ViewModel(int blogPostId)
+        private async Task<Result<BlogPostViewModel>> ViewModel(int blogPostId)
         {
-            var builder = new BlogPostViewModelBuilder();
             var blogPost = await GetBlogPost(blogPostId);
+
+            if (blogPost == null)
+                return new NotFoundResult<BlogPostViewModel>();
+
+            var builder = new BlogPostViewModelBuilder();
             var links = await GetRelatedLinks(blogPostId);
 
             if (links != null && links.Count > 0)
-                return builder.FromBlog(blogPost).WithRelatedLinks(links).Build();
+                return builder.FromBlog(blogPost).WithRelatedLinks(links).Build().ToSuccessResult();
             else
-                return builder.FromBlog(blogPost).Build();
+                return builder.FromBlog(blogPost).Build().ToSuccessResult();
         }
 
         private async Task<BlogPost> GetBlogPost(int id) 

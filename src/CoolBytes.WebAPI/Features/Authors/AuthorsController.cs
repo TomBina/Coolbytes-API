@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {
+    [ApiController]
     [Authorize("admin")]
     [Route("api/[controller]")]
-    public class AuthorsController : Controller
+    public class AuthorsController : ControllerBase
     {
         private readonly IMediator _mediator;
 
@@ -19,15 +20,16 @@ namespace CoolBytes.WebAPI.Features.Authors
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(GetAuthorQuery query) =>
-            this.OkOrNotFound(await _mediator.Send(query));
+        public async Task<ActionResult<AuthorViewModel>> Get(bool includeProfile)
+        {
+            var query = new GetAuthorQuery() { IncludeProfile = includeProfile };
+
+            return this.OkOrNotFound(await _mediator.Send(query));
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] AddAuthorCommand command)
+        public async Task<ActionResult> Add(AddAuthorCommand command)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             try
             {
                 return Ok(await _mediator.Send(command));
@@ -39,12 +41,7 @@ namespace CoolBytes.WebAPI.Features.Authors
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UpdateAuthorCommand command)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return Ok(await _mediator.Send(command));
-        }
+        public async Task<ActionResult> Update(UpdateAuthorCommand command)
+            => Ok(await _mediator.Send(command));
     }
 }
