@@ -14,6 +14,8 @@ namespace CoolBytes.Core.Models
         public UpdatableCollection<BlogPostTag> Tags { get; private set; }
         public BlogPostContent Content { get; private set; }
         public UpdatableCollection<ExternalLink> ExternalLinks { get; private set; }
+        public Category Category { get; private set; }
+        public int CategoryId { get; private set; }
 
         private BlogPost()
         {
@@ -21,13 +23,14 @@ namespace CoolBytes.Core.Models
             ExternalLinks = new ExternalLinkCollection();
         }
 
-        public BlogPost(BlogPostContent content, Author author)
+        public BlogPost(BlogPostContent content, Author author, Category category)
         {
             Date = DateTime.Now;
             Content = content ?? throw new ArgumentNullException(nameof(content));
             Author = author ?? throw new ArgumentNullException(nameof(author));
             Tags = new BlogPostTagCollection();
             ExternalLinks = new ExternalLinkCollection();
+            Category = category;
         }
 
         public void SetImage(Image image)

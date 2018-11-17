@@ -20,7 +20,7 @@ namespace CoolBytes.WebAPI
             using (serviceProvider.CreateScope())
             {
                 var context = serviceProvider.GetService<AppDbContext>();
-               
+
                 context.Database.Migrate();
             }
             serviceProvider.Dispose();
@@ -45,7 +45,8 @@ namespace CoolBytes.WebAPI
                 for (var i = 0; i < 20; i++)
                 {
                     var blogPostContent = new BlogPostContent("This is a test subject.", "Let's begin with a test intro", "And here's the test content");
-                    var blogPost = new BlogPost(blogPostContent, author);
+                    var category = new Category(1, "Test");
+                    var blogPost = new BlogPost(blogPostContent, author, category);
                     context.BlogPosts.Add(blogPost);
                 }
 

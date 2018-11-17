@@ -17,6 +17,7 @@ namespace CoolBytes.Core.Builders
         private Func<Task<Image>> _image;
         private IEnumerable<BlogPostTag> _tags;
         private IEnumerable<ExternalLink> _links;
+        private Category _category;
 
         public BlogPostBuilder(IAuthorService authorService, IImageFactory imageFactory)
         {
@@ -66,10 +67,17 @@ namespace CoolBytes.Core.Builders
             return this;
         }
 
+        public BlogPostBuilder WithCategory(Category category)
+        {
+            _category = category;
+
+            return this;
+        }
+
         public async Task<BlogPost> Build()
         {
             var author = await _author;
-            var blogPost = new BlogPost(_blogPostContent, author);
+            var blogPost = new BlogPost(_blogPostContent, author, _category);
 
             await When.NotNull(_image, async () => blogPost.SetImage(await _image()) );
             When.NotNull(_tags, () => blogPost.Tags.AddRange(_tags));
