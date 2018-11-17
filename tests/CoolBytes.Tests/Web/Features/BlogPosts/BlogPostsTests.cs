@@ -30,7 +30,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 var authorValidator = new AuthorValidator(Context);
                 var author = await Author.Create(user, authorProfile, authorValidator);
                 var blogPostContent = new BlogPostContent("Testsubject", "Testintro", "Testcontent");
-                var category = new Category(1, "Testcategory");
+                var category = new Category("Testcategory");
                 var blogPost = new BlogPost(blogPostContent, author, category);
 
                 context.BlogPosts.Add(blogPost);

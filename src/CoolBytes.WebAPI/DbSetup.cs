@@ -45,7 +45,7 @@ namespace CoolBytes.WebAPI
                 for (var i = 0; i < 20; i++)
                 {
                     var blogPostContent = new BlogPostContent("This is a test subject.", "Let's begin with a test intro", "And here's the test content");
-                    var category = new Category(1, "Test");
+                    var category = new Category("Test");
                     var blogPost = new BlogPost(blogPostContent, author, category);
                     context.BlogPosts.Add(blogPost);
                 }
