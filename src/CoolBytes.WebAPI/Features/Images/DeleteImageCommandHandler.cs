@@ -22,9 +22,10 @@ namespace CoolBytes.WebAPI.Features.Images
         {
             var image = await _context.Images.FindAsync(message.Id);
 
-            File.Delete($"{_configuration["ImagesUploadPath"]}{image.Path}");
             _context.Images.Remove(image);
             await _context.SaveChangesAsync();
+
+            File.Delete($"{_configuration["ImagesUploadPath"]}{image.Path}");
         }
     }
 }
