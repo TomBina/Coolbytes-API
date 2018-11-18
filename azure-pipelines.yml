@@ -10,12 +10,10 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet restore
-  displayName: dotnet restore
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
-- script: dotnet test --logger trx --collect "Code coverage"
-  displayName: dotnet test and code coverage
+- script: dotnet test --logger trx
+  displayName: dotnet test
 - task: PublishTestResults@2
   inputs:
     testRunner: VSTest
@@ -26,3 +24,4 @@ steps:
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
+- task: PublishBuildArtifacts@1
