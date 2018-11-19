@@ -18,6 +18,7 @@ steps:
   inputs:
     testRunner: VSTest
     testResultsFiles: '**/*.trx'
+  displayName: publish test results
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
