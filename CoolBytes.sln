@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FB2CFBCF-C58
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{167FD31D-03F4-4D8C-A5AF-817722FE49EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoolBytes.Tests", "Tests\CoolBytes.Tests\CoolBytes.Tests.csproj", "{BDBC1C57-D69C-40AD-A692-FB2458653C55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoolBytes.Tests", "tests\CoolBytes.Tests\CoolBytes.Tests.csproj", "{BDBC1C57-D69C-40AD-A692-FB2458653C55}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoolBytes.Data", "src\CoolBytes.Data\CoolBytes.Data.csproj", "{49D99B74-54A0-4792-8C41-8764826E3B5C}"
 EndProject
