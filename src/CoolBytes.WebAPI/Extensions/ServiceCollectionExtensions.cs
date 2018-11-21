@@ -14,7 +14,10 @@ namespace CoolBytes.WebAPI.Extensions
             services.AddScoped<IMailer>(sp =>
             {
                 var server = new Uri(configuration["Mailgun:Server"]);
-                var credentials = new MailgunMailerCredentials(configuration["Mailgun:UserName"], configuration["Mailgun:Key"]);
+                var userName = configuration["Mailgun:UserName"];
+                var password = configuration["Mailgun:Key"];
+
+                var credentials = new MailgunMailerCredentials(userName, password);
                 var domain = configuration["Mailgun:Domain"];
 
                 var options = new MailgunMailerOptions(server, credentials, domain);
