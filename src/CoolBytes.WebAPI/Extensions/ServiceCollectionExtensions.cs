@@ -1,26 +1,19 @@
 ﻿using CoolBytes.WebAPI.Services.Mailer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Net.Http;
 
 namespace CoolBytes.WebAPI.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMailgun(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddMailgun(this IServiceCollection services)
         {
+            services.AddSingleton<MailgunMailerOptionsFactory, MailgunMailerOptionsFactory>();
             services.AddScoped<IMailer>(sp =>
             {
-                var server = new Uri(configuration["Mailgun:Server"]);
-                var userName = configuration["Mailgun:UserName"];
-                var password = configuration["Mailgun:Key"];
-
-                var credentials = new MailgunMailerCredentials(userName, password);
-                var domain = configuration["Mailgun:Domain"];
-
-                var options = new MailgunMailerOptions(server, credentials, domain);
+                var optionsFactory = sp.GetService<MailgunMailerOptionsFactory>();
+                var options = optionsFactory.Create();
                 var httpClient = sp.GetService<HttpClient>();
                 var logger = sp.GetService<ILogger<MailgunMailer>>();
                 var sendValidator = sp.GetService<ISendValidator>();

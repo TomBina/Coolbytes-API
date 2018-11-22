@@ -26,6 +26,9 @@
     <None Update="Assets\iisexpress.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Assets\mailgunsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Assets\testimage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

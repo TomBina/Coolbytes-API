@@ -1,0 +1,16 @@
+{
+  "Mailgun": {
+    "Domain": "mailapplication.nl",
+    "UserName": "ZZn+vnrybHbn4eIwc7kFpA==",
+    "Key": "cd4vAB9efa5GIi+YxDAU+g==",
+    "Server": "https://api.mailgun.net/v3",
+    "Sender": {
+      "Email": "noreply@mailapplication.nl",
+      "Name": "noreply"
+    },
+    "Reciever": {
+      "Email": "tombina@outlook.com",
+      "Name": "Tom"
+    }
+  }
+}
