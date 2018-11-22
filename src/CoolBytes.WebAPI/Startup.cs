@@ -6,20 +6,20 @@ using CoolBytes.Data;
 using CoolBytes.WebAPI.Authorization;
 using CoolBytes.WebAPI.Extensions;
 using CoolBytes.WebAPI.Services;
+using CoolBytes.WebAPI.Services.Environment;
 using CoolBytes.WebAPI.Services.Mailer;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http;
-using Microsoft.AspNetCore.Mvc;
 using NJsonSchema;
 using NSwag.AspNetCore;
+using System.Net.Http;
 
 namespace CoolBytes.WebAPI
 {
@@ -36,10 +36,13 @@ namespace CoolBytes.WebAPI
         {
             ConfigureSecurity(services);
 
+            services.AddSingleton<HttpClient, HttpClient>();
+            services.AddSingleton<IEnvironmentService, EnvironmentService>();
+            services.AddHttpContextAccessor();
+
             services.AddTransient<BlogPostBuilder>();
             services.AddTransient<ExistingBlogPostBuilder>();
-            services.AddSingleton<HttpClient, HttpClient>();
-            services.AddMailgun(_configuration);
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IAuthorSearchService, AuthorService>();
@@ -48,7 +51,6 @@ namespace CoolBytes.WebAPI
             services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
             services.AddScoped<IImageFactoryValidator, ImageFactoryValidator>();
             services.AddScoped<ISendValidator, ThresholdValidator>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
             services.AddMvc()
@@ -57,6 +59,7 @@ namespace CoolBytes.WebAPI
                         .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
             services.AddMediatR(typeof(Startup));
             services.AddSwagger();
+            services.AddMailgun();
         }
 
         private void ConfigureSecurity(IServiceCollection services)
