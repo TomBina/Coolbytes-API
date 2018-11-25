@@ -18,7 +18,7 @@ namespace CoolBytes.WebAPI.Features.Images
         public ImagesController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ImageViewModel>>> Get() 
+        public async Task<ActionResult<IEnumerable<ImageViewModel>>> Get()
             => this.OkOrNotFound(await _mediator.Send(new GetImagesQuery()));
 
         [HttpPost]
@@ -26,8 +26,10 @@ namespace CoolBytes.WebAPI.Features.Images
             => (await _mediator.Send(command)).ToList();
 
         [HttpDelete]
-        public async Task<ActionResult> Delete(DeleteImageCommand command)
+        public async Task<ActionResult> Delete(int id)
         {
+            var command = new DeleteImageCommand() { Id = id };
+
             await _mediator.Send(command);
 
             return NoContent();
