@@ -26,7 +26,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BlogPostSummaryViewModel>>> Get([FromQuery]GetBlogPostsQuery query)
+        public async Task<ActionResult<BlogPostsViewModel>> Get([FromQuery]GetBlogPostsQuery query)
             => this.OkOrNotFound(await _mediator.Send(query));
 
         [HttpGet("{id}")]

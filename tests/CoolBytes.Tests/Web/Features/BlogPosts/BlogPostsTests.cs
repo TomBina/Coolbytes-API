@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.WebAPI.Services.Caching;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -44,11 +45,11 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context);
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, new MemoryCacheService());
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
 
-            Assert.NotEmpty(result);
+            Assert.NotEmpty(result.Categories);
         }
 
         [Fact]

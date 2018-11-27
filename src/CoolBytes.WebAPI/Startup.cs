@@ -20,6 +20,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NJsonSchema;
 using NSwag.AspNetCore;
 using System.Net.Http;
+using CoolBytes.WebAPI.Services.Caching;
 
 namespace CoolBytes.WebAPI
 {
@@ -38,6 +39,7 @@ namespace CoolBytes.WebAPI
 
             services.AddSingleton<HttpClient, HttpClient>();
             services.AddSingleton<IEnvironmentService, EnvironmentService>();
+            services.AddSingleton<ICacheService, MemoryCacheService>();
             services.AddHttpContextAccessor();
 
             services.AddTransient<BlogPostBuilder>();
