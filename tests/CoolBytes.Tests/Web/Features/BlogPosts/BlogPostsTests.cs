@@ -8,14 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.WebAPI.Services.Caching;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
 {
-    public class BlogPostsTests : TestBase, IClassFixture<Fixture>, IAsyncLifetime
+    public class BlogPostsTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
     {
-        public BlogPostsTests(Fixture fixture) : base(fixture)
+        public BlogPostsTests(TestContext testContext) : base(testContext)
         {
         }
 
@@ -23,7 +22,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
         private async Task SeedDb()
         {
-            using (var context = Fixture.CreateNewContext())
+            using (var context = TestContext.CreateNewContext())
             {
                 var user = new User("Test");
 
@@ -45,7 +44,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, new MemoryCacheService());
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CacheService());
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
 

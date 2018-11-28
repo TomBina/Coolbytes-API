@@ -15,7 +15,7 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
 {
-    public class AuthorsControllerTests : IClassFixture<Fixture>
+    public class AuthorsControllerTests : IClassFixture<TestContext>
     {
         private readonly ServiceProvider _serviceProvider;
 

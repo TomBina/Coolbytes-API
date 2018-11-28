@@ -10,9 +10,9 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Images
 {
-    public class ImagesTests : TestBase, IClassFixture<Fixture>, IAsyncLifetime
+    public class ImagesTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
     {
-        public ImagesTests(Fixture fixture) : base(fixture)
+        public ImagesTests(TestContext testContext) : base(testContext)
         {
         }
 
@@ -50,7 +50,7 @@ namespace CoolBytes.Tests.Web.Features.Images
         {
             var image = await AddImage();
 
-            IRequestHandler<DeleteImageCommand> handler = new DeleteImageCommandHandler(Context, Fixture.Configuration);
+            IRequestHandler<DeleteImageCommand> handler = new DeleteImageCommandHandler(Context, TestContext.Configuration);
             var message = new DeleteImageCommand() { Id = image.Id };
 
             await handler.Handle(message, CancellationToken.None);
@@ -66,7 +66,7 @@ namespace CoolBytes.Tests.Web.Features.Images
             using (var stream = file.OpenReadStream())
             {
                 var image = await imageFactory.Create(stream, file.FileName, file.ContentType);
-                using (var context = Fixture.CreateNewContext())
+                using (var context = TestContext.CreateNewContext())
                 {
                     context.Images.Add(image);
                     await context.SaveChangesAsync();

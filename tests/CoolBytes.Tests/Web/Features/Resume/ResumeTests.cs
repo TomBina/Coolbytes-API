@@ -8,9 +8,9 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Resume
 {
-    public class ResumeTests : TestBase, IClassFixture<Fixture>, IAsyncLifetime
+    public class ResumeTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
     {
-        public ResumeTests(Fixture fixture) : base(fixture)
+        public ResumeTests(TestContext testContext) : base(testContext)
         {
         }
 
@@ -21,7 +21,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
 
         private async Task SeedData()
         {
-            using (var context = Fixture.CreateNewContext())
+            using (var context = TestContext.CreateNewContext())
             {
                 var user = new User("Test");
 

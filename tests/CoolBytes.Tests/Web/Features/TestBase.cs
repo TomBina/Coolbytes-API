@@ -12,14 +12,14 @@ namespace CoolBytes.Tests.Web.Features
     public abstract class TestBase
     {
         protected AppDbContext Context;
-        protected Fixture Fixture;
+        protected TestContext TestContext;
         protected IUserService UserService;
         protected AuthorService AuthorService;
 
-        protected TestBase(Fixture fixture)
+        protected TestBase(TestContext testContext)
         {
-            Fixture = fixture;
-            Context = fixture.CreateNewContext();
+            TestContext = testContext;
+            Context = testContext.CreateNewContext();
         }
 
         protected void InitUserService(User user)
@@ -43,7 +43,7 @@ namespace CoolBytes.Tests.Web.Features
 
         protected ImageFactory CreateImageFactory()
         {
-            var options = new ImageFactoryOptions(Fixture.TempDirectory);
+            var options = new ImageFactoryOptions(TestContext.TempDirectory);
             var validator = new ImageFactoryValidator();
             var imageFactory = new ImageFactory(options, validator);
             return imageFactory;

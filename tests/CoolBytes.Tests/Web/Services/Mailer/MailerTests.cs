@@ -12,15 +12,15 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Services.Mailer
 {
-    public class MailerTests : IClassFixture<Fixture>, IAsyncLifetime
+    public class MailerTests : IClassFixture<TestContext>, IAsyncLifetime
     {
-        private readonly Fixture _fixture;
+        private readonly TestContext _testContext;
         private readonly AppDbContext _context;
 
-        public MailerTests(Fixture fixture)
+        public MailerTests(TestContext testContext)
         {
-            _fixture = fixture;
-            _context = fixture.CreateNewContext();
+            _testContext = testContext;
+            _context = testContext.CreateNewContext();
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace CoolBytes.Tests.Web.Services.Mailer
         [Fact]
         public async Task Mailer_WithReachedThreshold_ThrowsInvalidOperation()
         {
-            using (var context = _fixture.CreateNewContext())
+            using (var context = _testContext.CreateNewContext())
             {
                 var name = typeof(MailgunMailer).FullName;
                 var mailProvider = new MailProvider(name, 0);
@@ -57,7 +57,7 @@ namespace CoolBytes.Tests.Web.Services.Mailer
         [Fact]
         public async Task Mailer_WithMailStatOfYesterday_AddNewMailStat()
         {
-            using (var context = _fixture.CreateNewContext())
+            using (var context = _testContext.CreateNewContext())
             {
                 var name = typeof(MailgunMailer).FullName;
                 var mailProvider = new MailProvider(name, 100);

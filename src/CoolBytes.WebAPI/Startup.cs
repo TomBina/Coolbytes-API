@@ -39,7 +39,11 @@ namespace CoolBytes.WebAPI
 
             services.AddSingleton<HttpClient, HttpClient>();
             services.AddSingleton<IEnvironmentService, EnvironmentService>();
-            services.AddSingleton<ICacheService, MemoryCacheService>();
+            services.AddSingleton<ICacheService>(sp =>
+            {
+                var cacheKeyGenerator = new CacheKeyGenerator();
+                return new MemoryCacheService(cacheKeyGenerator);
+            });
             services.AddHttpContextAccessor();
 
             services.AddTransient<BlogPostBuilder>();
@@ -92,7 +96,7 @@ namespace CoolBytes.WebAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseAuthentication();
-            
+
             app.UseSwaggerUi3WithApiExplorer(settings =>
             {
                 settings.GeneratorSettings.DefaultPropertyNameHandling =

@@ -9,10 +9,16 @@ namespace CoolBytes.WebAPI.Services.Caching
     public class MemoryCacheService : ICacheService
     {
         private static readonly ConcurrentDictionary<string, object> Store = new ConcurrentDictionary<string, object>();
+        private readonly CacheKeyGenerator _cacheKeyGenerator;
+
+        public MemoryCacheService(CacheKeyGenerator cacheKeyGenerator)
+        {
+            _cacheKeyGenerator = cacheKeyGenerator;
+        }
 
         public async ValueTask<T> GetOrAddAsync<T>(Expression<Func<Task<T>>> factoryExpression)
         {
-            var key = GetKey(factoryExpression);
+            var key = _cacheKeyGenerator.GetKey(factoryExpression);
 
             var value = await GetAsync<T>(key);
 
@@ -23,16 +29,6 @@ namespace CoolBytes.WebAPI.Services.Caching
             value = await GetAsync<T>(key);
 
             return value;
-        }
-
-        private string GetKey<T>(Expression<Func<Task<T>>> factoryExpression)
-        {
-            var memberExpression = factoryExpression.Body as MethodCallExpression;
-
-            if (memberExpression == null)
-                throw new InvalidOperationException("Expression not valid!");
-
-            return memberExpression.Method.Name;
         }
 
         public ValueTask<T> GetAsync<T>(string key)
