@@ -27,7 +27,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
         public async Task<Result<BlogPostViewModel>> Handle(GetBlogPostQuery message, CancellationToken cancellationToken)
         {
-            var viewModel = await _cacheService.GetOrAddAsync(() => ViewModel(message.Id), message.Id);
+            var viewModel = await _cacheService.GetOrAddAsync(() => CreateViewModelAsync(message.Id), message.Id);
 
             if (viewModel == null)
                 return new NotFoundResult<BlogPostViewModel>();
@@ -35,7 +35,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             return viewModel.ToSuccessResult();
         }
 
-        private async Task<BlogPostViewModel> ViewModel(int blogPostId)
+        private async Task<BlogPostViewModel> CreateViewModelAsync(int blogPostId)
         {
             var blogPost = await GetBlogPost(blogPostId);
 

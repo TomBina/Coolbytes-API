@@ -25,9 +25,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         }
 
         public async Task<BlogPostsViewModel> Handle(GetBlogPostsQuery message, CancellationToken cancellationToken)
-            => await ViewModel();
-
-        private async Task<BlogPostsViewModel> ViewModel()
         {
             var viewModel = await _cacheService.GetOrAddAsync(() => CreateViewModelAsync());
 
