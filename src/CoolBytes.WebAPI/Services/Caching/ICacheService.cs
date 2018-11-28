@@ -6,7 +6,7 @@ namespace CoolBytes.WebAPI.Services.Caching
 {
     public interface ICacheService
     {
-        ValueTask<T> GetOrAddAsync<T>(Expression<Func<Task<T>>> factoryExpression);
+        ValueTask<T> GetOrAddAsync<T>(Expression<Func<Task<T>>> factoryExpression, params object[] arguments);
 
         ValueTask<T> GetAsync<T>(string key);
 

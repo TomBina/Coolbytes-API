@@ -16,10 +16,9 @@ namespace CoolBytes.WebAPI.Services.Caching
             _cacheKeyGenerator = cacheKeyGenerator;
         }
 
-        public async ValueTask<T> GetOrAddAsync<T>(Expression<Func<Task<T>>> factoryExpression)
+        public async ValueTask<T> GetOrAddAsync<T>(Expression<Func<Task<T>>> factoryExpression, params object[] arguments)
         {
-            var key = _cacheKeyGenerator.GetKey(factoryExpression);
-
+            var key = _cacheKeyGenerator.GetKey(factoryExpression, arguments);
             var value = await GetAsync<T>(key);
 
             if (value != null)

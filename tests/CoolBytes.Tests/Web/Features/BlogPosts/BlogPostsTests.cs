@@ -55,7 +55,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
             var blogPostId = Context.BlogPosts.First().Id;
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context);
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CacheService());
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
 
