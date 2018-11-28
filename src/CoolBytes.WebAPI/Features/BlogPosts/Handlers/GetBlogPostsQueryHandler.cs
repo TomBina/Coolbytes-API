@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
-using CoolBytes.WebAPI.Services.Caching;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using CoolBytes.WebAPI.Services.Caching;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
-    public class GetBlogPostsQueryHandler : IRequestHandler<GetBlogPostsQuery, BlogPostsViewModel>
+    public class GetBlogPostsQueryHandler : IRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostSummaryViewModel>>
     {
         private readonly AppDbContext _context;
         private readonly ICacheService _cacheService;
@@ -24,19 +24,37 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             _cacheService = cacheService;
         }
 
-        public async Task<BlogPostsViewModel> Handle(GetBlogPostsQuery message, CancellationToken cancellationToken)
+        public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsQuery message, CancellationToken cancellationToken)
         {
-            var viewModel = await _cacheService.GetOrAddAsync(() => CreateViewModelAsync());
+            IEnumerable<BlogPostSummaryViewModel> viewModel;
+
+            if (message.Tag == null)
+            {
+                viewModel = await _cacheService.GetOrAddAsync(() => ViewModelAsync(message.Tag));
+            }
+
+            else
+            {
+                viewModel = await ViewModelAsync(message.Tag);
+            }
 
             return viewModel;
         }
 
-        private async Task<BlogPostsViewModel> CreateViewModelAsync()
+        private async Task<IEnumerable<BlogPostSummaryViewModel>> ViewModelAsync(string tag)
         {
-            var categories = await QueryBlogPosts();
-            var viewmodel = new BlogPostsViewModel { Categories = categories };
+            IEnumerable<BlogPost> blogPosts;
 
-            return viewmodel;
+            if (tag == null)
+            {
+                blogPosts = await QueryBlogPosts();
+            }
+            else
+            {
+                blogPosts = await QueryBlogPostsWithTag(tag);
+            }
+
+            return Mapper.Map<IEnumerable<BlogPostSummaryViewModel>>(blogPosts);
         }
 
         private Task<List<BlogPost>> QueryBlogPostsWithTag(string tag) =>
@@ -49,21 +67,13 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .OrderByDescending(b => b.Id)
                 .ToListAsync();
 
-        private Task<List<CategoryViewModel>> QueryBlogPosts() =>
+        private Task<List<BlogPost>> QueryBlogPosts() =>
             _context.BlogPosts
                 .AsNoTracking()
-                .Include(b => b.Category)
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)
                 .Include(b => b.Image)
                 .OrderByDescending(b => b.Id)
-                .GroupBy(b => b.CategoryId)
-                .Select(b => new CategoryViewModel()
-                {
-                    CategoryId = b.Key,
-                    Category = b.FirstOrDefault().Category.Name,
-                    BlogPosts = Mapper.Map<List<BlogPostSummaryViewModel>>(b.AsEnumerable())
-                })
                 .ToListAsync();
     }
 }

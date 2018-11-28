@@ -44,9 +44,9 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CacheService());
+            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CacheService());
 
-            var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
+            var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
 
             Assert.NotEmpty(result.Categories);
         }

@@ -26,8 +26,25 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [HttpGet]
-        public async Task<ActionResult<BlogPostsViewModel>> Get([FromQuery]GetBlogPostsQuery query)
-            => this.OkOrNotFound(await _mediator.Send(query));
+        public async Task<ActionResult<IEnumerable<BlogPostSummaryViewModel>>> GetAll(string tag)
+        {
+            var message = new GetBlogPostsQuery()
+            {
+                Tag = tag
+            };
+            var viewModel = await _mediator.Send(message);
+
+            return Ok(viewModel);
+        }
+
+        [HttpGet("overview")]
+        public async Task<ActionResult<BlogPostsOverviewViewModel>> GetOverview()
+        {
+            var message = new GetBlogPostsOverviewQuery();
+            var viewModel = await _mediator.Send(message);
+
+            return this.OkOrNotFound(viewModel);
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<BlogPostViewModel>> Get(int id)
