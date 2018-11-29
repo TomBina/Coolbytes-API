@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+﻿using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
+using System.Collections.Generic;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.CQ
 {

@@ -14,15 +14,15 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.ResumeEvents
 {
-    public class ResumeEventsTests : TestBase, IClassFixture<Fixture>, IAsyncLifetime
+    public class ResumeEventsTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
     {
-        public ResumeEventsTests(Fixture fixture) : base(fixture)
+        public ResumeEventsTests(TestContext testContext) : base(testContext)
         {
         }
 
         public async Task InitializeAsync()
         {
-            using (var context = Fixture.CreateNewContext())
+            using (var context = TestContext.CreateNewContext())
             {
                 var user = new User("Test");
 
@@ -128,7 +128,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
         {
             var author = await AuthorService.GetAuthor();
 
-            using (var context = Fixture.CreateNewContext())
+            using (var context = TestContext.CreateNewContext())
             {
                 context.Attach(author).State = EntityState.Unchanged;
 

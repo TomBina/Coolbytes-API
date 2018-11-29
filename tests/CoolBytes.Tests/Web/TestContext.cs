@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.AutoMapper;
+using CoolBytes.WebAPI.Services.Caching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
@@ -9,7 +10,7 @@ using System.IO;
 
 namespace CoolBytes.Tests.Web
 {
-    public class Fixture : IDisposable
+    public class TestContext : IDisposable
     {
         private static readonly Random Random = new Random();
         public string TempDirectory { get; } = Path.Combine(Environment.CurrentDirectory, $"dir{Random.Next()}");
@@ -20,7 +21,7 @@ namespace CoolBytes.Tests.Web
 
         public IConfiguration Configuration { get; private set; }
 
-        public Fixture()
+        public TestContext()
         {
             InitAutoMapper();
             InitDb();
@@ -55,7 +56,14 @@ namespace CoolBytes.Tests.Web
             Configuration = configuration.Object;
         }
 
-        public AppDbContext CreateNewContext() => new AppDbContext(_options);
+        public AppDbContext CreateNewContext() 
+            => new AppDbContext(_options);
+
+        public StubCacheService StubCacheService 
+            => new StubCacheService();
+
+        public MemoryCacheService MemoryCacheService 
+            => new MemoryCacheService(new CacheKeyGenerator());
 
         public void Dispose()
         {

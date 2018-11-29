@@ -7,6 +7,7 @@ using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using CoolBytes.WebAPI.Services.Caching;
 using CoolBytes.WebAPI.Utils;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -16,29 +17,38 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
     public class GetBlogPostQueryHandler : IRequestHandler<GetBlogPostQuery, Result<BlogPostViewModel>>
     {
         private readonly AppDbContext _context;
+        private readonly ICacheService _cacheService;
 
-        public GetBlogPostQueryHandler(AppDbContext context)
+        public GetBlogPostQueryHandler(AppDbContext context, ICacheService cacheService)
         {
             _context = context;
+            _cacheService = cacheService;
         }
 
-        public async Task<Result<BlogPostViewModel>> Handle(GetBlogPostQuery message, CancellationToken cancellationToken) 
-            => await ViewModel(message.Id);
+        public async Task<Result<BlogPostViewModel>> Handle(GetBlogPostQuery message, CancellationToken cancellationToken)
+        {
+            var viewModel = await _cacheService.GetOrAddAsync(() => CreateViewModelAsync(message.Id), message.Id);
 
-        private async Task<Result<BlogPostViewModel>> ViewModel(int blogPostId)
+            if (viewModel == null)
+                return new NotFoundResult<BlogPostViewModel>();
+
+            return viewModel.ToSuccessResult();
+        }
+
+        private async Task<BlogPostViewModel> CreateViewModelAsync(int blogPostId)
         {
             var blogPost = await GetBlogPost(blogPostId);
 
             if (blogPost == null)
-                return new NotFoundResult<BlogPostViewModel>();
+                return null;
 
             var builder = new BlogPostViewModelBuilder();
             var links = await GetRelatedLinks(blogPostId);
 
             if (links != null && links.Count > 0)
-                return builder.FromBlog(blogPost).WithRelatedLinks(links).Build().ToSuccessResult();
-            else
-                return builder.FromBlog(blogPost).Build().ToSuccessResult();
+                return builder.FromBlog(blogPost).WithRelatedLinks(links).Build();
+
+            return builder.FromBlog(blogPost).Build();
         }
 
         private async Task<BlogPost> GetBlogPost(int id) 

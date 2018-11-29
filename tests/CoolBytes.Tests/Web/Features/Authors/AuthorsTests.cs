@@ -10,9 +10,9 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
 {
-    public class AuthorsTests : TestBase, IClassFixture<Fixture>, IAsyncLifetime
+    public class AuthorsTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
     {
-        public AuthorsTests(Fixture fixture) : base(fixture)
+        public AuthorsTests(TestContext testContext) : base(testContext)
         {
             InitUserService();
             InitAuthorService();
@@ -34,7 +34,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
 
         private async Task AddAuthor()
         {
-            using (var context = Fixture.CreateNewContext())
+            using (var context = TestContext.CreateNewContext())
             {
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
                 var authorValidator = new AuthorValidator(context);
@@ -48,7 +48,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
 
         private async Task<Image> AddImage()
         {
-            using (var context = Fixture.CreateNewContext())
+            using (var context = TestContext.CreateNewContext())
             {
                 var imageFactory = CreateImageFactory();
                 var file = CreateFileMock().Object;
