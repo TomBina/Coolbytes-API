@@ -42,6 +42,23 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             }
         }
 
+        private async Task<BlogPost> AddBlog()
+        {
+            using (var context = TestContext.CreateNewContext())
+            {
+                var blogPostContent = new BlogPostContent("Testsubject", "Testintro", "Testcontent");
+                var category = new Category("Testcategory");
+                var author = await AuthorService.GetAuthor();
+                var blogPost = new BlogPost(blogPostContent, author, category);
+
+                context.Entry(author).State = EntityState.Unchanged;
+                context.BlogPosts.Add(blogPost);
+                await context.SaveChangesAsync();
+
+                return blogPost;
+            }
+        }
+
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
@@ -56,19 +73,12 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task GetBlogPostsQueryHandler_UsesCacheTheSecondTime()
         {
             var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.MemoryCacheService);
+            var _ = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
+            var newBlog = await AddBlog();
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
-            var count = result.Count();
 
-            Assert.InRange(count, 0, int.MaxValue);
-
-            var randomBlog = Context.BlogPosts.First();
-            Context.BlogPosts.Remove(randomBlog);
-            await Context.SaveChangesAsync();
-
-            result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
-
-            Assert.Equal(count, result.Count());
+            Assert.False(result.Any(b => b.Id == newBlog.Id));
         }
 
         [Fact]
@@ -85,19 +95,12 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task GetBlogPostsOverviewQueryHandler_UsesCacheTheSecondTime()
         {
             var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.MemoryCacheService);
+            var _ = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
+            var newBlog = await AddBlog();
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
-            var count = result.Categories.SelectMany(c => c.BlogPosts).Count();
 
-            Assert.InRange(count, 0, int.MaxValue);
-
-            var randomBlog = Context.BlogPosts.First();
-            Context.BlogPosts.Remove(randomBlog);
-            await Context.SaveChangesAsync();
-
-            result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
-
-            Assert.Equal(count, result.Categories.SelectMany(c => c.BlogPosts).Count());
+            Assert.False(result.Categories.SelectMany(c => c.BlogPosts).Any(b => b.Id == newBlog.Id));
         }
 
 
