@@ -1,4 +1,5 @@
-﻿using CoolBytes.Core.Builders;
+﻿using System;
+using CoolBytes.Core.Builders;
 using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.Handlers;
@@ -44,7 +45,36 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CacheService());
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.StubCacheService);
+
+            var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
+
+            Assert.NotEmpty(result);
+        }
+
+        [Fact]
+        public async Task GetBlogPostsQueryHandler_UsesCacheTheSecondTime()
+        {
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.MemoryCacheService);
+
+            var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
+            var count = result.Count();
+
+            Assert.InRange(count, 0, int.MaxValue);
+
+            var randomBlog = Context.BlogPosts.First();
+            Context.BlogPosts.Remove(randomBlog);
+            await Context.SaveChangesAsync();
+
+            result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
+
+            Assert.Equal(count, result.Count());
+        }
+
+        [Fact]
+        public async Task GetBlogPostsOverviewQueryHandler_ReturnsBlogs()
+        {
+            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.StubCacheService);
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
 
@@ -52,14 +82,54 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
+        public async Task GetBlogPostsOverviewQueryHandler_UsesCacheTheSecondTime()
+        {
+            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.MemoryCacheService);
+
+            var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
+            var count = result.Categories.SelectMany(c => c.BlogPosts).Count();
+
+            Assert.InRange(count, 0, int.MaxValue);
+
+            var randomBlog = Context.BlogPosts.First();
+            Context.BlogPosts.Remove(randomBlog);
+            await Context.SaveChangesAsync();
+
+            result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
+
+            Assert.Equal(count, result.Categories.SelectMany(c => c.BlogPosts).Count());
+        }
+
+
+        [Fact]
         public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
             var blogPostId = Context.BlogPosts.First().Id;
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CacheService());
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.StubCacheService);
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
 
             Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task GetBlogPostQueryHandler_UsesCacheTheSecondTime()
+        {
+            var blogPost = Context.BlogPosts.First();
+            var blogPostId = blogPost.Id;
+            blogPost.Content.Update("Hello from DB", "Hello", "Hello");
+            await Context.SaveChangesAsync();
+
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.MemoryCacheService);
+
+            var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
+            Assert.Equal("Hello from DB", result.Payload.Subject);
+
+            blogPost.Content.Update("Hello from DB again!", "Hello", "Hello");
+            await Context.SaveChangesAsync();
+
+            result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
+            Assert.Equal("Hello from DB", result.Payload.Subject);
         }
 
         [Fact]
@@ -78,7 +148,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
             var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand, CancellationToken.None);
 
-            Assert.NotNull(result.Id);
+            Assert.InRange(result.Id, 1, Int32.MaxValue);
         }
 
         [Fact]

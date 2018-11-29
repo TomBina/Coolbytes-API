@@ -56,9 +56,14 @@ namespace CoolBytes.Tests.Web
             Configuration = configuration.Object;
         }
 
-        public AppDbContext CreateNewContext() => new AppDbContext(_options);
+        public AppDbContext CreateNewContext() 
+            => new AppDbContext(_options);
 
-        public ICacheService CacheService() => new StubCacheService();
+        public StubCacheService StubCacheService 
+            => new StubCacheService();
+
+        public MemoryCacheService MemoryCacheService 
+            => new MemoryCacheService(new CacheKeyGenerator());
 
         public void Dispose()
         {

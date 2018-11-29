@@ -6,6 +6,7 @@ using CoolBytes.Data;
 using CoolBytes.WebAPI.Authorization;
 using CoolBytes.WebAPI.Extensions;
 using CoolBytes.WebAPI.Services;
+using CoolBytes.WebAPI.Services.Caching;
 using CoolBytes.WebAPI.Services.Environment;
 using CoolBytes.WebAPI.Services.Mailer;
 using FluentValidation.AspNetCore;
@@ -17,10 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NJsonSchema;
-using NSwag.AspNetCore;
 using System.Net.Http;
-using CoolBytes.WebAPI.Services.Caching;
 
 namespace CoolBytes.WebAPI
 {
@@ -64,7 +62,7 @@ namespace CoolBytes.WebAPI
                         .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                         .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
             services.AddMediatR(typeof(Startup));
-            services.AddSwagger();
+            services.AddSwaggerDocument();
             services.AddMailgun();
         }
 
@@ -96,12 +94,8 @@ namespace CoolBytes.WebAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseAuthentication();
-
-            app.UseSwaggerUi3WithApiExplorer(settings =>
-            {
-                settings.GeneratorSettings.DefaultPropertyNameHandling =
-                    PropertyNameHandling.CamelCase;
-            });
+            app.UseSwagger();
+            app.UseSwaggerUi3();
 
             if (env.IsDevelopment())
             {
