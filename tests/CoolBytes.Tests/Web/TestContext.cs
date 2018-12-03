@@ -7,9 +7,14 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
 using System.IO;
+using CoolBytes.Core.Factories;
+using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.Tests.Web
 {
+    /// <summary>
+    /// Provides all contextual information on a per-test-class basis.
+    /// </summary>
     public class TestContext : IDisposable
     {
         private static readonly Random Random = new Random();
@@ -28,11 +33,6 @@ namespace CoolBytes.Tests.Web
             InitConfiguration();
         }
 
-        private void InitDb()
-        {
-            _options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("DB" + Random.Next()).Options;
-        }
-
         private static void InitAutoMapper()
         {
             lock (Mutex)
@@ -44,6 +44,11 @@ namespace CoolBytes.Tests.Web
                 _initialized = true;
 
             }
+        }
+
+        private void InitDb()
+        {
+            _options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("DB" + Random.Next()).Options;
         }
 
         private void InitConfiguration()
@@ -59,11 +64,28 @@ namespace CoolBytes.Tests.Web
         public AppDbContext CreateNewContext() 
             => new AppDbContext(_options);
 
-        public StubCacheService StubCacheService 
+        public StubCacheService CreateStubCacheService 
             => new StubCacheService();
 
-        public MemoryCacheService MemoryCacheService 
+        public MemoryCacheService CreateMemoryCacheService 
             => new MemoryCacheService(new CacheKeyGenerator());
+
+        public ImageFactory CreateImageFactory()
+        {
+            var options = new ImageFactoryOptions(TempDirectory);
+            var validator = new ImageFactoryValidator();
+            var imageFactory = new ImageFactory(options, validator);
+            return imageFactory;
+        }
+
+        public Mock<IFormFile> CreateFileMock()
+        {
+            var mock = new Mock<IFormFile>();
+            mock.Setup(e => e.FileName).Returns("testimage.png");
+            mock.Setup(e => e.ContentType).Returns("image/png");
+            mock.Setup(e => e.OpenReadStream()).Returns(() => File.OpenRead("assets/testimage.png"));
+            return mock;
+        }
 
         public void Dispose()
         {

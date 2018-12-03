@@ -2,25 +2,30 @@
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
 using CoolBytes.WebAPI.Features.ResumeEvents.DTO;
 using CoolBytes.WebAPI.Features.ResumeEvents.Handlers;
+using CoolBytes.WebAPI.Services;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.WebAPI.Services;
-using MediatR;
+using CoolBytes.Core.Interfaces;
+using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.ResumeEvents
 {
-    public class ResumeEventsTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
+    public class ResumeEventsTests : TestBase
     {
+        private IUserService _userService;
+        private AuthorService _authorService;
+
         public ResumeEventsTests(TestContext testContext) : base(testContext)
         {
         }
 
-        public async Task InitializeAsync()
+        public override async Task InitializeAsync()
         {
             using (var context = TestContext.CreateNewContext())
             {
@@ -34,8 +39,10 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
 
                 await context.SaveChangesAsync();
 
-                InitUserService(user);
-                InitAuthorService();
+                var userService = new Mock<IUserService>();
+                userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
+                _userService = userService.Object;
+                _authorService = new AuthorService(_userService, Context);
             }
         }
 
@@ -79,7 +86,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 Name = "Test",
                 Message = "test"
             };
-            var handler = new AddResumeEventCommandHandler(Context, AuthorService);
+            var handler = new AddResumeEventCommandHandler(Context, _authorService);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -126,7 +133,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
 
         private async Task<List<ResumeEvent>> SeedData()
         {
-            var author = await AuthorService.GetAuthor();
+            var author = await _authorService.GetAuthor();
 
             using (var context = TestContext.CreateNewContext())
             {
@@ -145,7 +152,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             }
         }
 
-        public async Task DisposeAsync()
+        public override async Task DisposeAsync()
         {
             var resumeEvents = await Context.ResumeEvents.ToArrayAsync();
             Context.ResumeEvents.RemoveRange(resumeEvents);

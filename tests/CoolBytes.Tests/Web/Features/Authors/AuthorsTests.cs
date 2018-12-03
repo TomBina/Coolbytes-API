@@ -1,6 +1,8 @@
-﻿using CoolBytes.Core.Models;
+﻿using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Services;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,21 +12,25 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
 {
-    public class AuthorsTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
+    public class AuthorsTests : TestBase
     {
+        private readonly IUserService _userService;
+        private readonly AuthorService _authorService;
+
         public AuthorsTests(TestContext testContext) : base(testContext)
         {
-            InitUserService();
-            InitAuthorService();
+            var user = new User("Test");
+            var userService = new Mock<IUserService>();
+            userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
+            _userService = userService.Object;
+            _authorService = new AuthorService(_userService, Context);
         }
-
-        public async Task InitializeAsync() => await Task.CompletedTask;
 
         [Fact]
         public async Task GetAuthorQueryHandler_ReturnsAuthor()
         {
             await AddAuthor();
-            var getAuthorQueryHandler = new GetAuthorQueryHandler(AuthorService);
+            var getAuthorQueryHandler = new GetAuthorQueryHandler(_authorService);
             var message = new GetAuthorQuery() { IncludeProfile = true };
 
             var result = await getAuthorQueryHandler.Handle(message, CancellationToken.None);
@@ -38,7 +44,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             {
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
                 var authorValidator = new AuthorValidator(context);
-                var user = await UserService.GetUser();
+                var user = await _userService.GetUser();
 
                 var author = await Author.Create(user, authorProfile, authorValidator);
                 context.Authors.Add(author);
@@ -50,8 +56,8 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             using (var context = TestContext.CreateNewContext())
             {
-                var imageFactory = CreateImageFactory();
-                var file = CreateFileMock().Object;
+                var imageFactory = TestContext.CreateImageFactory();
+                var file = TestContext.CreateFileMock().Object;
                 var image = await imageFactory.Create(file.OpenReadStream(), file.FileName, file.ContentType);
 
                 context.Images.Add(image);
@@ -75,7 +81,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             experiences.Add(experienceDto);
 
             var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, _userService, authorValidator);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me", Experiences = experiences };
 
             var result = await addAuthorCommandHandler.Handle(message, CancellationToken.None);
@@ -89,7 +95,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             await AddAuthor();
 
             var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, UserService, authorValidator);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, _userService, authorValidator);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
@@ -113,7 +119,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             experiences.Add(experienceDto);
 
             var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test", Experiences = experiences };
-            var handler = new UpdateAuthorCommandHandler(Context, AuthorService);
+            var handler = new UpdateAuthorCommandHandler(Context, _authorService);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -125,7 +131,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             await AddAuthor();
             var image = await AddImage();
-            var handler = new UpdateAuthorCommandHandler(Context, AuthorService);
+            var handler = new UpdateAuthorCommandHandler(Context, _authorService);
 
             var message = new UpdateAuthorCommand()
             {
@@ -140,7 +146,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             Assert.NotNull(result.Image);
         }
 
-        public async Task DisposeAsync()
+        public override async Task DisposeAsync()
         {
             Context.Users.RemoveRange(Context.Users.ToArray());
             Context.Authors.RemoveRange(Context.Authors.ToArray());

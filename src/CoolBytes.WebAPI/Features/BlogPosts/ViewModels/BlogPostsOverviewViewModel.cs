@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using CoolBytes.WebAPI.Features.Categories.ViewModels;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 {

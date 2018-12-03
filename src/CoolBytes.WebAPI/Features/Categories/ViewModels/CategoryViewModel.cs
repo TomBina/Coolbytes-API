@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 
-namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
+namespace CoolBytes.WebAPI.Features.Categories.ViewModels
 {
     public class CategoryViewModel
     {
