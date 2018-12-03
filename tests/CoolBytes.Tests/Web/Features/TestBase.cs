@@ -18,9 +18,17 @@ namespace CoolBytes.Tests.Web.Features
             Context = testContext.CreateNewContext();
         }
 
+        /// <summary>
+        /// Runs before each test.
+        /// </summary>
+        /// <returns>Task</returns>
         public virtual Task InitializeAsync() 
             => Task.CompletedTask;
 
+        /// <summary>
+        /// Runs after each test.
+        /// </summary>
+        /// <returns></returns>
         public virtual Task DisposeAsync()
         {
             Context?.Dispose();

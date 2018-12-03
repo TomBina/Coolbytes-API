@@ -1,8 +1,6 @@
-﻿using CoolBytes.WebAPI.Features.Categories.ViewModels;
-using CoolBytes.WebAPI.Utils;
-using MediatR;
-using System;
-using System.Collections.Generic;
+﻿using CoolBytes.Core.Models;
+using CoolBytes.WebAPI.Features.Categories.CQ;
+using CoolBytes.WebAPI.Features.Categories.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,24 +14,26 @@ namespace CoolBytes.Tests.Web.Features.Categories
 
         }
 
+        public override async Task InitializeAsync()
+        {
+            using (var context = TestContext.CreateNewContext())
+            {
+                context.Categories.Add(new Category("Default category"));
+                context.Categories.Add(new Category("Another category"));
+
+                await context.SaveChangesAsync();
+            }
+        }
 
         [Fact]
-        public void GetAllCategoriesHandler_Returns_Categories()
+        public async Task GetAllCategoriesHandler_Returns_Categories()
         {
             var message = new GetAllCategoriesQuery();
-            var handler = new GetAllCategoriesHandler();
-        }
-    }
+            var handler = new GetAllCategoriesHandler(Context);
 
-    public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, Result<IEnumerable<CategoryViewModel>>>
-    {
-        public Task<Result<IEnumerable<CategoryViewModel>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-    }
+            var result = await handler.Handle(message, CancellationToken.None);
 
-    public class GetAllCategoriesQuery : IRequest<Result<IEnumerable<CategoryViewModel>>>
-    {
+            Assert.NotEmpty(result.Payload);
+        }
     }
 }

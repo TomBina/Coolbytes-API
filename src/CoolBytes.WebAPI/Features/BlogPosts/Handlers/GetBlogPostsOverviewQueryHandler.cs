@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
-using CoolBytes.WebAPI.Features.Categories.ViewModels;
 using CoolBytes.WebAPI.Services.Caching;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
@@ -39,7 +38,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             return viewmodel;
         }
 
-        private Task<List<CategoryViewModel>> QueryBlogPosts() =>
+        private Task<List<CategoryBlogPostsViewModel>> QueryBlogPosts() =>
             _context.BlogPosts
                 .AsNoTracking()
                 .Include(b => b.Category)
@@ -48,7 +47,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .Include(b => b.Image)
                 .OrderByDescending(b => b.Id)
                 .GroupBy(b => b.CategoryId)
-                .Select(b => new CategoryViewModel()
+                .Select(b => new CategoryBlogPostsViewModel()
                 {
                     CategoryId = b.Key,
                     Category = b.FirstOrDefault().Category.Name,

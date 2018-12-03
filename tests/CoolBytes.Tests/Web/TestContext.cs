@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
+using CoolBytes.Core.Factories;
 using CoolBytes.Data;
-using CoolBytes.WebAPI.AutoMapper;
+using CoolBytes.WebAPI;
 using CoolBytes.WebAPI.Services.Caching;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
 using System.IO;
-using CoolBytes.Core.Factories;
-using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.Tests.Web
 {
@@ -40,7 +40,7 @@ namespace CoolBytes.Tests.Web
                 if (_initialized)
                     return;
 
-                Mapper.Initialize(config => config.AddProfile(new DefaultProfile()));
+                Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
                 _initialized = true;
 
             }

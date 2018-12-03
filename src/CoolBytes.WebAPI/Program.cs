@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CoolBytes.WebAPI.AutoMapper;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,7 +30,7 @@ namespace CoolBytes.WebAPI
 
         private static void StartWebHost(string[] args, IConfiguration configuration)
         {
-            Mapper.Initialize(c => c.AddProfile(typeof(DefaultProfile)));
+            Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .Enrich.FromLogContext()
