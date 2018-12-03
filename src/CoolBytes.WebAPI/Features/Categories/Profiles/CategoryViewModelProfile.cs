@@ -4,9 +4,9 @@ using CoolBytes.WebAPI.Features.Categories.ViewModels;
 
 namespace CoolBytes.WebAPI.Features.Categories.Profiles
 {
-    public class CategoryProfile : Profile
+    public class CategoryViewModelProfile : Profile
     {
-        public CategoryProfile()
+        public CategoryViewModelProfile()
         {
             CreateMap<Category, CategoryViewModel>().ForMember(cv => cv.CategoryId, opt => opt.MapFrom(c => c.Id));
         }
