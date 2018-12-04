@@ -18,6 +18,7 @@ namespace CoolBytes.WebAPI.Features.Contact
         }
 
         [HttpPost]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Send([FromBody] SendEmailCommand command)
         {
             if (!ModelState.IsValid)

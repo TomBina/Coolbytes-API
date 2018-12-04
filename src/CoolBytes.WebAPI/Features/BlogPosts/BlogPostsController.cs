@@ -26,6 +26,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<BlogPostSummaryViewModel>>> GetAll(string tag)
         {
             var message = new GetBlogPostsQuery()
@@ -38,6 +39,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [HttpGet("overview")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<BlogPostsOverviewViewModel>> GetOverview()
         {
             var message = new GetBlogPostsOverviewQuery();
@@ -47,6 +50,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<BlogPostViewModel>> Get(int id)
         {
             var query = new GetBlogPostQuery() { Id = id };
@@ -62,6 +67,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<BlogPostSummaryViewModel>> Add([FromForm] AddBlogPostCommand command, [FromForm] string externalLinks)
         {
             var links = ValidateExternalLinks(externalLinks);
@@ -94,6 +101,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpGet("update/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<BlogPostUpdateViewModel>> Update(int id)
         {
             var command = new UpdateBlogPostQuery() { Id = id };
@@ -103,6 +112,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpPut("update")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<BlogPostSummaryViewModel>> Update([FromForm] UpdateBlogPostCommand command, [FromForm] string externalLinks)
         {
             var links = ValidateExternalLinks(externalLinks);
@@ -117,6 +128,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
 
         [Authorize("admin")]
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
         public async Task<ActionResult> Delete(int id)
         {
             var command = new DeleteBlogPostCommand() { Id = id };

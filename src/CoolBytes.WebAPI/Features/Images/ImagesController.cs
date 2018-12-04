@@ -18,14 +18,18 @@ namespace CoolBytes.WebAPI.Features.Images
         public ImagesController(IMediator mediator) => _mediator = mediator;
 
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<IEnumerable<ImageViewModel>>> Get()
             => this.OkOrNotFound(await _mediator.Send(new GetImagesQuery()));
 
         [HttpPost]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<ImageViewModel>>> Upload([FromForm] UploadImagesCommand command)
             => (await _mediator.Send(command)).ToList();
 
         [HttpDelete]
+        [ProducesResponseType(204)]
         public async Task<ActionResult> Delete(int id)
         {
             var command = new DeleteImageCommand() { Id = id };

@@ -17,6 +17,8 @@ namespace CoolBytes.WebAPI.Features.Resume
         }
 
         [HttpGet("{authorId}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<ResumeViewModel>> Get(int authorId)
         {
             var query = new GetResumeQuery() { AuthorId = authorId };

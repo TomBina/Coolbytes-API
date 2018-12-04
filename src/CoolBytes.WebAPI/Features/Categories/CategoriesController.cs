@@ -23,6 +23,7 @@ namespace CoolBytes.WebAPI.Features.Categories
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<IEnumerable<CategoryViewModel>>> GetAll()
         {
@@ -36,6 +37,7 @@ namespace CoolBytes.WebAPI.Features.Categories
         }
 
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult<CategoryViewModel>> Get(int id)
         {
@@ -50,6 +52,7 @@ namespace CoolBytes.WebAPI.Features.Categories
 
         [Authorize("admin")]
         [HttpPost]
+        [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> Add(AddCategoryCommand command)
         {
@@ -63,6 +66,7 @@ namespace CoolBytes.WebAPI.Features.Categories
 
         [Authorize("admin")]
         [HttpPut]
+        [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         public async Task<ActionResult> Update(UpdateCategoryCommand command)
         {
@@ -75,10 +79,11 @@ namespace CoolBytes.WebAPI.Features.Categories
         }
 
         [Authorize("admin")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
+        [ProducesResponseType(200)]
         [ProducesResponseType(204)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404, Type = typeof(ErrorResult))]
+        [ProducesResponseType(400, Type = typeof(ErrorResult))]
+        [ProducesResponseType(404)]
         public async Task<ActionResult> Delete(int id)
         {
             var command = new DeleteCategoryCommand() { Id = id };
