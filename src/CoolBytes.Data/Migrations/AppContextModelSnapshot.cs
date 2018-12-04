@@ -341,7 +341,7 @@ namespace CoolBytes.Data.Migrations
                     b.HasOne("CoolBytes.Core.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CoolBytes.Core.Models.Image", "Image")
                         .WithMany()

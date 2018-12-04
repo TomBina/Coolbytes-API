@@ -1,11 +1,12 @@
-﻿using System;
-using CoolBytes.Core.Builders;
+﻿using CoolBytes.Core.Builders;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.Handlers;
 using CoolBytes.WebAPI.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,15 +14,16 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
 {
-    public class BlogPostsTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
+    public class BlogPostsTests : TestBase
     {
+        private IUserService _userService;
+        private AuthorService _authorService;
+
         public BlogPostsTests(TestContext testContext) : base(testContext)
         {
         }
 
-        public async Task InitializeAsync() => await SeedDb();
-
-        private async Task SeedDb()
+        public override async Task InitializeAsync()
         {
             using (var context = TestContext.CreateNewContext())
             {
@@ -37,8 +39,10 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 context.BlogPosts.Add(blogPost);
                 await context.SaveChangesAsync();
 
-                InitUserService(user);
-                InitAuthorService();
+                var userService = new Mock<IUserService>();
+                userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
+                _userService = userService.Object;
+                _authorService = new AuthorService(_userService, Context);
             }
         }
 
@@ -48,7 +52,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             {
                 var blogPostContent = new BlogPostContent("Testsubject", "Testintro", "Testcontent");
                 var category = new Category("Testcategory");
-                var author = await AuthorService.GetAuthor();
+                var author = await _authorService.GetAuthor();
                 var blogPost = new BlogPost(blogPostContent, author, category);
 
                 context.Entry(author).State = EntityState.Unchanged;
@@ -62,7 +66,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.StubCacheService);
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CreateStubCacheService);
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
 
@@ -72,7 +76,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_UsesCacheTheSecondTime()
         {
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.MemoryCacheService);
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CreateMemoryCacheService);
             var _ = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
             var newBlog = await AddBlog();
 
@@ -84,7 +88,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsOverviewQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.StubCacheService);
+            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CreateStubCacheService);
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
 
@@ -94,7 +98,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsOverviewQueryHandler_UsesCacheTheSecondTime()
         {
-            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.MemoryCacheService);
+            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CreateMemoryCacheService);
             var _ = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
             var newBlog = await AddBlog();
 
@@ -108,7 +112,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
             var blogPostId = Context.BlogPosts.First().Id;
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.StubCacheService);
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CreateStubCacheService);
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
 
@@ -123,7 +127,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             blogPost.Content.Update("Hello from DB", "Hello", "Hello");
             await Context.SaveChangesAsync();
 
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.MemoryCacheService);
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CreateMemoryCacheService);
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
             Assert.Equal("Hello from DB", result.Payload.Subject);
@@ -138,37 +142,41 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task AddBlogPostCommandHandler_AddsBlog()
         {
-            var imageFactory = CreateImageFactory();
-            var builder = new BlogPostBuilder(AuthorService, imageFactory);
-
+            var imageFactory = TestContext.CreateImageFactory();
+            var builder = new BlogPostBuilder(_authorService, imageFactory);
             var addBlogPostCommandHandler = new AddBlogPostCommandHandler(Context, builder);
+            var category = await Context.Categories.FirstOrDefaultAsync();
             var addBlogPostCommand = new AddBlogPostCommand()
             {
                 Subject = "Test",
                 ContentIntro = "Test",
-                Content = "Test"
+                Content = "Test",
+                CategoryId = category.Id
             };
 
             var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand, CancellationToken.None);
 
-            Assert.InRange(result.Id, 1, Int32.MaxValue);
+            Assert.InRange(result.Id, 1, int.MaxValue);
+            Assert.Equal(category.Name, result.Category);
         }
 
         [Fact]
         public async Task AddBlogPostCommandHandler_WithFile_AddsBlog()
         {
-            var imageFactory = CreateImageFactory();
-            var builder = new BlogPostBuilder(AuthorService, imageFactory);
+            var imageFactory = TestContext.CreateImageFactory();
+            var builder = new BlogPostBuilder(_authorService, imageFactory);
             var handler = new AddBlogPostCommandHandler(Context, builder);
-            var fileMock = CreateFileMock();
+            var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;
+            var category = await Context.Categories.FirstOrDefaultAsync();
 
             var message = new AddBlogPostCommand()
             {
                 Subject = "Test",
                 Content = "Test",
                 ContentIntro = "Test",
-                File = file
+                File = file,
+                CategoryId = category.Id
             };
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -179,7 +187,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task UpdateBlogPostQueryHandler_ReturnsBlogAsync()
         {
-            var blog = Context.BlogPosts.First();
+            var blog = await Context.BlogPosts.FirstAsync();
             var query = new UpdateBlogPostQuery() { Id = blog.Id };
             var handler = new UpdateBlogPostQueryHandler(Context);
 
@@ -191,31 +199,44 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task UpdateBlogPostCommandHandler_UpdatesBlog()
         {
+            var category = new Category("Hello test category");
+            using (var context = TestContext.CreateNewContext())
+            {
+                context.Categories.Add(category);
+                await context.SaveChangesAsync();
+            }
             var blogPost = Context.BlogPosts.AsNoTracking().First();
             var message = new UpdateBlogPostCommand()
             {
                 Id = blogPost.Id,
                 Subject = "Test new",
                 ContentIntro = "Test",
-                Content = "Test"
+                Content = "Test",
+                CategoryId = category.Id
             };
-
             var builder = new ExistingBlogPostBuilder(null);
             var handler = new UpdateBlogPostCommandHandler(Context, builder);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.Equal("Test new", result.Subject);
+            Assert.Equal(category.Name, result.Category);
         }
 
         [Fact]
         public async Task UpdateBlogPostCommandHandler_WithFile_UpdatesBlog()
         {
-            var imageFactory = CreateImageFactory();
+            var imageFactory = TestContext.CreateImageFactory();
             var builder = new ExistingBlogPostBuilder(imageFactory);
             var handler = new UpdateBlogPostCommandHandler(Context, builder);
-            var fileMock = CreateFileMock();
+            var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;
+            var category = new Category("Hello test category");
+            using (var context = TestContext.CreateNewContext())
+            {
+                context.Categories.Add(category);
+                await context.SaveChangesAsync();
+            }
 
             var blogPost = Context.BlogPosts.AsNoTracking().First();
             var message = new UpdateBlogPostCommand()
@@ -224,7 +245,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 Subject = "Test new",
                 ContentIntro = "Test",
                 Content = "Test",
-                File = file
+                File = file,
+                CategoryId = category.Id
             };
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -242,13 +264,6 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             await deleteBlogPostCommandHandler.Handle(deleteBlogPostCommand, CancellationToken.None);
 
             Assert.Null(await Context.BlogPosts.FindAsync(blogPost.Id));
-        }
-
-        public async Task DisposeAsync()
-        {
-            Context.Dispose();
-
-            await Task.CompletedTask;
         }
     }
 }

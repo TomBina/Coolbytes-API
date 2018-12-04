@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using CoolBytes.Core.Factories;
 using CoolBytes.Data;
-using CoolBytes.WebAPI.AutoMapper;
+using CoolBytes.WebAPI;
 using CoolBytes.WebAPI.Services.Caching;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
@@ -10,6 +12,9 @@ using System.IO;
 
 namespace CoolBytes.Tests.Web
 {
+    /// <summary>
+    /// Provides all contextual information on a per-test-class basis.
+    /// </summary>
     public class TestContext : IDisposable
     {
         private static readonly Random Random = new Random();
@@ -28,11 +33,6 @@ namespace CoolBytes.Tests.Web
             InitConfiguration();
         }
 
-        private void InitDb()
-        {
-            _options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("DB" + Random.Next()).Options;
-        }
-
         private static void InitAutoMapper()
         {
             lock (Mutex)
@@ -40,10 +40,15 @@ namespace CoolBytes.Tests.Web
                 if (_initialized)
                     return;
 
-                Mapper.Initialize(config => config.AddProfile(new DefaultProfile()));
+                Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
                 _initialized = true;
 
             }
+        }
+
+        private void InitDb()
+        {
+            _options = new DbContextOptionsBuilder<AppDbContext>().UseInMemoryDatabase("DB" + Random.Next()).Options;
         }
 
         private void InitConfiguration()
@@ -59,11 +64,28 @@ namespace CoolBytes.Tests.Web
         public AppDbContext CreateNewContext() 
             => new AppDbContext(_options);
 
-        public StubCacheService StubCacheService 
+        public StubCacheService CreateStubCacheService 
             => new StubCacheService();
 
-        public MemoryCacheService MemoryCacheService 
+        public MemoryCacheService CreateMemoryCacheService 
             => new MemoryCacheService(new CacheKeyGenerator());
+
+        public ImageFactory CreateImageFactory()
+        {
+            var options = new ImageFactoryOptions(TempDirectory);
+            var validator = new ImageFactoryValidator();
+            var imageFactory = new ImageFactory(options, validator);
+            return imageFactory;
+        }
+
+        public Mock<IFormFile> CreateFileMock()
+        {
+            var mock = new Mock<IFormFile>();
+            mock.Setup(e => e.FileName).Returns("testimage.png");
+            mock.Setup(e => e.ContentType).Returns("image/png");
+            mock.Setup(e => e.OpenReadStream()).Returns(() => File.OpenRead("assets/testimage.png"));
+            return mock;
+        }
 
         public void Dispose()
         {

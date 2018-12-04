@@ -4,22 +4,22 @@ using CoolBytes.WebAPI.Services;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Interfaces;
+using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Resume
 {
-    public class ResumeTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
+    public class ResumeTests : TestBase
     {
+        private IUserService _userService;
+        private AuthorService _authorService;
+
         public ResumeTests(TestContext testContext) : base(testContext)
         {
         }
 
-        public async Task InitializeAsync()
-        {
-            await SeedData();
-        }
-
-        private async Task SeedData()
+        public override async Task InitializeAsync()
         {
             using (var context = TestContext.CreateNewContext())
             {
@@ -42,31 +42,26 @@ namespace CoolBytes.Tests.Web.Features.Resume
 
                 await context.SaveChangesAsync();
 
-                InitUserService(user);
-                InitAuthorService();
+                var userService = new Mock<IUserService>();
+                userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
+                _userService = userService.Object;
+                _authorService = new AuthorService(_userService, Context);
             }
         }
 
         [Fact]
         public async Task GetResumeQueryHandler_ReturnsResume()
         {
-            var author = await AuthorService.GetAuthor();
+            var author = await _authorService.GetAuthor();
             var message = new GetResumeQuery()
             {
                 AuthorId = author.Id
             };
-            var handler = new GetResumeQueryHandler(Context, AuthorService, TestContext.StubCacheService);
+            var handler = new GetResumeQueryHandler(Context, _authorService, TestContext.CreateStubCacheService);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.NotNull(result);
-        }
-
-        public async Task DisposeAsync()
-        {
-            Context.Dispose();
-
-            await Task.CompletedTask;
         }
     }
 }

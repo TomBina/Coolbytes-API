@@ -20,6 +20,8 @@ namespace CoolBytes.WebAPI.Features.Authors
         }
 
         [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<AuthorViewModel>> Get(bool includeProfile)
         {
             var query = new GetAuthorQuery() { IncludeProfile = includeProfile };
@@ -28,6 +30,8 @@ namespace CoolBytes.WebAPI.Features.Authors
         }
 
         [HttpPost]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult> Add(AddAuthorCommand command)
         {
             try
@@ -41,6 +45,7 @@ namespace CoolBytes.WebAPI.Features.Authors
         }
 
         [HttpPut]
+        [ProducesResponseType(200)]
         public async Task<ActionResult> Update(UpdateAuthorCommand command)
             => Ok(await _mediator.Send(command));
     }

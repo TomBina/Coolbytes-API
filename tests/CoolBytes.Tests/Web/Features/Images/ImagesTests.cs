@@ -10,7 +10,7 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Images
 {
-    public class ImagesTests : TestBase, IClassFixture<TestContext>, IAsyncLifetime
+    public class ImagesTests : TestBase
     {
         public ImagesTests(TestContext testContext) : base(testContext)
         {
@@ -32,10 +32,10 @@ namespace CoolBytes.Tests.Web.Features.Images
         [Fact]
         public async Task ShouldUploadImages()
         {
-            var imageFactory = CreateImageFactory();
+            var imageFactory = TestContext.CreateImageFactory();
             var handler = new UploadImagesCommandHandler(Context, imageFactory);
-            var file1 = CreateFileMock().Object;
-            var file2 = CreateFileMock().Object;
+            var file1 = TestContext.CreateFileMock().Object;
+            var file2 = TestContext.CreateFileMock().Object;
             var files = new List<IFormFile>() { file1, file2 };
             var message = new UploadImagesCommand() { Files = files };
 
@@ -60,8 +60,8 @@ namespace CoolBytes.Tests.Web.Features.Images
 
         private async Task<Image> AddImage()
         {
-            var imageFactory = CreateImageFactory();
-            var file = CreateFileMock().Object;
+            var imageFactory = TestContext.CreateImageFactory();
+            var file = TestContext.CreateFileMock().Object;
 
             using (var stream = file.OpenReadStream())
             {
@@ -75,9 +75,7 @@ namespace CoolBytes.Tests.Web.Features.Images
             }
         }
 
-        public Task InitializeAsync() => Task.CompletedTask;
-
-        public async Task DisposeAsync()
+        public override async Task DisposeAsync()
         {
             Context.Images.RemoveRange(Context.Images.ToArray());
             await Context.SaveChangesAsync();

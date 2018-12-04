@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
@@ -34,16 +35,18 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
         private async Task<BlogPost> CreateBlogPost(AddBlogPostCommand message)
         {
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == message.CategoryId);
             var tags = message.Tags?.Select(s => new BlogPostTag(s)).ToList();
             var externalLinks = message.ExternalLinks?.Select(el => new ExternalLink(el.Name, el.Url)).ToList();
 
             return await _builder.WrittenByCurrentAuthor()
-                                        .WithContent(message)
-                                        .WithImage(message.ImageFile)
-                                        .WithTags(tags)
-                                        .WithExternalLinks(externalLinks)
-                                        .Build();
-        }
+                                 .WithContent(message)
+                                 .WithImage(message.ImageFile)
+                                 .WithTags(tags)
+                                 .WithExternalLinks(externalLinks)
+                                 .WithCategory(category)
+                                 .Build();
+}
 
         private async Task Save(BlogPost blogPost)
         {

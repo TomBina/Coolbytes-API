@@ -58,6 +58,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                                        .Include(b => b.Tags)
                                        .Include(b => b.Image)
                                        .Include(b => b.ExternalLinks)
+                                       .Include(b => b.Category)
                                        .FirstOrDefaultAsync(b => b.Id == id);
 
         private async Task<List<BlogPostLinkDto>> GetRelatedLinks(int id) 

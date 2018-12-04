@@ -2,7 +2,7 @@
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 {
-    public class CategoryViewModel
+    public class CategoryBlogPostsViewModel
     {
         public int CategoryId { get; set; }
         public string Category { get; set; }

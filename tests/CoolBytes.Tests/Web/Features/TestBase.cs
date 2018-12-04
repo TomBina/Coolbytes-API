@@ -1,20 +1,16 @@
-﻿using CoolBytes.Core.Factories;
-using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
-using CoolBytes.Data;
-using CoolBytes.WebAPI.Services;
-using Microsoft.AspNetCore.Http;
-using Moq;
-using System.IO;
+﻿using CoolBytes.Data;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace CoolBytes.Tests.Web.Features
 {
-    public abstract class TestBase
+    /// <summary>
+    /// Provides initialization for each unique test.
+    /// </summary>
+    public abstract class TestBase : IClassFixture<TestContext>, IAsyncLifetime
     {
-        protected AppDbContext Context;
-        protected TestContext TestContext;
-        protected IUserService UserService;
-        protected AuthorService AuthorService;
+        protected readonly AppDbContext Context;
+        protected readonly TestContext TestContext;
 
         protected TestBase(TestContext testContext)
         {
@@ -22,40 +18,22 @@ namespace CoolBytes.Tests.Web.Features
             Context = testContext.CreateNewContext();
         }
 
-        protected void InitUserService(User user)
-        {
-            var userService = new Mock<IUserService>();
-            userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
-            UserService = userService.Object;
-        }
+        /// <summary>
+        /// Runs before each test.
+        /// </summary>
+        /// <returns>Task</returns>
+        public virtual Task InitializeAsync() 
+            => Task.CompletedTask;
 
-        protected void InitUserService()
+        /// <summary>
+        /// Runs after each test.
+        /// </summary>
+        /// <returns></returns>
+        public virtual Task DisposeAsync()
         {
-            var user = new User("Test");
+            Context?.Dispose();
 
-            InitUserService(user);
-        }
-
-        protected void InitAuthorService()
-        {
-            AuthorService = new AuthorService(UserService, Context);
-        }
-
-        protected ImageFactory CreateImageFactory()
-        {
-            var options = new ImageFactoryOptions(TestContext.TempDirectory);
-            var validator = new ImageFactoryValidator();
-            var imageFactory = new ImageFactory(options, validator);
-            return imageFactory;
-        }
-
-        protected Mock<IFormFile> CreateFileMock()
-        {
-            var mock = new Mock<IFormFile>();
-            mock.Setup(e => e.FileName).Returns("testimage.png");
-            mock.Setup(e => e.ContentType).Returns("image/png");
-            mock.Setup(e => e.OpenReadStream()).Returns(() => File.OpenRead("assets/testimage.png"));
-            return mock;
+            return Task.CompletedTask;
         }
     }
 }

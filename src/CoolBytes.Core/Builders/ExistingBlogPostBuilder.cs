@@ -61,6 +61,13 @@ namespace CoolBytes.Core.Builders
             return this;
         }
 
+        public ExistingBlogPostBuilder WithCategory(Category category)
+        {
+            When.NotNull(category, () => _blogPost.SetCategory(category));
+
+            return this;
+        }
+
         public async Task<BlogPost> Build()
         {
             await When.NotNull(_image, async () => _blogPost.SetImage(await _image()));

@@ -22,6 +22,8 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents
         }
 
         [HttpGet("{authorid}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<IEnumerable<ResumeEventViewModel>>> GetByAuthorId(int authorId)
         {
             var query = new GetResumeEventsQuery() { AuthorId = authorId };
@@ -30,6 +32,8 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents
         }
 
         [HttpGet("event/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<ResumeEventViewModel>> GetById(int id)
         {
             var query = new GetResumeEventQuery() { Id = id };
@@ -37,14 +41,17 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents
         }
 
         [HttpPost]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<ResumeEventViewModel>> Add(AddResumeEventCommand message)
             => await _mediator.Send(message);
 
         [HttpPut]
+        [ProducesResponseType(200)]
         public async Task<ResumeEventViewModel> Update(UpdateResumeEventCommand message)
             => await _mediator.Send(message);
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
         public async Task<ActionResult> Delete(int id)
         {
             var command = new DeleteResumeEventCommand() { Id = id };

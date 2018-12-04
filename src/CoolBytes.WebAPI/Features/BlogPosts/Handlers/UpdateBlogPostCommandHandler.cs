@@ -41,6 +41,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             var blogPost = await _context.BlogPosts
                                          .Include(b => b.Tags)
                                          .Include(b => b.ExternalLinks)
+                                         .Include(b => b.Category)
                                          .SingleOrDefaultAsync(b => b.Id == blogPostId);
 
             _currentImageId = blogPost.ImageId;
@@ -52,13 +53,15 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         {
             var tags = message.Tags?.Select(s => new BlogPostTag(s)).ToList() ?? new List<BlogPostTag>();
             var externalLinks = message.ExternalLinks?.Select(el => new ExternalLink(el.Name, el.Url)).ToList() ?? new List<ExternalLink>();
-            
+            var category = await _context.Categories.FirstAsync(c => c.Id == message.CategoryId);
+
             await _builder.UseBlogPost(blogPost)
-                .WithContent(message)
-                .WithImage(message.ImageFile)
-                .WithTags(tags)
-                .WithExternalLinks(externalLinks)
-                .Build();
+                          .WithContent(message)
+                          .WithImage(message.ImageFile)
+                          .WithTags(tags)
+                          .WithExternalLinks(externalLinks)
+                          .WithCategory(category)
+                          .Build();
         }
 
         private async Task Save(BlogPost blogPost)
