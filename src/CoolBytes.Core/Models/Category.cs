@@ -11,5 +11,10 @@ namespace CoolBytes.Core.Models
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
+
+        public void UpdateName(string name)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+        }
     }
 }
