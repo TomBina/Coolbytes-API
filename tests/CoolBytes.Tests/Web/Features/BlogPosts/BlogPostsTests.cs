@@ -1,16 +1,15 @@
-﻿using System;
-using CoolBytes.Core.Builders;
+﻿using CoolBytes.Core.Builders;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.Handlers;
 using CoolBytes.WebAPI.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Interfaces;
-using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -145,18 +144,20 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var imageFactory = TestContext.CreateImageFactory();
             var builder = new BlogPostBuilder(_authorService, imageFactory);
-
             var addBlogPostCommandHandler = new AddBlogPostCommandHandler(Context, builder);
+            var category = await Context.Categories.FirstOrDefaultAsync();
             var addBlogPostCommand = new AddBlogPostCommand()
             {
                 Subject = "Test",
                 ContentIntro = "Test",
-                Content = "Test"
+                Content = "Test",
+                CategoryId = category.Id
             };
 
             var result = await addBlogPostCommandHandler.Handle(addBlogPostCommand, CancellationToken.None);
 
-            Assert.InRange(result.Id, 1, Int32.MaxValue);
+            Assert.InRange(result.Id, 1, int.MaxValue);
+            Assert.Equal(category.Name, result.Category);
         }
 
         [Fact]
@@ -167,13 +168,15 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var handler = new AddBlogPostCommandHandler(Context, builder);
             var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;
+            var category = await Context.Categories.FirstOrDefaultAsync();
 
             var message = new AddBlogPostCommand()
             {
                 Subject = "Test",
                 Content = "Test",
                 ContentIntro = "Test",
-                File = file
+                File = file,
+                CategoryId = category.Id
             };
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -184,7 +187,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task UpdateBlogPostQueryHandler_ReturnsBlogAsync()
         {
-            var blog = Context.BlogPosts.First();
+            var blog = await Context.BlogPosts.FirstAsync();
             var query = new UpdateBlogPostQuery() { Id = blog.Id };
             var handler = new UpdateBlogPostQueryHandler(Context);
 
@@ -196,21 +199,28 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task UpdateBlogPostCommandHandler_UpdatesBlog()
         {
+            var category = new Category("Hello test category");
+            using (var context = TestContext.CreateNewContext())
+            {
+                context.Categories.Add(category);
+                await context.SaveChangesAsync();
+            }
             var blogPost = Context.BlogPosts.AsNoTracking().First();
             var message = new UpdateBlogPostCommand()
             {
                 Id = blogPost.Id,
                 Subject = "Test new",
                 ContentIntro = "Test",
-                Content = "Test"
+                Content = "Test",
+                CategoryId = category.Id
             };
-
             var builder = new ExistingBlogPostBuilder(null);
             var handler = new UpdateBlogPostCommandHandler(Context, builder);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.Equal("Test new", result.Subject);
+            Assert.Equal(category.Name, result.Category);
         }
 
         [Fact]
@@ -221,6 +231,12 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var handler = new UpdateBlogPostCommandHandler(Context, builder);
             var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;
+            var category = new Category("Hello test category");
+            using (var context = TestContext.CreateNewContext())
+            {
+                context.Categories.Add(category);
+                await context.SaveChangesAsync();
+            }
 
             var blogPost = Context.BlogPosts.AsNoTracking().First();
             var message = new UpdateBlogPostCommand()
@@ -229,7 +245,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 Subject = "Test new",
                 ContentIntro = "Test",
                 Content = "Test",
-                File = file
+                File = file,
+                CategoryId = category.Id
             };
 
             var result = await handler.Handle(message, CancellationToken.None);

@@ -35,5 +35,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.CQ
             }
         }
         public IEnumerable<ExternalLinkDto> ExternalLinks { get; set; }
+        public int CategoryId { get; set; }
     }
 }

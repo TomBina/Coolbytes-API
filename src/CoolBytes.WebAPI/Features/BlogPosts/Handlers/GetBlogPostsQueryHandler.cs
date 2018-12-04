@@ -63,6 +63,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)
                 .Include(b => b.Image)
+                .Include(b => b.Category)
                 .Where(b => b.Tags.Any(t => t.Name == tag))
                 .OrderByDescending(b => b.Id)
                 .ToListAsync();
@@ -73,6 +74,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)
                 .Include(b => b.Image)
+                .Include(b => b.Category)
                 .OrderByDescending(b => b.Id)
                 .ToListAsync();
     }

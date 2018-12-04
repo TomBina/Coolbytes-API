@@ -1,5 +1,5 @@
-﻿using System;
-using CoolBytes.WebAPI.Features.Images;
+﻿using CoolBytes.WebAPI.Features.Images;
+using System;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 {
@@ -12,5 +12,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
         public string ContentIntro { get; set; }
         public ImageViewModel Image { get; set; }
         public string AuthorName { get; set; }
+        public string Category { get; set; }
     }
 }

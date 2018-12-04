@@ -30,12 +30,18 @@ namespace CoolBytes.Core.Models
             Author = author ?? throw new ArgumentNullException(nameof(author));
             Tags = new BlogPostTagCollection();
             ExternalLinks = new ExternalLinkCollection();
-            Category = category;
+            Category = category ?? throw new ArgumentNullException(nameof(category));
         }
 
         public void SetImage(Image image)
         {
             Image = image ?? throw new ArgumentNullException(nameof(image));
+        }
+
+        public void SetCategory(Category category)
+        {
+            if (category?.Id != Category.Id)
+                Category = category;
         }
     }
 }

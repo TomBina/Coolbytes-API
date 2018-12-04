@@ -2,12 +2,14 @@
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using FluentValidation;
 using System.Linq;
+using CoolBytes.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
 {
     public class AddBlogPostCommandValidator : AbstractValidator<AddBlogPostCommand>
     {
-        public AddBlogPostCommandValidator(IUserService userService, IAuthorValidator authorValidator)
+        public AddBlogPostCommandValidator(IUserService userService, IAuthorValidator authorValidator, AppDbContext dbContext)
         {
             RuleFor(b => b.Subject).NotEmpty().MaximumLength(100);
             RuleFor(b => b.ContentIntro).NotEmpty().MaximumLength(120);
@@ -23,6 +25,11 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
                 {
                     context.AddFailure(nameof(tags), "Empty tag not allowed.");
                 }
+            });
+            RuleFor(b => b.CategoryId).CustomAsync(async (categoryId, context, cancellationToken) =>
+            {
+                if (!await dbContext.Categories.AnyAsync(c => c.Id == categoryId))
+                    context.AddFailure("Category doesn't exit.");
             });
             RuleFor(b => b).CustomAsync(async (command, context, cancellationToken) =>
             {
