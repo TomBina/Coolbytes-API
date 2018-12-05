@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Utils;
 using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI.Services
@@ -20,7 +21,7 @@ namespace CoolBytes.WebAPI.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<User> GetUser()
+        public async Task<User> GetOrCreateCurrentUser()
         {
             var identifier = _httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
@@ -35,6 +36,18 @@ namespace CoolBytes.WebAPI.Services
             await _appDbContext.SaveChangesAsync();
 
             return user;
+        }
+
+        public async Task<Result<User>> TryGetCurrentUser()
+        {
+            var identifier = _httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrWhiteSpace(identifier))
+                return Result<User>.NotFoundResult();
+
+            var user = await _appDbContext.Users.FirstOrDefaultAsync(u => u.Identifier == identifier);
+
+            return user != null ? user.ToSuccessResult() : Result<User>.NotFoundResult();
         }
     }
 }

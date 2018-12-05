@@ -1,5 +1,5 @@
-﻿using CoolBytes.WebAPI.Features.Categories.ViewModels;
-using CoolBytes.WebAPI.Utils;
+﻿using CoolBytes.Core.Utils;
+using CoolBytes.WebAPI.Features.Categories.ViewModels;
 using MediatR;
 
 namespace CoolBytes.WebAPI.Features.Categories.CQ

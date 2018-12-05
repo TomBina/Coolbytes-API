@@ -33,7 +33,7 @@ namespace CoolBytes.WebAPI.Features.Authors
 
         private async Task<Author> CreateAuthor(AddAuthorCommand message)
         {
-            var user = await _userService.GetUser();
+            var user = await _userService.GetOrCreateCurrentUser();
             var authorProfile = await CreateAuthorProfile(message);
             var author = await Author.Create(user, authorProfile, _authorValidator);
 

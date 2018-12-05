@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoolBytes.WebAPI.Utils
+namespace CoolBytes.Core.Utils
 {
     public abstract class Result<T> : Result
     {

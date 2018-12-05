@@ -1,4 +1,4 @@
-﻿namespace CoolBytes.WebAPI.Utils
+﻿namespace CoolBytes.Core.Utils
 {
     public static class ResultExtensions
     {

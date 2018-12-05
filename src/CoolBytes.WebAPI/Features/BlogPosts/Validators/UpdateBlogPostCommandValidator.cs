@@ -13,8 +13,15 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
         {
             RuleFor(b => b.Id).NotEmpty().CustomAsync(async (id, context, cancellationToken) =>
             {
-                var user = await userService.GetUser();
-                var blogPost = await appDbContext.BlogPosts.FirstOrDefaultAsync(b => b.Author.User.Id == user.Id);
+                var user = await userService.TryGetCurrentUser();
+
+                if (!user)
+                {
+                    context.AddFailure("No user found.");
+                    return;
+                }
+
+                var blogPost = await appDbContext.BlogPosts.FirstOrDefaultAsync(b => b.Author.User.Id == user.Payload.Id);
                 if (blogPost == null)
                     context.AddFailure(nameof(id), "Updating blogpost can only be done by the author.");
             });

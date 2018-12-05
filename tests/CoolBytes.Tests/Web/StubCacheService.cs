@@ -19,9 +19,14 @@ namespace CoolBytes.Tests.Web
             throw new NotImplementedException();
         }
 
-        public Task SetAsync<T>(string key, Func<Task<T>> factory)
+        public ValueTask AddAsync<T>(string key, Func<Task<T>> factory)
         {
             throw new NotImplementedException();
+        }
+
+        public ValueTask RemoveAllAsync()
+        {
+            return new ValueTask();
         }
     }
 }

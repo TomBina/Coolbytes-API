@@ -31,8 +31,12 @@ namespace CoolBytes.WebAPI.Features.Authors
             RuleForEach(a => a.Experiences).SetValidator(new ExperienceDtoValidator(context));
             RuleFor(a => a).CustomAsync(async (command, validationContext, token) =>
             {
-                var user = await userService.GetUser();
-                if (!await context.Authors.AnyAsync(a => a.UserId == user.Id))
+                var user = await userService.TryGetCurrentUser();
+
+                if (!user)
+                    validationContext.AddFailure("No user found");
+
+                if (!await context.Authors.AnyAsync(a => a.UserId == user.Payload.Id))
                     validationContext.AddFailure("No author found!");
             });
         }

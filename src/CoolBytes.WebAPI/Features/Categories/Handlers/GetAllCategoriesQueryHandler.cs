@@ -1,22 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+using CoolBytes.Core.Utils;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Categories.CQ;
 using CoolBytes.WebAPI.Features.Categories.ViewModels;
-using CoolBytes.WebAPI.Utils;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Categories.Handlers
 {
-    public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, Result<IEnumerable<CategoryViewModel>>>
+    public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, Result<IEnumerable<CategoryViewModel>>>
     {
         private readonly AppDbContext _context;
 
-        public GetAllCategoriesHandler(AppDbContext context)
+        public GetAllCategoriesQueryHandler(AppDbContext context)
         {
             _context = context;
         }

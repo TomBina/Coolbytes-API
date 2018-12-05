@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System.Threading.Tasks;
+using CoolBytes.Core.Utils;
+using CoolBytes.WebAPI.Services.Caching;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
@@ -26,10 +28,12 @@ namespace CoolBytes.Tests.Web.Features.Authors
             serviceCollection.AddScoped<IAuthorValidator, AuthorValidator>();
             serviceCollection.AddScoped<IImageFactory>(sp => null);
             serviceCollection.AddScoped<IConfiguration>(sp => null);
+            serviceCollection.AddScoped<ICacheService>(sp => new StubCacheService());
 
             var userService = new Mock<IUserService>();
             var user = new User("test");
-            userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
+            userService.Setup(exp => exp.GetOrCreateCurrentUser()).ReturnsAsync(user);
+            userService.Setup(exp => exp.TryGetCurrentUser()).ReturnsAsync(user.ToSuccessResult());
             serviceCollection.AddSingleton(userService.Object);
 
             serviceCollection.AddMediatR(typeof(Startup));

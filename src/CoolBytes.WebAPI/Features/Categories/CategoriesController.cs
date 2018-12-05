@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CoolBytes.Core.Utils;
 using CoolBytes.WebAPI.Features.Categories.CQ;
 using CoolBytes.WebAPI.Features.Categories.ViewModels;
-using CoolBytes.WebAPI.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NotFoundResult = CoolBytes.WebAPI.Utils.NotFoundResult;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using NotFoundResult = CoolBytes.Core.Utils.NotFoundResult;
 
 namespace CoolBytes.WebAPI.Features.Categories
 {

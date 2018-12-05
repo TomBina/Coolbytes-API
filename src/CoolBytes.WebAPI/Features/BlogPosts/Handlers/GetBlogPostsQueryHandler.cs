@@ -9,28 +9,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.WebAPI.Services.Caching;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
-    public class GetBlogPostsQueryHandler : IRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostSummaryViewModel>>
+    public class GetBlogPostsQueryHandler : CrudHandler, IRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostSummaryViewModel>>
     {
-        private readonly AppDbContext _context;
-        private readonly ICacheService _cacheService;
-
-        public GetBlogPostsQueryHandler(AppDbContext context, ICacheService cacheService)
+        public GetBlogPostsQueryHandler(AppDbContext dbContext, ICacheService cacheService, IUserService userService) : base(dbContext, cacheService, userService)
         {
-            _context = context;
-            _cacheService = cacheService;
         }
 
         public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsQuery message, CancellationToken cancellationToken)
         {
+
             IEnumerable<BlogPostSummaryViewModel> viewModel;
 
             if (message.Tag == null)
             {
-                viewModel = await _cacheService.GetOrAddAsync(() => ViewModelAsync(message.Tag));
+                viewModel = await CacheService.GetOrAddAsync(() => ViewModelAsync(message.Tag));
             }
 
             else
@@ -58,7 +55,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         }
 
         private Task<List<BlogPost>> QueryBlogPostsWithTag(string tag) =>
-            _context.BlogPosts
+            Context.BlogPosts
                 .AsNoTracking()
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)
@@ -69,7 +66,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .ToListAsync();
 
         private Task<List<BlogPost>> QueryBlogPosts() =>
-            _context.BlogPosts
+            Context.BlogPosts
                 .AsNoTracking()
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)
@@ -77,5 +74,17 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .Include(b => b.Category)
                 .OrderByDescending(b => b.Id)
                 .ToListAsync();
+    }
+
+    public class CrudHandler
+    {
+        protected AppDbContext Context { get; }
+        protected ICacheService CacheService { get; }
+
+        public CrudHandler(AppDbContext context, ICacheService cacheService, IUserService userService)
+        {
+            Context = context;
+            CacheService = cacheService;
+        }
     }
 }

@@ -30,6 +30,12 @@ namespace CoolBytes.WebAPI.Services.Caching
         /// <param name="key">The key associated with the value.</param>
         /// <param name="factory">The factory to produce the value.</param>
         /// <returns>A task.</returns>
-        Task SetAsync<T>(string key, Func<Task<T>> factory);
+        ValueTask AddAsync<T>(string key, Func<Task<T>> factory);
+
+        /// <summary>
+        /// Removes all items from the cache.
+        /// </summary>
+        /// <returns></returns>
+        ValueTask RemoveAllAsync();
     }
 }

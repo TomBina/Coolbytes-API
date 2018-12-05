@@ -24,7 +24,7 @@ namespace CoolBytes.WebAPI.Services.Caching
             if (value != null)
                 return value;
 
-            await SetAsync(key, factoryExpression.Compile());
+            await AddAsync(key, factoryExpression.Compile());
             value = await GetAsync<T>(key);
 
             return value;
@@ -37,13 +37,23 @@ namespace CoolBytes.WebAPI.Services.Caching
             return new ValueTask<T>(value);
         }
 
-        public async Task SetAsync<T>(string key, Func<Task<T>> factory)
+        public async ValueTask AddAsync<T>(string key, Func<Task<T>> factory)
         {
             if (Store.ContainsKey(key))
                 return;
 
             var entry = await factory();
             Store.TryAdd(key, entry);
+        }
+
+        public ValueTask RemoveAllAsync()
+        {
+            foreach (var key in Store.Keys)
+            {
+                Store.TryRemove(key, out _);
+            }
+
+            return new ValueTask();
         }
     }
 }
