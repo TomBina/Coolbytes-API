@@ -40,6 +40,11 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
                     context.AddFailure(nameof(tags), "Empty tag not allowed.");
                 }
             });
+            RuleFor(b => b.CategoryId).NotEmpty().CustomAsync(async (categoryId, context, cancellationToken) =>
+            {
+                if (!await appDbContext.Categories.AnyAsync(c => c.Id == categoryId))
+                    context.AddFailure("Category doesn't exit.");
+            });
         }
     }
 }
