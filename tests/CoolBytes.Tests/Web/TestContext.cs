@@ -67,11 +67,23 @@ namespace CoolBytes.Tests.Web
         public AppDbContext CreateNewContext()
             => new AppDbContext(_options);
 
-        public StubCacheService CreateStubCacheService
+        public StubCacheService CreateStubCacheService()
             => new StubCacheService();
 
-        public MemoryCacheService CreateMemoryCacheService
-            => new MemoryCacheService(new CacheKeyGenerator());
+        /// <summary>
+        /// Creates a real memory cache.
+        /// </summary>
+        /// <param name="cachePolicy">When no policy is provided an empty only will be used.</param>
+        /// <returns>MemoryCacheService</returns>
+        public MemoryCacheService CreateMemoryCacheService(ICachePolicy cachePolicy = null)
+        {
+            if (cachePolicy == null)
+                cachePolicy = new StubCachePolicy();
+
+            var cacheKeyGenerator = new CacheKeyGenerator();
+
+            return new MemoryCacheService(cachePolicy, cacheKeyGenerator);
+        }
 
         public ImageFactory CreateImageFactory()
         {

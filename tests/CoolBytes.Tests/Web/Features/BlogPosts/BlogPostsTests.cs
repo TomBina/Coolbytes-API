@@ -5,7 +5,6 @@ using CoolBytes.Core.Utils;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.Handlers;
 using CoolBytes.WebAPI.Services;
-using CoolBytes.WebAPI.Services.Caching;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -69,13 +68,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var sp = TestContext.ServiceProviderBuilder
-                .AddHttpContextAccessor()
-                .Add<ICacheService>(TestContext.CreateStubCacheService)
-                .Add<IUserService>(_userService)
-                .Build();
-           
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, sp);
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CreateStubCacheService());
             var getBlogPostsQuery = new GetBlogPostsQuery();
             var result = await blogPostsQueryHandler.Handle(getBlogPostsQuery, CancellationToken.None);
 
@@ -84,14 +77,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
 
         [Fact]
         public async Task GetBlogPostsQueryHandler_IgnoresCache()
-        {
-            var sp = TestContext.ServiceProviderBuilder
-                .AddHttpContextAccessor()
-                .Add<ICacheService>(TestContext.CreateStubCacheService)
-                .Add<IUserService>(_userService)
-                .Build();
-
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, sp);
+        { 
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CreateStubCacheService());
             var getBlogPostsQuery = new GetBlogPostsQuery() { IgnoreCache = true };
 
             var result = await blogPostsQueryHandler.Handle(getBlogPostsQuery, CancellationToken.None);
@@ -99,17 +86,10 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             Assert.NotEmpty(result);
         }
 
-
         [Fact]
         public async Task GetBlogPostsQueryHandler_UsesCacheTheSecondTime()
         {
-            var sp = TestContext.ServiceProviderBuilder
-                .AddHttpContextAccessor()
-                .Add<ICacheService>(TestContext.CreateMemoryCacheService)
-                .Add<IUserService>(_userService)
-                .Build();
-
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, sp);
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CreateMemoryCacheService());
             var _ = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
             var newBlog = await AddBlog();
 
@@ -121,7 +101,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsOverviewQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CreateStubCacheService);
+            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CreateStubCacheService());
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
 
@@ -131,7 +111,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsOverviewQueryHandler_UsesCacheTheSecondTime()
         {
-            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CreateMemoryCacheService);
+            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CreateMemoryCacheService());
             var _ = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
             var newBlog = await AddBlog();
 
@@ -140,12 +120,11 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             Assert.False(result.Categories.SelectMany(c => c.BlogPosts).Any(b => b.Id == newBlog.Id));
         }
 
-
         [Fact]
         public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
             var blogPostId = Context.BlogPosts.First().Id;
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CreateStubCacheService);
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CreateStubCacheService());
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
 
@@ -160,7 +139,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             blogPost.Content.Update("Hello from DB", "Hello", "Hello");
             await Context.SaveChangesAsync();
 
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CreateMemoryCacheService);
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CreateMemoryCacheService());
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
             Assert.Equal("Hello from DB", result.Payload.Subject);

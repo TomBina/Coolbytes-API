@@ -7,11 +7,11 @@ namespace CoolBytes.Tests.Web
 {
     public class StubCacheService : ICacheService
     {
-        public ValueTask<T> GetOrAddAsync<T>(Expression<Func<Task<T>>> factoryExpression, params object[] arguments)
+        public Task<T> GetOrAddAsync<T>(Expression<Func<Task<T>>> factoryExpression, params object[] arguments)
         {
             var result = factoryExpression.Compile()();
 
-            return new ValueTask<T>(result);
+            return result;
         }
 
         public ValueTask<T> GetAsync<T>(string key)

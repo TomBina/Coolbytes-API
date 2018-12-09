@@ -19,6 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI
 {
@@ -39,8 +40,10 @@ namespace CoolBytes.WebAPI
             services.AddSingleton<IEnvironmentService, EnvironmentService>();
             services.AddSingleton<ICacheService>(sp =>
             {
+                var cachePolicy = new DefaultCachePolicy(sp.GetService<IHttpContextAccessor>(), sp.GetService<IUserService>());
                 var cacheKeyGenerator = new CacheKeyGenerator();
-                return new MemoryCacheService(cacheKeyGenerator);
+                
+                return new MemoryCacheService(cachePolicy, cacheKeyGenerator);
             });
             services.AddHttpContextAccessor();
 

@@ -10,19 +10,22 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Caching
 {
-    public class CachingTests
+    public class CachingTests : TestBase
     {
+        public CachingTests(TestContext testContext) : base(testContext)
+        {
+        }
+
         [Fact]
         public async Task TruncateCacheHandler_Truncates_Whole_Cache()
         {
             var command = new TruncateCacheCommand();
-            var cacheKeyGenerator = new CacheKeyGenerator();
-            var memoryCacheService = new MemoryCacheService(cacheKeyGenerator);
+            var memoryCacheService = TestContext.CreateMemoryCacheService();
             await memoryCacheService.AddAsync("hello", () => Task.FromResult("hello"));
             var cacheStore = (ConcurrentDictionary<string, object>)typeof(MemoryCacheService).GetField("Store", BindingFlags.NonPublic | BindingFlags.Static).GetValue(memoryCacheService);
             var countBeforeTest = cacheStore.Count;
-
             var handler = new TruncateCacheCommandHandler(memoryCacheService);
+
             var result = await handler.Handle(command, CancellationToken.None);
 
             Assert.Equal(1, countBeforeTest);
