@@ -8,7 +8,7 @@ namespace CoolBytes.WebAPI.Services.Caching
 {
     public class MemoryCacheService : ICacheService
     {
-        private readonly ConcurrentDictionary<string, object> _store = new ConcurrentDictionary<string, object>();
+        private static readonly ConcurrentDictionary<string, object> Store = new ConcurrentDictionary<string, object>();
         private readonly ICachePolicy _cachePolicy;
         private readonly CacheKeyGenerator _cacheKeyGenerator;
 
@@ -45,23 +45,23 @@ namespace CoolBytes.WebAPI.Services.Caching
 
         public ValueTask<T> GetAsync<T>(string key)
         {
-            var value = (T)_store.Get(key);
+            var value = (T)Store.Get(key);
 
             return new ValueTask<T>(value);
         }
 
         public async ValueTask AddAsync<T>(string key, Func<Task<T>> factory)
         {
-            if (_store.ContainsKey(key))
+            if (Store.ContainsKey(key))
                 return;
 
             var entry = await factory();
-            _store.TryAdd(key, entry);
+            Store.TryAdd(key, entry);
         }
 
         public ValueTask RemoveAllAsync()
         {
-            _store.Clear();
+            Store.Clear();
 
             return new ValueTask();
         }

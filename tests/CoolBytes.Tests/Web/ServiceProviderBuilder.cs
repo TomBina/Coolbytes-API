@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Moq;
+﻿using Moq;
 using System;
 
 namespace CoolBytes.Tests.Web

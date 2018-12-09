@@ -14,12 +14,12 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
-using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.WebAPI
 {
@@ -38,13 +38,6 @@ namespace CoolBytes.WebAPI
 
             services.AddSingleton<HttpClient, HttpClient>();
             services.AddSingleton<IEnvironmentService, EnvironmentService>();
-            services.AddSingleton<ICacheService>(sp =>
-            {
-                var cachePolicy = new DefaultCachePolicy(sp.GetService<IHttpContextAccessor>(), sp.GetService<IUserService>());
-                var cacheKeyGenerator = new CacheKeyGenerator();
-                
-                return new MemoryCacheService(cachePolicy, cacheKeyGenerator);
-            });
             services.AddHttpContextAccessor();
 
             services.AddTransient<BlogPostBuilder>();
@@ -58,6 +51,13 @@ namespace CoolBytes.WebAPI
             services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
             services.AddScoped<IImageFactoryValidator, ImageFactoryValidator>();
             services.AddScoped<ISendValidator, ThresholdValidator>();
+            services.AddScoped<ICacheService>(sp =>
+            {
+                var cachePolicy = new DefaultCachePolicy(sp.GetService<IHttpContextAccessor>(), sp.GetService<IUserService>());
+                var cacheKeyGenerator = new CacheKeyGenerator();
+
+                return new MemoryCacheService(cachePolicy, cacheKeyGenerator);
+            });
 
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
             services.AddMvc()

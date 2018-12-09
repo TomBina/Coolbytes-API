@@ -1,13 +1,11 @@
-﻿using System;
+﻿using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
-using CoolBytes.Tests.Web.Features;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Utils;
+using CoolBytes.Tests.Web.Features;
 using CoolBytes.WebAPI.Services.Caching;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Services.Caching
