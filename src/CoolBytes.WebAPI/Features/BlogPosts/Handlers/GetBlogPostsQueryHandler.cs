@@ -35,7 +35,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
             else
             {
-                viewModel = await _cacheService.GetOrAddAsync(() => ViewModelAsync(message.Tag));
+                viewModel = await ViewModelAsync(message.Tag);
             }
 
             return viewModel;
