@@ -20,6 +20,11 @@ namespace CoolBytes.WebAPI.Services.Caching
             if (!_httpContext.Request.Headers.ContainsKey("X-CACHE-ENABLED"))
                 return true;
 
+            bool.TryParse(_httpContext.Request.Headers["X-CACHE-ENABLED"], out var cacheEnabled);
+
+            if (cacheEnabled)
+                return true;
+
             var result = await _userService.TryGetCurrentUserAsync();
 
             return !result.IsSuccess;

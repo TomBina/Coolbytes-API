@@ -51,7 +51,7 @@ namespace CoolBytes.Tests.Web.Services.Caching
         [Fact]
         public async Task When_Cache_Header_Is_Found_And_User_Is_Present_Cache_Gets_Disabled()
         {
-            var httpContextAccessor = TestContext.CreateHttpContextAccessor(h => h.Request.Headers.Add("X-CACHE-ENABLED", "true"));
+            var httpContextAccessor = TestContext.CreateHttpContextAccessor(h => h.Request.Headers.Add("X-CACHE-ENABLED", "1"));
             var userServiceMock = new Mock<IUserService>();
             userServiceMock.Setup(u => u.TryGetCurrentUserAsync()).ReturnsAsync(new SuccessResult<User>(null));
             var cachePolicy = new DefaultCachePolicy(httpContextAccessor, userServiceMock.Object);
@@ -73,7 +73,7 @@ namespace CoolBytes.Tests.Web.Services.Caching
         [Fact]
         public async Task When_Cache_Header_Is_Found_And_User_Is_NOT_Present_Cache_Keeps_Being_Enabled()
         {
-            var httpContextAccessor = TestContext.CreateHttpContextAccessor(h => h.Request.Headers.Add("X-CACHE-ENABLED", "true"));
+            var httpContextAccessor = TestContext.CreateHttpContextAccessor(h => h.Request.Headers.Add("X-CACHE-ENABLED", "1"));
             var userServiceMock = new Mock<IUserService>();
             userServiceMock.Setup(u => u.TryGetCurrentUserAsync()).ReturnsAsync(new ErrorResult<User>(string.Empty));
             var cachePolicy = new DefaultCachePolicy(httpContextAccessor, userServiceMock.Object);
