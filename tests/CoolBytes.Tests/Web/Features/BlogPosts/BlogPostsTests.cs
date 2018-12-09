@@ -87,18 +87,6 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
-        public async Task GetBlogPostsQueryHandler_UsesCacheTheSecondTime()
-        {
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CreateMemoryCacheService());
-            var _ = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
-            var newBlog = await AddBlog();
-
-            var result = await blogPostsQueryHandler.Handle(new GetBlogPostsQuery(), CancellationToken.None);
-
-            Assert.False(result.Any(b => b.Id == newBlog.Id));
-        }
-
-        [Fact]
         public async Task GetBlogPostsOverviewQueryHandler_ReturnsBlogs()
         {
             var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CreateStubCacheService());
@@ -106,18 +94,6 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
 
             Assert.NotEmpty(result.Categories);
-        }
-
-        [Fact]
-        public async Task GetBlogPostsOverviewQueryHandler_UsesCacheTheSecondTime()
-        {
-            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CreateMemoryCacheService());
-            var _ = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
-            var newBlog = await AddBlog();
-
-            var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
-
-            Assert.False(result.Categories.SelectMany(c => c.BlogPosts).Any(b => b.Id == newBlog.Id));
         }
 
         [Fact]
@@ -129,26 +105,6 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
 
             Assert.NotNull(result);
-        }
-
-        [Fact]
-        public async Task GetBlogPostQueryHandler_UsesCacheTheSecondTime()
-        {
-            var blogPost = Context.BlogPosts.First();
-            var blogPostId = blogPost.Id;
-            blogPost.Content.Update("Hello from DB", "Hello", "Hello");
-            await Context.SaveChangesAsync();
-
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CreateMemoryCacheService());
-
-            var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
-            Assert.Equal("Hello from DB", result.Payload.Subject);
-
-            blogPost.Content.Update("Hello from DB again!", "Hello", "Hello");
-            await Context.SaveChangesAsync();
-
-            result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
-            Assert.Equal("Hello from DB", result.Payload.Subject);
         }
 
         [Fact]

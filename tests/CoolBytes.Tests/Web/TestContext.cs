@@ -64,9 +64,24 @@ namespace CoolBytes.Tests.Web
             Configuration = configuration.Object;
         }
 
+        public IHttpContextAccessor CreateHttpContextAccessor(Action<HttpContext> configure = null)
+        {
+            var accessor = new Mock<IHttpContextAccessor>();
+            var httpContext = new DefaultHttpContext();
+            accessor.Setup(h => h.HttpContext).Returns(httpContext);
+
+            configure?.Invoke(httpContext);
+
+            return accessor.Object;
+        }
+
         public AppDbContext CreateNewContext()
             => new AppDbContext(_options);
 
+        /// <summary>
+        /// Create a fake cache.
+        /// </summary>
+        /// <returns>StubCacheService</returns>
         public StubCacheService CreateStubCacheService()
             => new StubCacheService();
 

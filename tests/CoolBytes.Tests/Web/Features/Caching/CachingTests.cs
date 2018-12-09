@@ -22,7 +22,7 @@ namespace CoolBytes.Tests.Web.Features.Caching
             var command = new TruncateCacheCommand();
             var memoryCacheService = TestContext.CreateMemoryCacheService();
             await memoryCacheService.AddAsync("hello", () => Task.FromResult("hello"));
-            var cacheStore = (ConcurrentDictionary<string, object>)typeof(MemoryCacheService).GetField("Store", BindingFlags.NonPublic | BindingFlags.Static).GetValue(memoryCacheService);
+            var cacheStore = (ConcurrentDictionary<string, object>)typeof(MemoryCacheService).GetField("_store", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(memoryCacheService);
             var countBeforeTest = cacheStore.Count;
             var handler = new TruncateCacheCommandHandler(memoryCacheService);
 
