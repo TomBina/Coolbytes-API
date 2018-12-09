@@ -19,8 +19,12 @@ namespace CoolBytes.WebAPI.Services
 
         public async Task<bool> Exists(IUserService userService)
         {
-            var user = await userService.GetUser();
-            return await FoundAnyAuthor(user);
+            var user = await userService.TryGetCurrentUserAsync();
+
+            if (!user)
+                return false;
+
+            return await FoundAnyAuthor(user.Payload);
         }
 
         private async Task<bool> FoundAnyAuthor(User user) => await _appDbContext.Authors.AnyAsync(a => a.UserId == user.Id);

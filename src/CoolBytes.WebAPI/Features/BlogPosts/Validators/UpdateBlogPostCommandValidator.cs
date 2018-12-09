@@ -13,8 +13,15 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
         {
             RuleFor(b => b.Id).NotEmpty().CustomAsync(async (id, context, cancellationToken) =>
             {
-                var user = await userService.GetUser();
-                var blogPost = await appDbContext.BlogPosts.FirstOrDefaultAsync(b => b.Author.User.Id == user.Id);
+                var user = await userService.TryGetCurrentUserAsync();
+
+                if (!user)
+                {
+                    context.AddFailure("No user found.");
+                    return;
+                }
+
+                var blogPost = await appDbContext.BlogPosts.FirstOrDefaultAsync(b => b.Author.User.Id == user.Payload.Id);
                 if (blogPost == null)
                     context.AddFailure(nameof(id), "Updating blogpost can only be done by the author.");
             });
@@ -32,6 +39,11 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
                 {
                     context.AddFailure(nameof(tags), "Empty tag not allowed.");
                 }
+            });
+            RuleFor(b => b.CategoryId).NotEmpty().CustomAsync(async (categoryId, context, cancellationToken) =>
+            {
+                if (!await appDbContext.Categories.AnyAsync(c => c.Id == categoryId))
+                    context.AddFailure("Category doesn't exit.");
             });
         }
     }

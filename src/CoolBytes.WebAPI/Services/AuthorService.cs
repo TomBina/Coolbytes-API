@@ -20,14 +20,22 @@ namespace CoolBytes.WebAPI.Services
 
         public async Task<Author> GetAuthor()
         {
-            var user = await _userService.GetUser();
-            return await _context.Authors.FirstOrDefaultAsync(a => a.UserId == user.Id);
+            var user = await _userService.TryGetCurrentUserAsync();
+
+            if (!user)
+                return null;
+
+            return await _context.Authors.FirstOrDefaultAsync(a => a.UserId == user.Payload.Id);
         }
 
         public async Task<Author> GetAuthorWithProfile()
         {
-            var user = await _userService.GetUser();
-            return await QueryAuthorWithProfile().FirstOrDefaultAsync(a => a.UserId == user.Id);
+            var user = await _userService.TryGetCurrentUserAsync();
+
+            if (!user)
+                return null;
+
+            return await QueryAuthorWithProfile().FirstOrDefaultAsync(a => a.UserId == user.Payload.Id);
         }
 
         public async Task<Author> GetAuthorWithProfile(int id)

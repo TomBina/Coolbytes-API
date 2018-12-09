@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CoolBytes.WebAPI.Utils
+namespace CoolBytes.Core.Utils
 {
     public class ErrorResult<T> : Result<T>
     {
@@ -23,7 +23,7 @@ namespace CoolBytes.WebAPI.Utils
         
         public ErrorResult(IEnumerable<string> errors, char separator = ' ')
         {
-            ErrorMessage = string.Join(separator, errors);
+            ErrorMessage = string.Join(separator.ToString(), errors);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
-using CoolBytes.WebAPI.Utils;
+﻿using CoolBytes.Core.Utils;
+using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.CQ

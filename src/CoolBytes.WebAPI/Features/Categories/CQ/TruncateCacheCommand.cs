@@ -3,8 +3,7 @@ using MediatR;
 
 namespace CoolBytes.WebAPI.Features.Categories.CQ
 {
-    public class DeleteCategoryCommand : IRequest<Result>
+    public class TruncateCacheCommand : IRequest<Result>
     {
-        public int Id { get; set; }
     }
 }

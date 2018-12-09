@@ -1,10 +1,10 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using CoolBytes.Core.Utils;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Categories.CQ;
-using CoolBytes.WebAPI.Utils;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Categories.Handlers
 {

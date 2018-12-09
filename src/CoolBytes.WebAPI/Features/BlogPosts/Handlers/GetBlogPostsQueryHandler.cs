@@ -3,24 +3,24 @@ using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using CoolBytes.WebAPI.Services.Caching;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.WebAPI.Services.Caching;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class GetBlogPostsQueryHandler : IRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostSummaryViewModel>>
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
         private readonly ICacheService _cacheService;
 
-        public GetBlogPostsQueryHandler(AppDbContext context, ICacheService cacheService)
+        public GetBlogPostsQueryHandler(AppDbContext dbContext, ICacheService cacheService)
         {
-            _context = context;
+            _dbContext = dbContext;
             _cacheService = cacheService;
         }
 
@@ -30,12 +30,12 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
             if (message.Tag == null)
             {
-                viewModel = await _cacheService.GetOrAddAsync(() => ViewModelAsync(message.Tag));
+                viewModel = await _cacheService.GetOrAddAsync(() => ViewModelAsync(null));
             }
 
             else
             {
-                viewModel = await ViewModelAsync(message.Tag);
+                viewModel = await _cacheService.GetOrAddAsync(() => ViewModelAsync(message.Tag));
             }
 
             return viewModel;
@@ -58,7 +58,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         }
 
         private Task<List<BlogPost>> QueryBlogPostsWithTag(string tag) =>
-            _context.BlogPosts
+            _dbContext.BlogPosts
                 .AsNoTracking()
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)
@@ -69,7 +69,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .ToListAsync();
 
         private Task<List<BlogPost>> QueryBlogPosts() =>
-            _context.BlogPosts
+            _dbContext.BlogPosts
                 .AsNoTracking()
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)

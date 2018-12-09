@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Utils;
 using Moq;
 using Xunit;
 
@@ -43,7 +44,8 @@ namespace CoolBytes.Tests.Web.Features.Resume
                 await context.SaveChangesAsync();
 
                 var userService = new Mock<IUserService>();
-                userService.Setup(exp => exp.GetUser()).ReturnsAsync(user);
+                userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
+                userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
                 _userService = userService.Object;
                 _authorService = new AuthorService(_userService, Context);
             }
@@ -57,7 +59,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
             {
                 AuthorId = author.Id
             };
-            var handler = new GetResumeQueryHandler(Context, _authorService, TestContext.CreateStubCacheService);
+            var handler = new GetResumeQueryHandler(Context, _authorService, TestContext.CreateStubCacheService());
 
             var result = await handler.Handle(message, CancellationToken.None);
 

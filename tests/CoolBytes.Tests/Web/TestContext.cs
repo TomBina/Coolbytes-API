@@ -17,14 +17,17 @@ namespace CoolBytes.Tests.Web
     /// </summary>
     public class TestContext : IDisposable
     {
+        public IConfiguration Configuration { get; private set; }
+
         private static readonly Random Random = new Random();
-        public string TempDirectory { get; } = Path.Combine(Environment.CurrentDirectory, $"dir{Random.Next()}");
+        private readonly string _tempDirectory = Path.Combine(Environment.CurrentDirectory, $"dir{Random.Next()}");
         private DbContextOptions<AppDbContext> _options;
 
         private static bool _initialized;
         private static readonly object Mutex = new object();
 
-        public IConfiguration Configuration { get; private set; }
+        public ServiceProviderBuilder ServiceProviderBuilder
+            => new ServiceProviderBuilder();
 
         public TestContext()
         {
@@ -57,22 +60,49 @@ namespace CoolBytes.Tests.Web
             configuration.Setup(c => c["ImagesUri:Scheme"]).Returns("testdata");
             configuration.Setup(c => c["ImagesUri:Host"]).Returns("testserver.com");
             configuration.Setup(c => c["ImagesUri:Port"]).Returns("80");
-            configuration.Setup(c => c["ImagesUploadPath"]).Returns(TempDirectory);
+            configuration.Setup(c => c["ImagesUploadPath"]).Returns(_tempDirectory);
             Configuration = configuration.Object;
         }
 
-        public AppDbContext CreateNewContext() 
+        public IHttpContextAccessor CreateHttpContextAccessor(Action<HttpContext> configure = null)
+        {
+            var accessor = new Mock<IHttpContextAccessor>();
+            var httpContext = new DefaultHttpContext();
+            accessor.Setup(h => h.HttpContext).Returns(httpContext);
+
+            configure?.Invoke(httpContext);
+
+            return accessor.Object;
+        }
+
+        public AppDbContext CreateNewContext()
             => new AppDbContext(_options);
 
-        public StubCacheService CreateStubCacheService 
+        /// <summary>
+        /// Create a fake cache.
+        /// </summary>
+        /// <returns>StubCacheService</returns>
+        public StubCacheService CreateStubCacheService()
             => new StubCacheService();
 
-        public MemoryCacheService CreateMemoryCacheService 
-            => new MemoryCacheService(new CacheKeyGenerator());
+        /// <summary>
+        /// Creates a real memory cache.
+        /// </summary>
+        /// <param name="cachePolicy">When no policy is provided an empty only will be used.</param>
+        /// <returns>MemoryCacheService</returns>
+        public MemoryCacheService CreateMemoryCacheService(ICachePolicy cachePolicy = null)
+        {
+            if (cachePolicy == null)
+                cachePolicy = new StubCachePolicy();
+
+            var cacheKeyGenerator = new CacheKeyGenerator();
+
+            return new MemoryCacheService(cachePolicy, cacheKeyGenerator);
+        }
 
         public ImageFactory CreateImageFactory()
         {
-            var options = new ImageFactoryOptions(TempDirectory);
+            var options = new ImageFactoryOptions(_tempDirectory);
             var validator = new ImageFactoryValidator();
             var imageFactory = new ImageFactory(options, validator);
             return imageFactory;
@@ -89,8 +119,8 @@ namespace CoolBytes.Tests.Web
 
         public void Dispose()
         {
-            if (Directory.Exists(TempDirectory))
-                Directory.Delete(TempDirectory, recursive: true);
+            if (Directory.Exists(_tempDirectory))
+                Directory.Delete(_tempDirectory, recursive: true);
         }
     }
 }

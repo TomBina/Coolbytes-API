@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoolBytes.WebAPI.Utils
+namespace CoolBytes.Core.Utils
 {
     public class ExceptionResult<T> : Result<T>
     {

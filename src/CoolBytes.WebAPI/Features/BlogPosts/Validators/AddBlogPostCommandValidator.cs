@@ -26,7 +26,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
                     context.AddFailure(nameof(tags), "Empty tag not allowed.");
                 }
             });
-            RuleFor(b => b.CategoryId).CustomAsync(async (categoryId, context, cancellationToken) =>
+            RuleFor(b => b.CategoryId).NotEmpty().CustomAsync(async (categoryId, context, cancellationToken) =>
             {
                 if (!await dbContext.Categories.AnyAsync(c => c.Id == categoryId))
                     context.AddFailure("Category doesn't exit.");
