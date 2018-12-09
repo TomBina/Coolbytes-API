@@ -21,7 +21,7 @@ namespace CoolBytes.WebAPI.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<User> GetOrCreateCurrentUser()
+        public async Task<User> GetOrCreateCurrentUserAsync()
         {
             var identifier = _httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
@@ -38,7 +38,7 @@ namespace CoolBytes.WebAPI.Services
             return user;
         }
 
-        public async Task<Result<User>> TryGetCurrentUser()
+        public async Task<Result<User>> TryGetCurrentUserAsync()
         {
             var identifier = _httpContextAccessor.HttpContext.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 

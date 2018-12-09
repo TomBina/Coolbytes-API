@@ -41,8 +41,8 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 await context.SaveChangesAsync();
 
                 var userService = new Mock<IUserService>();
-                userService.Setup(exp => exp.GetOrCreateCurrentUser()).ReturnsAsync(user);
-                userService.Setup(exp => exp.TryGetCurrentUser()).ReturnsAsync(user.ToSuccessResult());
+                userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
+                userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
                 _userService = userService.Object;
                 _authorService = new AuthorService(_userService, Context);
             }

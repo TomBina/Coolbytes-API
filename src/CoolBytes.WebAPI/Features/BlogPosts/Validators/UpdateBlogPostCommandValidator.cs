@@ -13,7 +13,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Validators
         {
             RuleFor(b => b.Id).NotEmpty().CustomAsync(async (id, context, cancellationToken) =>
             {
-                var user = await userService.TryGetCurrentUser();
+                var user = await userService.TryGetCurrentUserAsync();
 
                 if (!user)
                 {

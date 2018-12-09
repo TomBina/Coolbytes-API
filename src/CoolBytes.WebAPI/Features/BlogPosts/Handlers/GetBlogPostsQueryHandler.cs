@@ -5,34 +5,32 @@ using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Interfaces;
-using CoolBytes.WebAPI.Services.Caching;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
-    public class GetBlogPostsQueryHandler : CrudHandler, IRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostSummaryViewModel>>
+    public class GetBlogPostsQueryHandler : BaseHandler, IRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostSummaryViewModel>>
     {
-        public GetBlogPostsQueryHandler(AppDbContext dbContext, ICacheService cacheService, IUserService userService) : base(dbContext, cacheService, userService)
+        public GetBlogPostsQueryHandler(AppDbContext dbContext, IServiceProvider serviceProvider) : base(dbContext, serviceProvider)
         {
         }
 
         public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsQuery message, CancellationToken cancellationToken)
         {
-
             IEnumerable<BlogPostSummaryViewModel> viewModel;
 
             if (message.Tag == null)
             {
-                viewModel = await CacheService.GetOrAddAsync(() => ViewModelAsync(message.Tag));
+                viewModel = await GetOrAddAsync(() => ViewModelAsync(null));
             }
 
             else
             {
-                viewModel = await ViewModelAsync(message.Tag);
+                viewModel = await GetOrAddAsync(() => ViewModelAsync(message.Tag));
             }
 
             return viewModel;
@@ -74,17 +72,5 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .Include(b => b.Category)
                 .OrderByDescending(b => b.Id)
                 .ToListAsync();
-    }
-
-    public class CrudHandler
-    {
-        protected AppDbContext Context { get; }
-        protected ICacheService CacheService { get; }
-
-        public CrudHandler(AppDbContext context, ICacheService cacheService, IUserService userService)
-        {
-            Context = context;
-            CacheService = cacheService;
-        }
     }
 }

@@ -22,8 +22,8 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             var user = new User("Test");
             var userService = new Mock<IUserService>();
-            userService.Setup(exp => exp.GetOrCreateCurrentUser()).ReturnsAsync(user);
-            userService.Setup(exp => exp.TryGetCurrentUser()).ReturnsAsync(user.ToSuccessResult());
+            userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
+            userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
             _userService = userService.Object;
             _authorService = new AuthorService(_userService, Context);
         }
@@ -46,7 +46,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             {
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
                 var authorValidator = new AuthorValidator(context);
-                var user = await _userService.GetOrCreateCurrentUser();
+                var user = await _userService.GetOrCreateCurrentUserAsync();
 
                 var author = await Author.Create(user, authorProfile, authorValidator);
                 context.Authors.Add(author);

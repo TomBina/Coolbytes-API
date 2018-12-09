@@ -20,7 +20,7 @@ namespace CoolBytes.WebAPI.Services
 
         public async Task<Author> GetAuthor()
         {
-            var user = await _userService.TryGetCurrentUser();
+            var user = await _userService.TryGetCurrentUserAsync();
 
             if (!user)
                 return null;
@@ -30,7 +30,7 @@ namespace CoolBytes.WebAPI.Services
 
         public async Task<Author> GetAuthorWithProfile()
         {
-            var user = await _userService.TryGetCurrentUser();
+            var user = await _userService.TryGetCurrentUserAsync();
 
             if (!user)
                 return null;

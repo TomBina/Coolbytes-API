@@ -1,4 +1,5 @@
-﻿using CoolBytes.Core.Interfaces;
+﻿using System;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI;
@@ -19,7 +20,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
 {
     public class AuthorsControllerTests : IClassFixture<TestContext>
     {
-        private readonly ServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProviderBuilder;
 
         public AuthorsControllerTests()
         {            
@@ -32,18 +33,18 @@ namespace CoolBytes.Tests.Web.Features.Authors
 
             var userService = new Mock<IUserService>();
             var user = new User("test");
-            userService.Setup(exp => exp.GetOrCreateCurrentUser()).ReturnsAsync(user);
-            userService.Setup(exp => exp.TryGetCurrentUser()).ReturnsAsync(user.ToSuccessResult());
+            userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
+            userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
             serviceCollection.AddSingleton(userService.Object);
 
             serviceCollection.AddMediatR(typeof(Startup));
-            _serviceProvider = serviceCollection.BuildServiceProvider();
+            _serviceProviderBuilder = serviceCollection.BuildServiceProvider();
         }
 
         [Fact]
         public async Task AddAuthor_ReturnsAuthor()
         {
-            var controller = new AuthorsController(_serviceProvider.GetService<IMediator>());
+            var controller = new AuthorsController(_serviceProviderBuilder.GetService<IMediator>());
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             var result = await controller.Add(message);
@@ -54,7 +55,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         [Fact]
         public async Task AddAuthor_AddingSecondTime_ReturnsBadRequest()
         {
-            var controller = new AuthorsController(_serviceProvider.GetService<IMediator>());
+            var controller = new AuthorsController(_serviceProviderBuilder.GetService<IMediator>());
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             await controller.Add(message);

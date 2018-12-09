@@ -19,7 +19,7 @@ namespace CoolBytes.WebAPI.Services
 
         public async Task<bool> Exists(IUserService userService)
         {
-            var user = await userService.TryGetCurrentUser();
+            var user = await userService.TryGetCurrentUserAsync();
 
             if (!user)
                 return false;
