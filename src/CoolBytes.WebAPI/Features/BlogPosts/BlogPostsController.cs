@@ -2,6 +2,7 @@
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.Validators;
+using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts
 {
@@ -63,6 +63,16 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             }
 
             return blogPost.Payload;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<IEnumerable<BlogPostSummaryViewModel>>> GetByCategoryId(int id)
+        {
+            var message = new GetBlogPostsByCategoryQuery() { CategoryId = id };
+            var blogs = await _mediator.Send(message);
+
+            return blogs.ToList();
         }
 
         [Authorize("admin")]

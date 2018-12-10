@@ -76,12 +76,16 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         }
 
         [Fact]
-        public async Task GetBlogPostsQueryHandler_IgnoresCache()
-        { 
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CreateStubCacheService());
-            var getBlogPostsQuery = new GetBlogPostsQuery() { IgnoreCache = true };
-
-            var result = await blogPostsQueryHandler.Handle(getBlogPostsQuery, CancellationToken.None);
+        public async Task GetBlogPostsByCategoryQueryHandler_ReturnsBlogs()
+        {
+            var query = new GetBlogPostsByCategoryQuery();
+            using (var context = TestContext.CreateNewContext())
+            {
+                var category = await context.Categories.FirstAsync();
+                query.CategoryId = category.Id;
+            }
+            var handler = new GetBlogPostsByCategoryQueryHandler(Context, TestContext.CreateStubCacheService());
+            var result = await handler.Handle(query, CancellationToken.None);
 
             Assert.NotEmpty(result);
         }
