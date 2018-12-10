@@ -65,7 +65,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             return blogPost.Payload;
         }
 
-        [HttpGet]
+        [HttpGet("category/{id}")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<BlogPostSummaryViewModel>>> GetByCategoryId(int id)
         {
