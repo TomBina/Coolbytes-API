@@ -32,6 +32,10 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         }
 
         private async Task<IEnumerable<BlogPost>> BlogPostsFactoryAsync(int categoryId) 
-            => await _context.BlogPosts.Where(b => b.CategoryId == categoryId).ToListAsync();
+            => await _context.BlogPosts.AsNoTracking()
+                                       .Include(b => b.Author)
+                                       .Include(b => b.Author.AuthorProfile)
+                                       .Include(b => b.Image)
+                                       .Include(b => b.Category).Where(b => b.CategoryId == categoryId).ToListAsync();
     }
 }
