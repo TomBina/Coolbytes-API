@@ -47,7 +47,7 @@ namespace CoolBytes.Tests.Web.Features.Categories
 
             var result = await handler.Handle(message, CancellationToken.None);
 
-            Assert.Equal(category.Id, result.Payload.CategoryId);
+            Assert.Equal(category.Id, result.Payload.Id);
         }
 
         private async Task<Category> GetRandomCategory()

@@ -8,7 +8,7 @@ namespace CoolBytes.WebAPI.Features.Categories.Profiles
     {
         public CategoryViewModelProfile()
         {
-            CreateMap<Category, CategoryViewModel>().ForMember(cv => cv.CategoryId, opt => opt.MapFrom(c => c.Id));
+            CreateMap<Category, CategoryViewModel>().ForMember(cv => cv.Id, opt => opt.MapFrom(c => c.Id));
         }
     }
 }
