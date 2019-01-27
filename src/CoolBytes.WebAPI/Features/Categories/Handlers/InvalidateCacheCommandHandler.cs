@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Categories.Handlers
 {
-    public class TruncateCacheCommandHandler : IRequestHandler<TruncateCacheCommand, Result>
+    public class InvalidateCacheCommandHandler : IRequestHandler<InvalidateCacheCommand, Result>
     {
         private readonly ICacheService _cacheService;
 
-        public TruncateCacheCommandHandler(ICacheService cacheService)
+        public InvalidateCacheCommandHandler(ICacheService cacheService)
         {
             _cacheService = cacheService;
         }
 
-        public async Task<Result> Handle(TruncateCacheCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(InvalidateCacheCommand request, CancellationToken cancellationToken)
         {
             await _cacheService.RemoveAllAsync();
 
