@@ -16,10 +16,10 @@ namespace CoolBytes.Tests.Web.Features.Caching
         [Fact]
         public async Task TruncateCacheHandler_Truncates_Whole_Cache()
         {
-            var command = new TruncateCacheCommand();
+            var command = new InvalidateCacheCommand();
             var memoryCacheService = TestContext.CreateMemoryCacheService();
             await memoryCacheService.AddAsync("hello", () => Task.FromResult("hello"));
-            var handler = new TruncateCacheCommandHandler(memoryCacheService);
+            var handler = new InvalidateCacheCommandHandler(memoryCacheService);
 
             var result = await handler.Handle(command, CancellationToken.None);
 

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoolBytes.WebAPI.Features.Caching
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class CacheController : Controller
     {
         private readonly IMediator _mediator;
@@ -19,9 +21,9 @@ namespace CoolBytes.WebAPI.Features.Caching
         [HttpDelete]
         [ProducesResponseType(203)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> Truncate()
+        public async Task<ActionResult> Invalidate()
         {
-            var message = new TruncateCacheCommand();
+            var message = new InvalidateCacheCommand();
             var result = await _mediator.Send(message);
 
             if (!result)
