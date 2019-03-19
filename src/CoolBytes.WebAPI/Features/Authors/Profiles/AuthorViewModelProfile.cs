@@ -16,7 +16,7 @@ namespace CoolBytes.WebAPI.Features.Authors.Profiles
                 .ForMember(v => v.ResumeUri, exp => exp.MapFrom(a => a.AuthorProfile.ResumeUri))
                 .ForMember(v => v.SocialHandles, exp => exp.MapFrom(a => a.AuthorProfile.SocialHandles))
                 .ForMember(v => v.Image,
-                    exp => exp.ResolveUsing((author, viewModel, image) =>
+                    exp => exp.MapFrom((author, viewModel, image) =>
                     {
                         if (author.AuthorProfile != null)
                         {

@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoolBytes.WebAPI", "src\Coo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utils", "utils", "{85855F02-6F37-46D3-B930-DDA94560155D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.EncryptionOptionsGenerator", "utils\CoolBytes.EncryptionOptionsGenerator\CoolBytes.EncryptionOptionsGenerator.csproj", "{24177FAE-E047-4F44-BED3-76E7105E28CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoolBytes.EncryptionOptionsGenerator", "utils\CoolBytes.EncryptionOptionsGenerator\CoolBytes.EncryptionOptionsGenerator.csproj", "{24177FAE-E047-4F44-BED3-76E7105E28CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

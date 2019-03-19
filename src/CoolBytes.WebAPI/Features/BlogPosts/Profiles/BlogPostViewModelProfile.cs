@@ -23,7 +23,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Profiles
 
         private static void ResolveImageModelFromBlogPost<T>(IMemberConfigurationExpression<BlogPost, T, ImageViewModel> exp)
         {
-            exp.ResolveUsing((blogPost, viewModel, image) =>
+            exp.MapFrom((blogPost, viewModel, image) =>
                 blogPost.Image == null ? null : new ImageViewModel() { UriPath = blogPost.Image.UriPath });
         }
     }
