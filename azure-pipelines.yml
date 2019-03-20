@@ -22,7 +22,8 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: publish
-    publishWebProjects: True
+    publishWebProjects: False
+    projects: '**/CoolBytes.WebAPI.csproj'
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
   displayName: dotnet publish
