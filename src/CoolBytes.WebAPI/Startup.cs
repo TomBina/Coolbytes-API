@@ -61,7 +61,7 @@ namespace CoolBytes.WebAPI
 
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
             services.AddMvc()
-                        .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                         .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                         .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
             services.AddMediatR(typeof(Startup));
@@ -97,6 +97,7 @@ namespace CoolBytes.WebAPI
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseAuthentication();
+            app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUi3();
 
