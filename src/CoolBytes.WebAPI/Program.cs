@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace CoolBytes.WebAPI
 {
@@ -58,6 +59,12 @@ namespace CoolBytes.WebAPI
 
         private static IWebHost BuildWebHost(string[] args, IConfiguration configuration) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((context, builder) =>
+                {
+                    var settingsJson = File.ReadAllText("keyvaultsettings.json");
+                    var settings = JsonConvert.DeserializeObject<KeyVaultSettings>(settingsJson);
+                    builder.AddAzureKeyVault(settings.Vault, settings.ClientId, settings.Secret);
+                })
                 .UseStartup<Startup>()
                 .UseConfiguration(configuration)
                 .UseSerilog()
