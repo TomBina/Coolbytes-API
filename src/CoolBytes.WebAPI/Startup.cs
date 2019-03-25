@@ -7,7 +7,6 @@ using CoolBytes.WebAPI.Authorization;
 using CoolBytes.WebAPI.Extensions;
 using CoolBytes.WebAPI.Services;
 using CoolBytes.WebAPI.Services.Caching;
-using CoolBytes.WebAPI.Services.Environment;
 using CoolBytes.WebAPI.Services.Mailer;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -37,7 +36,6 @@ namespace CoolBytes.WebAPI
             ConfigureSecurity(services);
 
             services.AddSingleton<HttpClient, HttpClient>();
-            services.AddSingleton<IEnvironmentService, EnvironmentService>();
             services.AddHttpContextAccessor();
 
             services.AddTransient<BlogPostBuilder>();
