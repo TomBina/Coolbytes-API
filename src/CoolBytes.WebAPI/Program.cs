@@ -6,6 +6,7 @@ using Serilog;
 using System;
 using System.IO;
 using Newtonsoft.Json;
+using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
 
 namespace CoolBytes.WebAPI
 {
@@ -26,26 +27,27 @@ namespace CoolBytes.WebAPI
             var currentEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             builder.AddJsonFile($"appsettings.{currentEnvironment}.json", optional: false, reloadOnChange: true);
 
+            var settingsJson = File.ReadAllText("keyvaultsettings.json");
+            var settings = JsonConvert.DeserializeObject<KeyVaultSettings>(settingsJson);
+
+            builder.AddAzureKeyVault(settings.Vault, settings.ClientId, settings.Secret);
+
             return builder.Build();
         }
 
         private static void StartWebHost(string[] args, IConfiguration configuration)
         {
-            Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
             Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.MongoDB(configuration.GetConnectionString("MongoDb"))
-                .CreateLogger();
+                                .ReadFrom.Configuration(configuration)
+                                .Enrich.FromLogContext()
+                                .WriteTo.Console()
+                                .WriteTo.MongoDB(configuration.GetConnectionString("MongoDb"))
+                                .WriteTo.ApplicationInsights(configuration["coolbytesinstrumentationkey"], new EventTelemetryConverter())
+                                .CreateLogger();
 
             try
             {
-                Log.Information("Init db");
-                DbSetup.InitDb(configuration);
-
-                Log.Information("Starting web host");
-                BuildWebHost(args, configuration).Run();
+                Initialize(args, configuration);
             }
             catch (Exception ex)
             {
@@ -57,14 +59,18 @@ namespace CoolBytes.WebAPI
             }
         }
 
+        private static void Initialize(string[] args, IConfiguration configuration)
+        {
+            Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
+            Log.Information("Init db");
+            DbSetup.InitDb(configuration);
+
+            Log.Information("Starting web host");
+            BuildWebHost(args, configuration).Run();
+        }
+
         private static IWebHost BuildWebHost(string[] args, IConfiguration configuration) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((context, builder) =>
-                {
-                    var settingsJson = File.ReadAllText("keyvaultsettings.json");
-                    var settings = JsonConvert.DeserializeObject<KeyVaultSettings>(settingsJson);
-                    builder.AddAzureKeyVault(settings.Vault, settings.ClientId, settings.Secret);
-                })
                 .UseStartup<Startup>()
                 .UseConfiguration(configuration)
                 .UseSerilog()
