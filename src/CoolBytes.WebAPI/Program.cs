@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using System;
 using System.IO;
+using CoolBytes.WebAPI.Services;
 using Newtonsoft.Json;
 using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
 
@@ -27,9 +28,8 @@ namespace CoolBytes.WebAPI
             var currentEnvironment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             builder.AddJsonFile($"appsettings.{currentEnvironment}.json", optional: false, reloadOnChange: true);
 
-            var settingsJson = File.ReadAllText("keyvaultsettings.json");
-            var settings = JsonConvert.DeserializeObject<KeyVaultSettings>(settingsJson);
-
+            var keyVaultFactory = new KeyVaultSettingsFactory();
+            var settings = keyVaultFactory.Create();
             builder.AddAzureKeyVault(settings.Vault, settings.ClientId, settings.Secret);
 
             return builder.Build();
