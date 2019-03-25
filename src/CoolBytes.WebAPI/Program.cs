@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
+using CoolBytes.WebAPI.Services.KeyVault;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
 using System;
 using System.IO;
-using CoolBytes.WebAPI.Services;
-using Newtonsoft.Json;
-using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
 
 namespace CoolBytes.WebAPI
 {

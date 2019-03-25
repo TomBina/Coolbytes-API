@@ -1,4 +1,4 @@
-﻿namespace CoolBytes.WebAPI
+﻿namespace CoolBytes.WebAPI.Services.KeyVault
 {
     public class KeyVaultSettings
     {

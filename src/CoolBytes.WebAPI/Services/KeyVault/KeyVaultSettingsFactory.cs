@@ -1,9 +1,9 @@
-﻿using CoolBytes.WebAPI.Services.Environment;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
+using CoolBytes.WebAPI.Services.Environment;
+using Newtonsoft.Json;
 
-namespace CoolBytes.WebAPI.Services
+namespace CoolBytes.WebAPI.Services.KeyVault
 {
     public class KeyVaultSettingsFactory
     {
