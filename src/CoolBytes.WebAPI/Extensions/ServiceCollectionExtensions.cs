@@ -1,4 +1,4 @@
-﻿using CoolBytes.WebAPI.Services.Mailer;
+﻿using CoolBytes.Services.Mailer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.Net.Http;

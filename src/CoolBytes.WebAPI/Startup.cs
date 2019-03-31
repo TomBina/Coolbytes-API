@@ -3,11 +3,11 @@ using CoolBytes.Core.Builders;
 using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
+using CoolBytes.Services;
+using CoolBytes.Services.Caching;
+using CoolBytes.Services.Mailer;
 using CoolBytes.WebAPI.Authorization;
 using CoolBytes.WebAPI.Extensions;
-using CoolBytes.WebAPI.Services;
-using CoolBytes.WebAPI.Services.Caching;
-using CoolBytes.WebAPI.Services.Mailer;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,10 +37,10 @@ namespace CoolBytes.WebAPI
 
             services.AddSingleton<HttpClient, HttpClient>();
             services.AddHttpContextAccessor();
-
             services.AddTransient<BlogPostBuilder>();
             services.AddTransient<ExistingBlogPostBuilder>();
 
+            //services.Scan(s => s.FromCallingAssembly().AddClasses(c => c.in).UsingRegistrationStrategy(RegistrationStrategy.Skip).AsMatchingInterface().WithScopedLifetime());
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IAuthorSearchService, AuthorService>();

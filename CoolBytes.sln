@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoolBytes.Data", "src\CoolB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoolBytes.WebAPI", "src\CoolBytes.WebAPI\CoolBytes.WebAPI.csproj", "{0E33B8CE-CD39-4BD9-89B5-4889E8D679BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.Services", "CoolBytes.Services\CoolBytes.Services.csproj", "{FB960C7A-5C44-4E58-BA53-0C706F3311FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{0E33B8CE-CD39-4BD9-89B5-4889E8D679BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E33B8CE-CD39-4BD9-89B5-4889E8D679BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E33B8CE-CD39-4BD9-89B5-4889E8D679BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB960C7A-5C44-4E58-BA53-0C706F3311FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB960C7A-5C44-4E58-BA53-0C706F3311FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB960C7A-5C44-4E58-BA53-0C706F3311FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB960C7A-5C44-4E58-BA53-0C706F3311FC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{BDBC1C57-D69C-40AD-A692-FB2458653C55} = {167FD31D-03F4-4D8C-A5AF-817722FE49EC}
 		{49D99B74-54A0-4792-8C41-8764826E3B5C} = {FB2CFBCF-C587-47D4-987D-E1FB9DC98C78}
 		{0E33B8CE-CD39-4BD9-89B5-4889E8D679BC} = {FB2CFBCF-C587-47D4-987D-E1FB9DC98C78}
+		{FB960C7A-5C44-4E58-BA53-0C706F3311FC} = {FB2CFBCF-C587-47D4-987D-E1FB9DC98C78}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7B8863F2-2C55-4EE2-B989-E2417AEE21A5}

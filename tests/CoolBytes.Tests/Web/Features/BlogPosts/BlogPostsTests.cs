@@ -2,9 +2,9 @@
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Core.Utils;
+using CoolBytes.Services;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.Handlers;
-using CoolBytes.WebAPI.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Moq;

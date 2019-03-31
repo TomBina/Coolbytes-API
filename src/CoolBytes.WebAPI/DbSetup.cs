@@ -1,6 +1,6 @@
 ﻿using CoolBytes.Core.Models;
 using CoolBytes.Data;
-using CoolBytes.WebAPI.Services;
+using CoolBytes.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

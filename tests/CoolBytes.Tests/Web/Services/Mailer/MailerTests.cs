@@ -1,13 +1,13 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using CoolBytes.Data;
+﻿using CoolBytes.Data;
 using CoolBytes.Data.Models;
-using CoolBytes.WebAPI.Services.Mailer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using CoolBytes.Services.Mailer;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Services.Mailer

@@ -1,4 +1,4 @@
-﻿using CoolBytes.WebAPI.Services.Mailer;
+﻿using CoolBytes.Services.Mailer;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;

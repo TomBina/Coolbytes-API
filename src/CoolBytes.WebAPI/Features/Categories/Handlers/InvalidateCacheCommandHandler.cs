@@ -1,9 +1,9 @@
 ﻿using CoolBytes.Core.Utils;
 using CoolBytes.WebAPI.Features.Categories.CQ;
-using CoolBytes.WebAPI.Services.Caching;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Services.Caching;
 
 namespace CoolBytes.WebAPI.Features.Categories.Handlers
 {

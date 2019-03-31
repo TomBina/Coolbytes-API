@@ -1,4 +1,4 @@
-﻿using CoolBytes.WebAPI.Services.Mailer;
+﻿using CoolBytes.Services.Mailer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;

@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using CoolBytes.WebAPI.Services.Caching;
+﻿using CoolBytes.Services.Caching;
+using System.Threading.Tasks;
 
 namespace CoolBytes.Tests.Web
 {

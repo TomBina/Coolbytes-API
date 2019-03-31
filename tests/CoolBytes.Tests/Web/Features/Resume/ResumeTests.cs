@@ -1,12 +1,12 @@
-﻿using CoolBytes.Core.Models;
+﻿using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Models;
+using CoolBytes.Core.Utils;
+using CoolBytes.Services;
 using CoolBytes.WebAPI.Features.Resume;
-using CoolBytes.WebAPI.Services;
+using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Utils;
-using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Resume

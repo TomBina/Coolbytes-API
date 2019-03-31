@@ -2,13 +2,13 @@
 using CoolBytes.Core.Factories;
 using CoolBytes.Data;
 using CoolBytes.WebAPI;
-using CoolBytes.WebAPI.Services.Caching;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
 using System.IO;
+using CoolBytes.Services.Caching;
 
 namespace CoolBytes.Tests.Web
 {
