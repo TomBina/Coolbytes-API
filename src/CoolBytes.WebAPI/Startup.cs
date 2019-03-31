@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Builders;
 using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
-using CoolBytes.Services;
 using CoolBytes.Services.Caching;
-using CoolBytes.Services.Mailer;
 using CoolBytes.WebAPI.Authorization;
 using CoolBytes.WebAPI.Extensions;
 using FluentValidation.AspNetCore;
@@ -13,12 +12,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http;
 
 namespace CoolBytes.WebAPI
 {
@@ -35,27 +32,24 @@ namespace CoolBytes.WebAPI
         {
             ConfigureSecurity(services);
 
-            services.AddSingleton<HttpClient, HttpClient>();
+            services.AddHttpClient();
             services.AddHttpContextAccessor();
             services.AddTransient<BlogPostBuilder>();
             services.AddTransient<ExistingBlogPostBuilder>();
 
-            //services.Scan(s => s.FromCallingAssembly().AddClasses(c => c.in).UsingRegistrationStrategy(RegistrationStrategy.Skip).AsMatchingInterface().WithScopedLifetime());
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAuthorService, AuthorService>();
-            services.AddScoped<IAuthorSearchService, AuthorService>();
-            services.AddScoped<IAuthorValidator, AuthorValidator>();
-            services.AddScoped<IImageFactory, ImageFactory>();
-            services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
-            services.AddScoped<IImageFactoryValidator, ImageFactoryValidator>();
-            services.AddScoped<ISendValidator, ThresholdValidator>();
-            services.AddScoped<ICacheService>(sp =>
-            {
-                var cachePolicy = new DefaultCachePolicy(sp.GetService<IHttpContextAccessor>(), sp.GetService<IUserService>());
-                var cacheKeyGenerator = new CacheKeyGenerator();
+            services.Scan(s =>
+                s.FromAssemblyOf<ICacheService>()
+                    .AddClasses(c => c.WithAttribute<ScopedAttribute>())
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime());
 
-                return new MemoryCacheService(cachePolicy, cacheKeyGenerator);
-            });
+            services.Scan(s =>
+                s.FromAssemblyOf<IImageFactory>()
+                    .AddClasses(c => c.WithAttribute<ScopedAttribute>())
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime());
+
+            services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
 
             services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
             services.AddMvc()
