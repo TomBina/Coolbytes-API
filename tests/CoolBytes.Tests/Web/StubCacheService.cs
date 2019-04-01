@@ -1,4 +1,4 @@
-﻿using CoolBytes.WebAPI.Services.Caching;
+﻿using CoolBytes.Services.Caching;
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;

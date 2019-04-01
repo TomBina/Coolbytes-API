@@ -1,18 +1,18 @@
-﻿using CoolBytes.Core.Models;
+﻿using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Models;
+using CoolBytes.Core.Utils;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
 using CoolBytes.WebAPI.Features.ResumeEvents.DTO;
 using CoolBytes.WebAPI.Features.ResumeEvents.Handlers;
-using CoolBytes.WebAPI.Services;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Utils;
-using Moq;
+using CoolBytes.Services;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.ResumeEvents

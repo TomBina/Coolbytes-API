@@ -1,19 +1,19 @@
-﻿using System;
-using CoolBytes.Core.Interfaces;
+﻿using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
+using CoolBytes.Core.Utils;
 using CoolBytes.Data;
+using CoolBytes.Services;
+using CoolBytes.Services.Caching;
 using CoolBytes.WebAPI;
 using CoolBytes.WebAPI.Features.Authors;
-using CoolBytes.WebAPI.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
+using System;
 using System.Threading.Tasks;
-using CoolBytes.Core.Utils;
-using CoolBytes.WebAPI.Services.Caching;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
