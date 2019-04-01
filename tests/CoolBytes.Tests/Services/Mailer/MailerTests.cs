@@ -1,16 +1,17 @@
-﻿using CoolBytes.Data;
-using CoolBytes.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using System;
+﻿using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using CoolBytes.Data;
+using CoolBytes.Data.Models;
 using CoolBytes.Services.Mailer;
+using CoolBytes.Tests.Web;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
-namespace CoolBytes.Tests.Web.Services.Mailer
+namespace CoolBytes.Tests.Services.Mailer
 {
     public class MailerTests : IClassFixture<TestContext>, IAsyncLifetime
     {

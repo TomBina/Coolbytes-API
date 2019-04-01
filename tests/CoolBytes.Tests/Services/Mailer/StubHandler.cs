@@ -1,11 +1,11 @@
-﻿using CoolBytes.Services.Mailer;
-using Newtonsoft.Json;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Services.Mailer;
+using Newtonsoft.Json;
 
-namespace CoolBytes.Tests.Web.Services.Mailer
+namespace CoolBytes.Tests.Services.Mailer
 {
     public class StubHandler : HttpMessageHandler
     {

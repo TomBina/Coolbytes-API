@@ -1,14 +1,15 @@
-﻿using CoolBytes.Core.Interfaces;
+﻿using System.Threading.Tasks;
+using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Core.Utils;
+using CoolBytes.Services.Caching;
+using CoolBytes.Tests.Web;
 using CoolBytes.Tests.Web.Features;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using System.Threading.Tasks;
-using CoolBytes.Services.Caching;
 using Xunit;
 
-namespace CoolBytes.Tests.Web.Services.Caching
+namespace CoolBytes.Tests.Services.Caching
 {
     public class MemoryCacheTests : TestBase
     {
