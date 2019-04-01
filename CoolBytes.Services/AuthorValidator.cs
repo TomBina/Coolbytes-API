@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.Services
 {
+    [Scoped]
     public class AuthorValidator : IAuthorValidator
     {
         private readonly AppDbContext _appDbContext;

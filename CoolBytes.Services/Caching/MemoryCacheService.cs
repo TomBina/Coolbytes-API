@@ -2,17 +2,19 @@
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Utils;
 
 namespace CoolBytes.Services.Caching
 {
+    [Scoped]
     public class MemoryCacheService : ICacheService
     {
         private static readonly ConcurrentDictionary<string, object> Store = new ConcurrentDictionary<string, object>();
         private readonly ICachePolicy _cachePolicy;
-        private readonly CacheKeyGenerator _cacheKeyGenerator;
+        private readonly ICacheKeyGenerator _cacheKeyGenerator;
 
-        public MemoryCacheService(ICachePolicy cachePolicy, CacheKeyGenerator cacheKeyGenerator)
+        public MemoryCacheService(ICachePolicy cachePolicy, ICacheKeyGenerator cacheKeyGenerator)
         {
             _cachePolicy = cachePolicy;
             _cacheKeyGenerator = cacheKeyGenerator;

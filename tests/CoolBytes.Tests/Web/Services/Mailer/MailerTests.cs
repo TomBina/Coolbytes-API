@@ -87,11 +87,14 @@ namespace CoolBytes.Tests.Web.Services.Mailer
             return new MailgunMailer(httpClient, options, thresholdValidator, logger);
         }
 
-        private static HttpClient CreateHttpClient()
+        private static IHttpClientFactory CreateHttpClient()
         {
             var fakeHandler = new StubHandler();
+            var httpClientFactory = new Mock<IHttpClientFactory>();
             var httpClient = new HttpClient(fakeHandler);
-            return httpClient;
+
+            httpClientFactory.Setup(h => h.CreateClient(It.IsAny<string>())).Returns(httpClient);
+            return httpClientFactory.Object;
         }
 
         private static MailgunMailerOptions CreateOptions()

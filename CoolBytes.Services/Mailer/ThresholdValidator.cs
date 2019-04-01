@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Data;
 using CoolBytes.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.Services.Mailer
 {
+    [Scoped]
     public class ThresholdValidator : ISendValidator
     {
         private readonly AppDbContext _context;

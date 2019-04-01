@@ -14,7 +14,7 @@ namespace CoolBytes.WebAPI.Extensions
             {
                 var optionsFactory = sp.GetService<MailgunMailerOptionsFactory>();
                 var options = optionsFactory.Create();
-                var httpClient = sp.GetService<HttpClient>();
+                var httpClient = sp.GetService<IHttpClientFactory>();
                 var logger = sp.GetService<ILogger<MailgunMailer>>();
                 var sendValidator = sp.GetService<ISendValidator>();
 

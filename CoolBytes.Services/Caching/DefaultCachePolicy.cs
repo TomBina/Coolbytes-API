@@ -1,9 +1,11 @@
 ﻿using System.Threading.Tasks;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.Services.Caching
 {
+    [Scoped]
     public class DefaultCachePolicy : ICachePolicy
     {
         private readonly HttpContext _httpContext;

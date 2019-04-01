@@ -12,14 +12,14 @@ namespace CoolBytes.Services.Mailer
 {
     public class MailgunMailer : IMailer
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly MailgunMailerOptions _options;
         private readonly ISendValidator _validator;
         private readonly ILogger<MailgunMailer> _logger;
 
-        public MailgunMailer(HttpClient httpClient, MailgunMailerOptions options, ISendValidator validator, ILogger<MailgunMailer> logger)
+        public MailgunMailer(IHttpClientFactory httpClientFactory, MailgunMailerOptions options, ISendValidator validator, ILogger<MailgunMailer> logger)
         {
-            _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
             _options = options;
             _validator = validator;
             _logger = logger;
@@ -81,7 +81,8 @@ namespace CoolBytes.Services.Mailer
             HttpResponseMessage response;
             try
             {
-                response = await _httpClient.SendAsync(httpMessage, CancellationToken.None);
+                var httpClient = _httpClientFactory.CreateClient(); 
+                response = await httpClient.SendAsync(httpMessage, CancellationToken.None);
             }
             catch (Exception ex)
             {

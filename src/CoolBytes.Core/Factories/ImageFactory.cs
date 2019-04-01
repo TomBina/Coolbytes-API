@@ -3,9 +3,11 @@ using CoolBytes.Core.Models;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using CoolBytes.Core.Attributes;
 
 namespace CoolBytes.Core.Factories
 {
+    [Scoped]
     public class ImageFactory : IImageFactory
     {
         private readonly IImageFactoryOptions _options;

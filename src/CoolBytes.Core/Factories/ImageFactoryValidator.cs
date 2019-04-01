@@ -1,9 +1,11 @@
 ﻿using System.IO;
 using System.Linq;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Core.Factories
 {
+    [Scoped]
     public class ImageFactoryValidator : IImageFactoryValidator
     {
         private const int MaxFileSize = (1024 * 1024) * 3;

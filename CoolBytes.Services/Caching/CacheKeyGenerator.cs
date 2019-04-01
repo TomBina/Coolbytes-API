@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using CoolBytes.Core.Attributes;
 
 namespace CoolBytes.Services.Caching
 {
-    public class CacheKeyGenerator
+    [Scoped]
+    public class CacheKeyGenerator : ICacheKeyGenerator
     {
         public string GetKey<T>(Expression<Func<Task<T>>> factoryExpression, params object[] arguments)
         {

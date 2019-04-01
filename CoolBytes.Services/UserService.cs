@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Core.Utils;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.Services
 {
+    [Scoped]
     public class UserService : IUserService
     {
         private readonly AppDbContext _appDbContext;

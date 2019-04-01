@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Models;
 using CoolBytes.Data;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace CoolBytes.Services
 {
+    [Scoped]
     public class AuthorService : IAuthorService, IAuthorSearchService
     {
         private readonly IUserService _userService;
