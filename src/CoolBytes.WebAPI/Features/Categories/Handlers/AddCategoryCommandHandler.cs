@@ -5,6 +5,7 @@ using CoolBytes.WebAPI.Features.Categories.CQ;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.Categories.Handlers
 {
@@ -19,7 +20,10 @@ namespace CoolBytes.WebAPI.Features.Categories.Handlers
 
         public async Task<Result> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
         {
-            var category = new Category(request.Name);
+            var highestSortOrder = await _context.Categories.MaxAsync(c => c.SortOrder);
+            var sortOrder = ++highestSortOrder;
+
+            var category = new Category(request.Name, sortOrder);
             _context.Categories.Add(category);
 
             await _context.SaveChangesAsync(cancellationToken);

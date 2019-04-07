@@ -20,8 +20,8 @@ namespace CoolBytes.Tests.Web.Features.Categories
         {
             using (var context = TestContext.CreateNewContext())
             {
-                context.Categories.Add(new Category("Default category"));
-                context.Categories.Add(new Category("Another category"));
+                context.Categories.Add(new Category("Default category", 1));
+                context.Categories.Add(new Category("Another category", 2));
 
                 await context.SaveChangesAsync();
             }

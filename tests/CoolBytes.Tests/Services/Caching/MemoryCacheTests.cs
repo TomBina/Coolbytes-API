@@ -23,7 +23,7 @@ namespace CoolBytes.Tests.Services.Caching
         {
             using (var context = TestContext.CreateNewContext())
             {
-                var category = new Category("Test");
+                var category = new Category("Test", 1);
                 context.Categories.Add(category);
                 await context.SaveChangesAsync();
                 CategoryId = category.Id;
