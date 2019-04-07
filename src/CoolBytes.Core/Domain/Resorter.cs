@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using CoolBytes.Tests.Core;
+using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Core.Domain
 {
-    public class Resorter
+    public class ReSorter<T> where T: ISortable
     {
-        public void Sort(IList<ISortable> sortables, int[] newSortOrder)
+        public void Sort(IList<T> sortables, IList<int> newSortOrder)
         {
             for (var i = 0; i < sortables.Count; i++)
             {

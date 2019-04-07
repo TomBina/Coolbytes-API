@@ -1,5 +1,5 @@
 ﻿using System;
-using CoolBytes.Tests.Core;
+using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Core.Domain
 {

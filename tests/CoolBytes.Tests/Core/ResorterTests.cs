@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using CoolBytes.Core.Domain;
+﻿using CoolBytes.Core.Domain;
+using System.Collections.Generic;
 using Xunit;
 
 namespace CoolBytes.Tests.Core
@@ -9,12 +9,12 @@ namespace CoolBytes.Tests.Core
         [Fact]
         public void Should_ReSort_Collection()
         {
-            var sortables = new List<ISortable>();
+            var sortables = new List<Category>();
             var category = new Category("Test", 1);
             var anotherCategory = new Category("Test 2", 2);
             sortables.AddRange(new[] { category, anotherCategory });
             var newSortOrder = new[] { 2, 1 };
-            var reSorter = new Resorter();
+            var reSorter = new ReSorter<Category>();
 
             reSorter.Sort(sortables, newSortOrder);
 

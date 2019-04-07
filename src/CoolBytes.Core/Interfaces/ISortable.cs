@@ -1,4 +1,4 @@
-﻿namespace CoolBytes.Tests.Core
+﻿namespace CoolBytes.Core.Interfaces
 {
     public interface ISortable
     {
