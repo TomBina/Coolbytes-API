@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CoolBytes.Core.Models;
+using CoolBytes.Core.Domain;
 using CoolBytes.WebAPI.Features.ResumeEvents.DTO;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents.Profiles

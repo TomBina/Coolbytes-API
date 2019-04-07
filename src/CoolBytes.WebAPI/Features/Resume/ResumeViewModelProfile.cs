@@ -6,7 +6,7 @@ namespace CoolBytes.WebAPI.Features.Resume
     {
         public ResumeViewModelProfile()
         {
-            CreateMap<Core.Models.Resume, ResumeViewModel>();
+            CreateMap<Core.Domain.Resume, ResumeViewModel>();
         }
     }
 }

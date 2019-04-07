@@ -1,7 +1,7 @@
-﻿using CoolBytes.Tests.Core;
-using System;
+﻿using System;
+using CoolBytes.Tests.Core;
 
-namespace CoolBytes.Core.Models
+namespace CoolBytes.Core.Domain
 {
     public class Category : ISortable
     {

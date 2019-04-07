@@ -1,10 +1,10 @@
-﻿using CoolBytes.Core.Models;
-using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Utils;
 using CoolBytes.WebAPI.Features.Categories.CQ;
 using CoolBytes.WebAPI.Features.Categories.Handlers;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Categories

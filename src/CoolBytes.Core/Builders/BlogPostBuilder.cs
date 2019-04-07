@@ -1,9 +1,9 @@
 ﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
 using CoolBytes.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 
 namespace CoolBytes.Core.Builders
 {

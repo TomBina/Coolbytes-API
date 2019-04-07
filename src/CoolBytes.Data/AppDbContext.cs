@@ -1,8 +1,8 @@
-﻿using CoolBytes.Core.Models;
-using CoolBytes.Data.Models;
+﻿using CoolBytes.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 
 namespace CoolBytes.Data
 {

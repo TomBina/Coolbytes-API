@@ -1,10 +1,10 @@
-﻿using CoolBytes.Core.Models;
-using CoolBytes.WebAPI.Features.Images;
+﻿using CoolBytes.WebAPI.Features.Images;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 using MediatR;
 using Xunit;
 

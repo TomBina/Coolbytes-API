@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {

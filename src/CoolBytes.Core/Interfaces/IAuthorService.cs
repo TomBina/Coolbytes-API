@@ -1,5 +1,5 @@
-﻿using CoolBytes.Core.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 
 namespace CoolBytes.Core.Interfaces
 {

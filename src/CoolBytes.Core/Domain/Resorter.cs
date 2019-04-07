@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using CoolBytes.Tests.Core;
 
-namespace CoolBytes.Core.Models
+namespace CoolBytes.Core.Domain
 {
     public class Resorter
     {

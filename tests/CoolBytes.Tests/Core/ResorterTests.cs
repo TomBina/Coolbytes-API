@@ -1,5 +1,5 @@
-﻿using CoolBytes.Core.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CoolBytes.Core.Domain;
 using Xunit;
 
 namespace CoolBytes.Tests.Core

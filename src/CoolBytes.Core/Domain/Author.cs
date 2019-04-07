@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using CoolBytes.Core.Interfaces;
 
-namespace CoolBytes.Core.Models
+namespace CoolBytes.Core.Domain
 {
     public class Author
     {

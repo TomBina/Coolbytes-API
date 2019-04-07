@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CoolBytes.Core.Models;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 using CoolBytes.Services.Caching;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers

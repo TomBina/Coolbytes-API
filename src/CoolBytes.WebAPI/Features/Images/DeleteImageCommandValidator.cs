@@ -1,4 +1,4 @@
-﻿using CoolBytes.Core.Models;
+﻿using CoolBytes.Core.Domain;
 using CoolBytes.Data;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;

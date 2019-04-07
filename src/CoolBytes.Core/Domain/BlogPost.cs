@@ -1,7 +1,7 @@
-﻿using CoolBytes.Core.Collections;
-using System;
+﻿using System;
+using CoolBytes.Core.Collections;
 
-namespace CoolBytes.Core.Models
+namespace CoolBytes.Core.Domain
 {
     public class BlogPost
     {

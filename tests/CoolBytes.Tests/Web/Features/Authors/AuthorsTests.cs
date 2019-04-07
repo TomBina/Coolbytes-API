@@ -1,5 +1,4 @@
 ﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
 using CoolBytes.Core.Utils;
 using CoolBytes.Services;
 using CoolBytes.WebAPI.Features.Authors;
@@ -9,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
