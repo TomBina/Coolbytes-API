@@ -1,8 +1,9 @@
-﻿using System;
+﻿using CoolBytes.Tests.Core;
+using System;
 
 namespace CoolBytes.Core.Models
 {
-    public class Category
+    public class Category : ISortable
     {
         public int Id { get; private set; }
         public string Name { get; private set; }
@@ -21,7 +22,7 @@ namespace CoolBytes.Core.Models
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
-        public void UpdateSortOrder(int sortOrder)
+        public void SetSortOrder(int sortOrder)
         {
             if (sortOrder <= 0) throw new ArgumentOutOfRangeException(nameof(sortOrder));
             SortOrder = sortOrder;
