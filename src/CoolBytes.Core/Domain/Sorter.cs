@@ -3,7 +3,7 @@ using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Core.Domain
 {
-    public class ReSorter<T> where T: ISortable
+    public class Sorter<T> where T: ISortable
     {
         public void Sort(IList<T> sortables, IList<int> newSortOrder)
         {

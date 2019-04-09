@@ -4,7 +4,7 @@ using Xunit;
 
 namespace CoolBytes.Tests.Core
 {
-    public class ReSorterTests
+    public class SorterTests
     {
         [Fact]
         public void Should_ReSort_Collection()
@@ -14,9 +14,9 @@ namespace CoolBytes.Tests.Core
             var anotherCategory = new Category("Test 2", 2);
             sortables.AddRange(new[] { category, anotherCategory });
             var newSortOrder = new[] { 2, 1 };
-            var reSorter = new ReSorter<Category>();
+            var sorter = new Sorter<Category>();
 
-            reSorter.Sort(sortables, newSortOrder);
+            sorter.Sort(sortables, newSortOrder);
 
             Assert.Equal(2, sortables[0].SortOrder);
             Assert.Equal(1, sortables[1].SortOrder);

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account;
 using NotFoundResult = CoolBytes.Core.Utils.NotFoundResult;
 
 namespace CoolBytes.WebAPI.Features.Categories
@@ -74,6 +75,20 @@ namespace CoolBytes.WebAPI.Features.Categories
 
             if (!result)
                 return NotFound();
+
+            return Ok();
+        }
+
+        [Authorize("admin")]
+        [HttpPut]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> ReSort(SortCategoriesCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (!result)
+                return BadRequest();
 
             return Ok();
         }

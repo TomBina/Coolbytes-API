@@ -43,4 +43,17 @@
     <EmbeddedResource Remove="wwwroot\images\**" />
     <None Remove="wwwroot\images\**" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Features\Categories\Validators\SortCategoriesCommandValidator.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SortCategoriesCommandValidator.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Features\Categories\Validators\SortCategoriesCommandValidator.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SortCategoriesCommandValidator.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

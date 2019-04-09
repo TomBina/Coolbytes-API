@@ -10,29 +10,29 @@ using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Categories.Handlers
 {
-    public class ReSortCategoriesCommandHandler : IRequestHandler<ReSortCategoriesCommand, Result>
+    public class SortCategoriesCommandHandler : IRequestHandler<SortCategoriesCommand, Result>
     {
         private readonly AppDbContext _context;
 
-        public ReSortCategoriesCommandHandler(AppDbContext context)
+        public SortCategoriesCommandHandler(AppDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Result> Handle(ReSortCategoriesCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(SortCategoriesCommand request, CancellationToken cancellationToken)
         {
-            var allCategories = await ReSort(request);
+            var allCategories = await Sort(request);
             await Save(allCategories);
 
             return Result.SuccessResult();
         }
 
-        private async Task<List<Category>> ReSort(ReSortCategoriesCommand request)
+        private async Task<List<Category>> Sort(SortCategoriesCommand request)
         {
             var allCategories = await _context.Categories.ToListAsync();
-            var reSorter = new ReSorter<Category>();
+            var sorter = new Sorter<Category>();
 
-            reSorter.Sort(allCategories, request.NewSortOrder);
+            sorter.Sort(allCategories, request.NewSortOrder);
             return allCategories;
         }
 
@@ -40,7 +40,7 @@ namespace CoolBytes.WebAPI.Features.Categories.Handlers
         {
             _context.AddRange(allCategories);
 
-            await _context.SaveChangesAsync();
+            await Task.CompletedTask;
         }
     }
 }

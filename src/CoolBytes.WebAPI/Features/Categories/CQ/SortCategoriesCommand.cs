@@ -4,7 +4,7 @@ using MediatR;
 
 namespace CoolBytes.WebAPI.Features.Categories.CQ
 {
-    public class ReSortCategoriesCommand : IRequest<Result>
+    public class SortCategoriesCommand : IRequest<Result>
     {
         public List<int> NewSortOrder { get; set; }
     }
