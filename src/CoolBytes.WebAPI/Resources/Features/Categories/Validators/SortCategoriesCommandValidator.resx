@@ -118,6 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SortOrderError" xml:space="preserve">
-    <value>NewSortOrder should have same length as current SortOrder..</value>
+    <value>NewSortOrder should have same length as current SortOrder!</value>
   </data>
 </root>

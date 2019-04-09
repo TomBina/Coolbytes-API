@@ -62,7 +62,7 @@ namespace CoolBytes.WebAPI.Resources.Features.Categories.Validators {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NewSortOrder should have same length as current SortOrder...
+        ///   Looks up a localized string similar to NewSortOrder should have same length as current SortOrder!.
         /// </summary>
         public static string SortOrderError {
             get {

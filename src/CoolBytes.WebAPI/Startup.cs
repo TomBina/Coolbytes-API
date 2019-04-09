@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSwag;
+using NSwag.SwaggerGeneration.Processors.Security;
 
 namespace CoolBytes.WebAPI
 {
@@ -35,7 +37,17 @@ namespace CoolBytes.WebAPI
                 .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
             services.AddMediatR(typeof(Startup));
-            services.AddSwaggerDocument();
+            services.AddSwaggerDocument(settings =>
+            {
+                settings.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT"));
+                settings.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT", new SwaggerSecurityScheme
+                {
+                    Type = SwaggerSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    Description = "Bearer token",
+                    In = SwaggerSecurityApiKeyLocation.Header
+                }));
+            });
 
             services.ScanServices();
             services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));

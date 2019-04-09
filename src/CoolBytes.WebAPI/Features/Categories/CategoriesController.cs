@@ -80,10 +80,10 @@ namespace CoolBytes.WebAPI.Features.Categories
         }
 
         [Authorize("admin")]
-        [HttpPut]
+        [HttpPut("sort")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult> ReSort(SortCategoriesCommand command)
+        public async Task<ActionResult> Sort(SortCategoriesCommand command)
         {
             var result = await _mediator.Send(command);
 
