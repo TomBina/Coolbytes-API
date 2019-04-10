@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CoolBytes.Core.Models;
+using CoolBytes.Core.Domain;
 using CoolBytes.WebAPI.Features.Categories.ViewModels;
 
 namespace CoolBytes.WebAPI.Features.Categories.Profiles

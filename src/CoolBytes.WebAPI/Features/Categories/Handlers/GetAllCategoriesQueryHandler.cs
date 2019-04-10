@@ -23,7 +23,7 @@ namespace CoolBytes.WebAPI.Features.Categories.Handlers
 
         public async Task<Result<IEnumerable<CategoryViewModel>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var categories = await _context.Categories.ToListAsync(cancellationToken: cancellationToken);
+            var categories = await _context.Categories.OrderBy(c => c.SortOrder).ToListAsync(cancellationToken: cancellationToken);
 
             if (!categories.Any())
                 return Result<IEnumerable<CategoryViewModel>>.NotFoundResult();

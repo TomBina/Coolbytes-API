@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CoolBytes.Core.Models;
+using CoolBytes.Core.Domain;
 
 namespace CoolBytes.WebAPI.Features.Images
 {

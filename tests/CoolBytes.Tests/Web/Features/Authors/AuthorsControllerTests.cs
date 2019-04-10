@@ -1,5 +1,4 @@
 ﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
 using CoolBytes.Core.Utils;
 using CoolBytes.Data;
 using CoolBytes.Services;
@@ -14,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using CoolBytes.Core.Models;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using System;
 using System.Collections.Generic;
+using CoolBytes.Core.Domain;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 {

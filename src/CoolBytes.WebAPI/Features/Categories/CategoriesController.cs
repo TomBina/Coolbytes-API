@@ -79,6 +79,20 @@ namespace CoolBytes.WebAPI.Features.Categories
         }
 
         [Authorize("admin")]
+        [HttpPut("sort")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> Sort(SortCategoriesCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (!result)
+                return BadRequest();
+
+            return Ok();
+        }
+
+        [Authorize("admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(204)]

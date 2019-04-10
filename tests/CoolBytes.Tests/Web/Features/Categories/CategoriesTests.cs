@@ -1,10 +1,10 @@
-﻿using CoolBytes.Core.Models;
-using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Utils;
 using CoolBytes.WebAPI.Features.Categories.CQ;
 using CoolBytes.WebAPI.Features.Categories.Handlers;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Categories
@@ -20,8 +20,8 @@ namespace CoolBytes.Tests.Web.Features.Categories
         {
             using (var context = TestContext.CreateNewContext())
             {
-                context.Categories.Add(new Category("Default category"));
-                context.Categories.Add(new Category("Another category"));
+                context.Categories.Add(new Category("Default category", 1));
+                context.Categories.Add(new Category("Another category", 2));
 
                 await context.SaveChangesAsync();
             }

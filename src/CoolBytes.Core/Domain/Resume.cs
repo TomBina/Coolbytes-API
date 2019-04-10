@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CoolBytes.Core.Models
+namespace CoolBytes.Core.Domain
 {
     public class Resume
     {

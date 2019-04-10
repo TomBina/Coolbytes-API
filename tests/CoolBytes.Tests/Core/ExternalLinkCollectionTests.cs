@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using CoolBytes.Core.Collections;
-using CoolBytes.Core.Models;
+using CoolBytes.Core.Domain;
 using Xunit;
 
 namespace CoolBytes.Tests.Core

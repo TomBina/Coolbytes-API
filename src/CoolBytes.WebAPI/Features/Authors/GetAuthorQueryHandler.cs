@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {

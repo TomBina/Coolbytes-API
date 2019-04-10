@@ -1,4 +1,4 @@
-﻿namespace CoolBytes.Core.Models
+﻿namespace CoolBytes.Core.Domain
 {
     public class SocialHandles
     {

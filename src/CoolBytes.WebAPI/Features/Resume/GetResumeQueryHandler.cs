@@ -37,12 +37,12 @@ namespace CoolBytes.WebAPI.Features.Resume
             return Mapper.Map<ResumeViewModel>(resume);
         }
 
-        private async Task<Core.Models.Resume> CreateResumeAsync(int authorId)
+        private async Task<Core.Domain.Resume> CreateResumeAsync(int authorId)
         {
             var author = await _authorSearchService.GetAuthorWithProfile(authorId);
             var resumeEvents = await _context.ResumeEvents.Where(r => r.AuthorId == authorId).ToListAsync();
 
-            var resume = new Core.Models.Resume(author, resumeEvents);
+            var resume = new Core.Domain.Resume(author, resumeEvents);
             return resume;
         }
     }

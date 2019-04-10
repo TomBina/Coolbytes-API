@@ -1,7 +1,7 @@
-﻿using CoolBytes.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CoolBytes.Core.Domain;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {

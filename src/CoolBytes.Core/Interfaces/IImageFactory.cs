@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
-using CoolBytes.Core.Models;
+using CoolBytes.Core.Domain;
 
 namespace CoolBytes.Core.Interfaces
 {

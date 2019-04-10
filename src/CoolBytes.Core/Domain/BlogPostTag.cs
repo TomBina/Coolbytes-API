@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CoolBytes.Core.Models
+namespace CoolBytes.Core.Domain
 {
     public class BlogPostTag
     {

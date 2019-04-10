@@ -2,8 +2,8 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using CoolBytes.Core.Attributes;
+using CoolBytes.Core.Domain;
 using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
 using CoolBytes.Core.Utils;
 using CoolBytes.Data;
 using Microsoft.AspNetCore.Http;

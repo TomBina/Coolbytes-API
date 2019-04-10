@@ -15,7 +15,7 @@ namespace CoolBytes.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024")
+                .HasAnnotation("ProductVersion", "2.2.3-servicing-35854")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -101,8 +101,7 @@ namespace CoolBytes.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BlogPostId")
-                        .IsRequired();
+                    b.Property<int>("BlogPostId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -125,6 +124,8 @@ namespace CoolBytes.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<int>("SortOrder");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -139,8 +140,7 @@ namespace CoolBytes.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AuthorProfileId")
-                        .IsRequired();
+                    b.Property<int>("AuthorProfileId");
 
                     b.Property<string>("Color")
                         .IsRequired()
@@ -167,8 +167,7 @@ namespace CoolBytes.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("BlogPostId")
-                        .IsRequired();
+                    b.Property<int>("BlogPostId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -312,7 +311,7 @@ namespace CoolBytes.Data.Migrations
 
                     b.OwnsOne("CoolBytes.Core.Models.SocialHandles", "SocialHandles", b1 =>
                         {
-                            b1.Property<int?>("AuthorProfileId")
+                            b1.Property<int>("AuthorProfileId")
                                 .ValueGeneratedOnAdd()
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -321,6 +320,8 @@ namespace CoolBytes.Data.Migrations
 
                             b1.Property<string>("LinkedIn")
                                 .HasMaxLength(255);
+
+                            b1.HasKey("AuthorProfileId");
 
                             b1.ToTable("AuthorsProfile");
 
@@ -349,7 +350,7 @@ namespace CoolBytes.Data.Migrations
 
                     b.OwnsOne("CoolBytes.Core.Models.BlogPostContent", "Content", b1 =>
                         {
-                            b1.Property<int?>("BlogPostId")
+                            b1.Property<int>("BlogPostId")
                                 .ValueGeneratedOnAdd()
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -370,6 +371,8 @@ namespace CoolBytes.Data.Migrations
                                 .HasMaxLength(100);
 
                             b1.Property<DateTime?>("Updated");
+
+                            b1.HasKey("BlogPostId");
 
                             b1.ToTable("BlogPosts");
 
@@ -418,13 +421,15 @@ namespace CoolBytes.Data.Migrations
 
                     b.OwnsOne("CoolBytes.Core.Models.DateRange", "DateRange", b1 =>
                         {
-                            b1.Property<int?>("ResumeEventId")
+                            b1.Property<int>("ResumeEventId")
                                 .ValueGeneratedOnAdd()
                                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                             b1.Property<DateTime>("EndDate");
 
                             b1.Property<DateTime>("StartDate");
+
+                            b1.HasKey("ResumeEventId");
 
                             b1.ToTable("ResumeEvents");
 

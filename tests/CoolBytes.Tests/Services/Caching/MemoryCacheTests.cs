@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using CoolBytes.Core.Domain;
 using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Models;
 using CoolBytes.Core.Utils;
 using CoolBytes.Services.Caching;
 using CoolBytes.Tests.Web;
@@ -23,7 +23,7 @@ namespace CoolBytes.Tests.Services.Caching
         {
             using (var context = TestContext.CreateNewContext())
             {
-                var category = new Category("Test");
+                var category = new Category("Test", 1);
                 context.Categories.Add(category);
                 await context.SaveChangesAsync();
                 CategoryId = category.Id;
