@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account;
 using NotFoundResult = CoolBytes.Core.Utils.NotFoundResult;
 
 namespace CoolBytes.WebAPI.Features.Categories
@@ -79,7 +78,7 @@ namespace CoolBytes.WebAPI.Features.Categories
             return Ok();
         }
 
-        [Authorize("admin")]
+        //[Authorize("admin")]
         [HttpPut("sort")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]

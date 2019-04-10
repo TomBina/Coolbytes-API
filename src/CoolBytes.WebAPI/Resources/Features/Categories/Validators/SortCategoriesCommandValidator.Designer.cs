@@ -62,11 +62,29 @@ namespace CoolBytes.WebAPI.Resources.Features.Categories.Validators {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to NewSortOrder should have same length as current SortOrder!.
+        ///   Looks up a localized string similar to All categoryids must exists..
         /// </summary>
-        public static string SortOrderError {
+        public static string AllIdsMustExistError {
             get {
-                return ResourceManager.GetString("SortOrderError", resourceCulture);
+                return ResourceManager.GetString("AllIdsMustExistError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Categoryids must be unique..
+        /// </summary>
+        public static string IdsMustBeUniqueError {
+            get {
+                return ResourceManager.GetString("IdsMustBeUniqueError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NewSortOrder should have same length as current SortOrder..
+        /// </summary>
+        public static string SortOrderLengthError {
+            get {
+                return ResourceManager.GetString("SortOrderLengthError", resourceCulture);
             }
         }
     }

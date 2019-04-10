@@ -1,4 +1,5 @@
-﻿using CoolBytes.Core.Domain;
+﻿using System;
+using CoolBytes.Core.Domain;
 using CoolBytes.Core.Utils;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Categories.CQ;
@@ -38,9 +39,8 @@ namespace CoolBytes.WebAPI.Features.Categories.Handlers
 
         private async Task Save(List<Category> allCategories)
         {
-            _context.AddRange(allCategories);
-
-            await Task.CompletedTask;
+            _context.Categories.UpdateRange(allCategories);
+            await _context.SaveChangesAsync();
         }
     }
 }

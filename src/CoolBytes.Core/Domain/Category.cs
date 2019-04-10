@@ -9,6 +9,9 @@ namespace CoolBytes.Core.Domain
         public string Name { get; private set; }
         public int SortOrder { get; private set; }
 
+        public Category(int id, string name, int sortOrder) : this(name, sortOrder) 
+            => Id = id;
+
         public Category(string name, int sortOrder)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
