@@ -1,5 +1,4 @@
-﻿using System;
-using CoolBytes.Core.Domain;
+﻿using CoolBytes.Core.Domain;
 using CoolBytes.Core.Utils;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Categories.CQ;

@@ -78,7 +78,7 @@ namespace CoolBytes.WebAPI.Features.Categories
             return Ok();
         }
 
-        //[Authorize("admin")]
+        [Authorize("admin")]
         [HttpPut("sort")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
