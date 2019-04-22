@@ -42,7 +42,6 @@ namespace CoolBytes.WebAPI
                                 .ReadFrom.Configuration(configuration)
                                 .Enrich.FromLogContext()
                                 .WriteTo.Console()
-                                .WriteTo.MongoDB(configuration.GetConnectionString("MongoDb"))
                                 .WriteTo.ApplicationInsights(configuration["coolbytesinstrumentationkey"], new EventTelemetryConverter())
                                 .CreateLogger();
 
