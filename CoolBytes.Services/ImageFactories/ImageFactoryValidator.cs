@@ -5,7 +5,7 @@ using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Services.ImageFactories
 {
-    [Scoped]
+    [Inject(typeof(IImageFactoryValidator))]
     public class ImageFactoryValidator : IImageFactoryValidator
     {
         private const int MaxFileSize = (1024 * 1024) * 3;

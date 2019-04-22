@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.Services
 {
-    [Scoped]
+    [Inject(typeof(IAuthorValidator))]
     public class AuthorValidator : IAuthorValidator
     {
         private readonly AppDbContext _appDbContext;

@@ -20,11 +20,13 @@ namespace CoolBytes.WebAPI
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _environment;
         private readonly ConnectionStringFactory _connectionStringFactory;
 
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
+            _environment = environment;
             _connectionStringFactory = new ConnectionStringFactory(configuration, environment);
         }
 
@@ -57,7 +59,7 @@ namespace CoolBytes.WebAPI
                 }));
             });
 
-            services.ScanServices();
+            services.ScanServices(_environment.EnvironmentName);
             services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
             services.AddMailgun();
         }

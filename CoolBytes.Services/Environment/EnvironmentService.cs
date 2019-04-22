@@ -2,7 +2,7 @@
 
 namespace CoolBytes.Services.Environment
 {
-    [Scoped]
+    [Inject(typeof(IEnvironmentService))]
     public class EnvironmentService : IEnvironmentService
     {
         public string GetVariable(string key)

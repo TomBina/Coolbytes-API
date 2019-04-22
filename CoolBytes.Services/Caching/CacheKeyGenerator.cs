@@ -5,7 +5,7 @@ using CoolBytes.Core.Attributes;
 
 namespace CoolBytes.Services.Caching
 {
-    [Scoped]
+    [Inject(typeof(ICacheKeyGenerator))]
     public class CacheKeyGenerator : ICacheKeyGenerator
     {
         public string GetKey<T>(Expression<Func<Task<T>>> factoryExpression, params object[] arguments)

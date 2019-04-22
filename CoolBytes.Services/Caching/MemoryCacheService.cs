@@ -7,7 +7,7 @@ using CoolBytes.Core.Utils;
 
 namespace CoolBytes.Services.Caching
 {
-    [Scoped]
+    [Inject(typeof(ICacheService))]
     public class MemoryCacheService : ICacheService
     {
         private static readonly ConcurrentDictionary<string, object> Store = new ConcurrentDictionary<string, object>();

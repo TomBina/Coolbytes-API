@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.Services
 {
-    [Scoped]
+    [Inject(typeof(IUserService))]
     public class UserService : IUserService
     {
         private readonly AppDbContext _appDbContext;

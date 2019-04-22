@@ -1,12 +1,13 @@
 ﻿using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Domain;
 using CoolBytes.Core.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace CoolBytes.Services.ImageFactories
 {
-    [Scoped]
+    [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "development", "production")]
     public class LocalImageFactory : ImageFactory
     {
         private readonly IImageFactoryOptions _options;

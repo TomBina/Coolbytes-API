@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.Services.Mailer
 {
-    [Scoped]
+    [Inject(typeof(ISendValidator))]
     public class ThresholdValidator : ISendValidator
     {
         private readonly AppDbContext _context;

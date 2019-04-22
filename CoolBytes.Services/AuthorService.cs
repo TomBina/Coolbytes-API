@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace CoolBytes.Services
 {
-    [Scoped]
+    [Inject(typeof(IAuthorService))]
     public class AuthorService : IAuthorService, IAuthorSearchService
     {
         private readonly IUserService _userService;

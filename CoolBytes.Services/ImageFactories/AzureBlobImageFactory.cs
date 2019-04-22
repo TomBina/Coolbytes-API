@@ -7,9 +7,12 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using CoolBytes.Core.Attributes;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CoolBytes.Services.ImageFactories
 {
+    [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "production-azure")]
     public class AzureBlobImageFactory : ImageFactory
     {
         private readonly IHostingEnvironment _environment;

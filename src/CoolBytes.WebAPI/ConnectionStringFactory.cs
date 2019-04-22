@@ -16,7 +16,7 @@ namespace CoolBytes.WebAPI
 
         public string Create()
         {
-            var environmentName = _environment.EnvironmentName;
+            var environmentName = _environment.EnvironmentName.ToLower();
             var connectionString = _configuration.GetConnectionString("Default");
 
             if (!environmentName.Contains("azure"))

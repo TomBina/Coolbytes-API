@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.Services.Caching
 {
-    [Scoped]
+    [Inject(typeof(ICachePolicy))]
     public class DefaultCachePolicy : ICachePolicy
     {
         private readonly HttpContext _httpContext;
