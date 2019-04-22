@@ -3,7 +3,7 @@ using System.Linq;
 using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Interfaces;
 
-namespace CoolBytes.Core.Factories
+namespace CoolBytes.Services.ImageFactories
 {
     [Scoped]
     public class ImageFactoryValidator : IImageFactoryValidator

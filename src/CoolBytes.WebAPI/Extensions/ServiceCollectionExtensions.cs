@@ -49,7 +49,7 @@ namespace CoolBytes.WebAPI.Extensions
                     .WithScopedLifetime());
 
             services.Scan(s =>
-                s.FromAssemblyOf<IImageFactory>()
+                s.FromAssemblyOf<ImageFactory>()
                     .AddClasses(c => c.WithAttribute<ScopedAttribute>())
                     .AsImplementedInterfaces()
                     .WithScopedLifetime());

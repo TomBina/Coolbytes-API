@@ -27,7 +27,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var serviceCollection = new ServiceCollection();
             serviceCollection.AddDbContextPool<AppDbContext>(builder => builder.UseInMemoryDatabase("Test"));
             serviceCollection.AddScoped<IAuthorValidator, AuthorValidator>();
-            serviceCollection.AddScoped<IImageFactory>(sp => null);
+            serviceCollection.AddScoped<ImageFactory>(sp => null);
             serviceCollection.AddScoped<IConfiguration>(sp => null);
             serviceCollection.AddScoped<ICacheService>(sp => new StubCacheService());
 

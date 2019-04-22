@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CoolBytes.Core.Factories;
 using CoolBytes.Data;
 using CoolBytes.WebAPI;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +8,7 @@ using Moq;
 using System;
 using System.IO;
 using CoolBytes.Services.Caching;
+using CoolBytes.Services.ImageFactories;
 
 namespace CoolBytes.Tests.Web
 {
@@ -100,11 +100,11 @@ namespace CoolBytes.Tests.Web
             return new MemoryCacheService(cachePolicy, cacheKeyGenerator);
         }
 
-        public ImageFactory CreateImageFactory()
+        public LocalImageFactory CreateImageFactory()
         {
             var options = new ImageFactoryOptions(_tempDirectory);
             var validator = new ImageFactoryValidator();
-            var imageFactory = new ImageFactory(options, validator);
+            var imageFactory = new LocalImageFactory(options, validator);
             return imageFactory;
         }
 

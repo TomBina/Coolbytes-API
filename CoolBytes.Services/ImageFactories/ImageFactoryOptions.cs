@@ -1,7 +1,7 @@
 ﻿using System;
 using CoolBytes.Core.Interfaces;
 
-namespace CoolBytes.Core.Factories
+namespace CoolBytes.Services.ImageFactories
 {
     public class ImageFactoryOptions : IImageFactoryOptions
     {

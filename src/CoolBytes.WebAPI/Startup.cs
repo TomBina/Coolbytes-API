@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using CoolBytes.Core.Builders;
-using CoolBytes.Core.Factories;
 using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
+using CoolBytes.Services.ImageFactories;
 using CoolBytes.WebAPI.Extensions;
 using FluentValidation.AspNetCore;
 using MediatR;

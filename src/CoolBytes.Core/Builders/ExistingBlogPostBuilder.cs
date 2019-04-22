@@ -9,12 +9,12 @@ namespace CoolBytes.Core.Builders
 {
     public class ExistingBlogPostBuilder 
     {
-        private readonly IImageFactory _imageFactory;
+        private readonly ImageFactory _imageFactory;
 
         private BlogPost _blogPost;
         private Func<Task<Image>> _image;
 
-        public ExistingBlogPostBuilder(IImageFactory imageFactory)
+        public ExistingBlogPostBuilder(ImageFactory imageFactory)
         {
             _imageFactory = imageFactory;
         }

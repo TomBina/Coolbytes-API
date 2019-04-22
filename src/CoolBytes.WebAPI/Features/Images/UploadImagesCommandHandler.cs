@@ -13,10 +13,10 @@ namespace CoolBytes.WebAPI.Features.Images
 {
     public class UploadImagesCommandHandler : IRequestHandler<UploadImagesCommand, IEnumerable<ImageViewModel>>
     {
-        private readonly IImageFactory _imageFactory;
+        private readonly ImageFactory _imageFactory;
         private readonly AppDbContext _context;
 
-        public UploadImagesCommandHandler(AppDbContext context, IImageFactory imageFactory)
+        public UploadImagesCommandHandler(AppDbContext context, ImageFactory imageFactory)
         {
             _context = context;
             _imageFactory = imageFactory;

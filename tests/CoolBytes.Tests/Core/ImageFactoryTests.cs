@@ -1,7 +1,7 @@
-﻿using CoolBytes.Core.Factories;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using CoolBytes.Services.ImageFactories;
 using Xunit;
 
 namespace CoolBytes.Tests.Core
@@ -21,7 +21,7 @@ namespace CoolBytes.Tests.Core
         [Fact]
         public async Task ImageFactory_Valid_CreatesImage()
         {
-            var imageFactory = new ImageFactory(_imageFactoryOptions, _imageFactoryValidator);
+            var imageFactory = new LocalImageFactory(_imageFactoryOptions, _imageFactoryValidator);
 
             using (var fileStream = File.OpenRead("assets/testimage.png"))
             {
@@ -34,7 +34,7 @@ namespace CoolBytes.Tests.Core
         [Fact]
         public async Task ImageFactory_InvalidContentType_ThrowsException()
         {
-            var imageFactory = new ImageFactory(_imageFactoryOptions, _imageFactoryValidator);
+            var imageFactory = new LocalImageFactory(_imageFactoryOptions, _imageFactoryValidator);
 
             using (var fileStream = File.Open("assets/iisexpress.exe", FileMode.Open))
             {
@@ -45,7 +45,7 @@ namespace CoolBytes.Tests.Core
         [Fact]
         public async Task ImageFactory_Empty_ThrowsException()
         {
-            var imageFactory = new ImageFactory(_imageFactoryOptions, _imageFactoryValidator);
+            var imageFactory = new LocalImageFactory(_imageFactoryOptions, _imageFactoryValidator);
 
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
