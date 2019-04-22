@@ -7,6 +7,8 @@ using Serilog;
 using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
 using System;
 using System.IO;
+using Microsoft.AspNetCore.Hosting.Internal;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CoolBytes.WebAPI
 {
@@ -61,11 +63,14 @@ namespace CoolBytes.WebAPI
         private static void Initialize(string[] args, IConfiguration configuration)
         {
             Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
-            Log.Information("Init db");
-            DbSetup.InitDb(configuration);
+            var webHost = BuildWebHost(args, configuration);
+            var serviceProvider = webHost.Services;
 
+            Log.Information("Init db");
+            DbSetup.InitDb(configuration, serviceProvider.GetService<IHostingEnvironment>());
             Log.Information("Starting web host");
-            BuildWebHost(args, configuration).Run();
+
+            webHost.Run();
         }
 
         private static IWebHost BuildWebHost(string[] args, IConfiguration configuration) =>

@@ -20,9 +20,13 @@ namespace CoolBytes.WebAPI
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private readonly ConnectionStringFactory _connectionStringFactory;
 
-        public Startup(IConfiguration configuration) 
-            => _configuration = configuration;
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        {
+            _configuration = configuration;
+            _connectionStringFactory = new ConnectionStringFactory(configuration, environment);
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -31,7 +35,11 @@ namespace CoolBytes.WebAPI
             services.AddTransient<BlogPostBuilder>();
             services.AddTransient<ExistingBlogPostBuilder>();
             services.AddSecurity(_configuration);
-            services.AddDbContextPool<AppDbContext>(o => o.UseSqlServer(_configuration.GetConnectionString("Default")));
+            services.AddDbContextPool<AppDbContext>(o =>
+            {
+                var connectionString = _connectionStringFactory.Create();
+                o.UseSqlServer(connectionString);
+            });
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)

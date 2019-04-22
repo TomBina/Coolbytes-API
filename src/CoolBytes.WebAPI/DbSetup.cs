@@ -1,6 +1,7 @@
 ﻿using CoolBytes.Core.Domain;
 using CoolBytes.Data;
 using CoolBytes.Services;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,12 +10,15 @@ namespace CoolBytes.WebAPI
 {
     public static class DbSetup
     {
-        public static void InitDb(IConfiguration configuration)
+        public static void InitDb(IConfiguration configuration, IHostingEnvironment environment)
         {
             var services = new ServiceCollection();
             services.AddDbContext<AppDbContext>(o =>
-                o.UseSqlServer(configuration.GetConnectionString("Default")));
-
+            {
+                var factory = new ConnectionStringFactory(configuration, environment);
+                var connectionString = factory.Create();
+                o.UseSqlServer(connectionString);
+            });
             var serviceProvider = services.BuildServiceProvider();
 
             using (serviceProvider.CreateScope())
