@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using CoolBytes.Core.Attributes;
+﻿using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Domain;
 using CoolBytes.Core.Interfaces;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace CoolBytes.Services.ImageFactories
 {
@@ -11,12 +10,10 @@ namespace CoolBytes.Services.ImageFactories
     public class LocalImageFactory : ImageFactory
     {
         private readonly IImageFactoryOptions _options;
-        private readonly IImageFactoryValidator _validator;
 
         public LocalImageFactory(IImageFactoryOptions options, IImageFactoryValidator validator) : base(validator)
         {
             _options = options;
-            _validator = validator;
         }
 
         public override async Task<Image> Create(Stream stream, string currentFileName, string contentType)
