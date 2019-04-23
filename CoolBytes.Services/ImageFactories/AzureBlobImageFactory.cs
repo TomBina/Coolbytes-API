@@ -1,18 +1,18 @@
-﻿using CoolBytes.Core.Domain;
+﻿using CoolBytes.Core.Attributes;
+using CoolBytes.Core.Domain;
 using CoolBytes.Core.Interfaces;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.Storage;
-using Microsoft.Azure.Storage.Blob;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using CoolBytes.Core.Attributes;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Blob;
 
 namespace CoolBytes.Services.ImageFactories
 {
-    [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "production-azure")]
+    [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "development", "production-azure")]
     public class AzureBlobImageFactory : ImageFactory
     {
         private readonly IHostingEnvironment _environment;
@@ -30,7 +30,7 @@ namespace CoolBytes.Services.ImageFactories
 
             var blobRef = CreateBlobReference(currentFileName);
             await blobRef.UploadFromStreamAsync(stream);
-            
+
             return new Image(blobRef.Name, blobRef.Container.Name, blobRef.Name, blobRef.Properties.Length, contentType);
         }
 

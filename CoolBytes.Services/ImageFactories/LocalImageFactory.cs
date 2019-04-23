@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CoolBytes.Services.ImageFactories
 {
-    [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "development", "production")]
+    [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "production")]
     public class LocalImageFactory : ImageFactory
     {
         private readonly IImageFactoryOptions _options;
