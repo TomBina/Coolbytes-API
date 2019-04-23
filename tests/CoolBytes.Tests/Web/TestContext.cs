@@ -99,7 +99,7 @@ namespace CoolBytes.Tests.Web
 
         public LocalImageFactory CreateImageFactory()
         {
-            var options = new ImageFactoryOptions(_tempDirectory);
+            var options = new LocalImageFactoryOptions(_tempDirectory);
             var validator = new ImageFactoryValidator();
             var imageFactory = new LocalImageFactory(options, validator);
             return imageFactory;

@@ -1,9 +1,13 @@
 ﻿using System;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CoolBytes.Services.ImageFactories
 {
-    public class ImageFactoryOptions : IImageFactoryOptions
+    [Inject(typeof(IImageFactoryOptions), ServiceLifetime.Scoped, "production")]
+    public class LocalImageFactoryOptions : IImageFactoryOptions
     {
         public string UploadPath { get; }
         public Func<string, string> FileName { get; } =
@@ -13,16 +17,20 @@ namespace CoolBytes.Services.ImageFactories
         public Func<string, string> UriPath { get; } =
             fileName => $@"/images/{fileName.Substring(0, 3)}/{fileName}";
 
-        public ImageFactoryOptions(string uploadPath)
+        public LocalImageFactoryOptions(IConfiguration configuration)
         {
-            UploadPath = uploadPath ?? throw new ArgumentNullException(nameof(uploadPath));
+            if (configuration == null)
+                throw new ArgumentNullException(nameof(configuration));
+
+            UploadPath = configuration["ImagesUploadPath"] ?? throw new ArgumentNullException(nameof(UploadPath));
         }
 
-        public ImageFactoryOptions(string uploadPath, 
+        public LocalImageFactoryOptions(string uploadPath, 
                                    Func<string, string> fileName, 
                                    Func<string, string, string> directory, 
-                                   Func<string, string> uriPath) : this(uploadPath)
+                                   Func<string, string> uriPath)
         {
+            UploadPath = uploadPath;
             FileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
             Directory = directory ?? throw new ArgumentNullException(nameof(directory));
             UriPath = uriPath;

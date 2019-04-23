@@ -60,7 +60,6 @@ namespace CoolBytes.WebAPI
             });
 
             services.ScanServices(_environment.EnvironmentName);
-            services.AddScoped<IImageFactoryOptions>(sp => new ImageFactoryOptions(_configuration["ImagesUploadPath"]));
             services.AddMailgun();
         }
 
