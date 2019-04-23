@@ -36,10 +36,10 @@ namespace CoolBytes.Services.ImageFactories
 
         private CloudBlockBlob CreateBlobReference(string currentFileName)
         {
-            var container = _environment.EnvironmentName;
+            var container = _environment.EnvironmentName.ToLower();
             var client = CloudStorageAccount.Parse(_connectionString).CreateCloudBlobClient();
             var containerRef = client.GetContainerReference(container);
-            var fileName = $"{Guid.NewGuid().ToString()}.{Path.GetExtension(currentFileName)}";
+            var fileName = $"{Guid.NewGuid().ToString()}{Path.GetExtension(currentFileName)}";
             var blobRef = containerRef.GetBlockBlobReference(fileName);
 
             return blobRef;

@@ -17,7 +17,8 @@ namespace CoolBytes.Services.ImageFactories
             {
                 "image/jpeg",
                 "image/jpg",
-                "image/png"
+                "image/png",
+                "image/svg+xml"
             };
         }
 
