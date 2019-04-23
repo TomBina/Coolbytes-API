@@ -2,6 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using CoolBytes.Services.ImageFactories;
+using Microsoft.Extensions.Configuration;
+using Moq;
 using Xunit;
 
 namespace CoolBytes.Tests.Core
@@ -14,7 +16,10 @@ namespace CoolBytes.Tests.Core
 
         public ImageFactoryTests()
         {
-            _localImageFactoryOptions = new LocalImageFactoryOptions(_uploadPath);
+            var config = new Mock<IConfiguration>();
+            config.Setup(c => c["ImagesUploadPath"]).Returns(_uploadPath);
+
+            _localImageFactoryOptions = new LocalImageFactoryOptions(config.Object);
             _imageFactoryValidator = new ImageFactoryValidator();
         }
 

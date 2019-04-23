@@ -99,7 +99,10 @@ namespace CoolBytes.Tests.Web
 
         public LocalImageFactory CreateImageFactory()
         {
-            var options = new LocalImageFactoryOptions(_tempDirectory);
+            var config = new Mock<IConfiguration>();
+            config.Setup(c => c["ImagesUploadPath"]).Returns(_tempDirectory);
+
+            var options = new LocalImageFactoryOptions(config.Object);
             var validator = new ImageFactoryValidator();
             var imageFactory = new LocalImageFactory(options, validator);
             return imageFactory;
