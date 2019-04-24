@@ -1,11 +1,11 @@
-﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Utils;
 using CoolBytes.Services;
 using CoolBytes.WebAPI.Features.Resume;
 using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 using Xunit;
 

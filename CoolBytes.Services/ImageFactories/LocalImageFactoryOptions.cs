@@ -1,6 +1,6 @@
 ﻿using System;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Attributes;
-using CoolBytes.Core.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

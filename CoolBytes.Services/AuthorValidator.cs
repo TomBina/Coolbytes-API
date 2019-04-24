@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Domain;
-using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
 using Microsoft.EntityFrameworkCore;
 

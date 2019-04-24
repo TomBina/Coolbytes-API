@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Builders;
-using CoolBytes.Core.Interfaces;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;

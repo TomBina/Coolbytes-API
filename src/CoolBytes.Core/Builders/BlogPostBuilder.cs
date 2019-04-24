@@ -1,8 +1,8 @@
-﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 
 namespace CoolBytes.Core.Builders

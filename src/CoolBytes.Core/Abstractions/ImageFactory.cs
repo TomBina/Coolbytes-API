@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using CoolBytes.Core.Domain;
 
-namespace CoolBytes.Core.Interfaces
+namespace CoolBytes.Core.Abstractions
 {
     public abstract class ImageFactory
     {

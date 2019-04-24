@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CoolBytes.Core.Interfaces
+namespace CoolBytes.Core.Abstractions
 {
     public interface IImageFactoryOptions
     {

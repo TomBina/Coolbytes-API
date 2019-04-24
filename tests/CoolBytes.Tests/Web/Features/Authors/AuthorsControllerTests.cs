@@ -1,5 +1,4 @@
-﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Utils;
 using CoolBytes.Data;
 using CoolBytes.Services;
 using CoolBytes.Services.Caching;
@@ -13,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 using Xunit;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace CoolBytes.Core.Interfaces
+namespace CoolBytes.Core.Abstractions
 {
     public interface IImageFile
     {

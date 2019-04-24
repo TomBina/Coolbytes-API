@@ -1,6 +1,6 @@
-﻿using CoolBytes.Core.Interfaces;
-using System;
+﻿using System;
 using System.IO;
+using CoolBytes.Core.Abstractions;
 
 namespace CoolBytes.Core.Builders
 {

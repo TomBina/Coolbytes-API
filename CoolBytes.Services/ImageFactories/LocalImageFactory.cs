@@ -1,9 +1,9 @@
 ﻿using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Domain;
-using CoolBytes.Core.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System.IO;
 using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 
 namespace CoolBytes.Services.ImageFactories
 {

@@ -1,12 +1,12 @@
 ﻿using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Domain;
-using CoolBytes.Core.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using Microsoft.Azure.Storage;
 using Microsoft.Azure.Storage.Blob;
 

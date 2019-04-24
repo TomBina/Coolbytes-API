@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Abstractions;
 
 namespace CoolBytes.Core.Domain
 {

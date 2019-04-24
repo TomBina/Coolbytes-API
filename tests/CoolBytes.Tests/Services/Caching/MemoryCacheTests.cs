@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
-using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Utils;
 using CoolBytes.Services.Caching;
 using CoolBytes.Tests.Web;

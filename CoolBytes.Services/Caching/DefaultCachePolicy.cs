@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Attributes;
-using CoolBytes.Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace CoolBytes.Services.Caching

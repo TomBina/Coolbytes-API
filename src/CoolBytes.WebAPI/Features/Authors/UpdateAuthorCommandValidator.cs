@@ -1,5 +1,5 @@
 ﻿using System;
-using CoolBytes.Core.Interfaces;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Data;
 using FluentValidation;
 using FluentValidation.Validators;

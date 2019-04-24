@@ -2,7 +2,7 @@
 using CoolBytes.Core.Domain;
 using CoolBytes.Core.Utils;
 
-namespace CoolBytes.Core.Interfaces
+namespace CoolBytes.Core.Abstractions
 {
     public interface IUserService
     {

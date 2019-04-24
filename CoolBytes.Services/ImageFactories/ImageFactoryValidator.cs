@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Attributes;
-using CoolBytes.Core.Interfaces;
 
 namespace CoolBytes.Services.ImageFactories
 {

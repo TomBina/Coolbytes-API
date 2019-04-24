@@ -1,4 +1,4 @@
-﻿using CoolBytes.Core.Interfaces;
+﻿using CoolBytes.Core.Abstractions;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
 using FluentValidation;

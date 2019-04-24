@@ -1,4 +1,4 @@
-﻿namespace CoolBytes.Core.Interfaces
+﻿namespace CoolBytes.Core.Abstractions
 {
     public interface IEntity
     {
