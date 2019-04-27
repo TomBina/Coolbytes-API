@@ -1,19 +1,21 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using CoolBytes.Core.Abstractions;
+﻿using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Domain;
 using CoolBytes.Services.BlobStorage;
-using CoolBytes.Services.Images.Factories;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace CoolBytes.Services.Images
 {
+    [Inject(typeof(IImageService), ServiceLifetime.Scoped, "development", "production-azure")]
     public class AzureBlobImageService : IImageService
     {
-        private readonly AzureBlobImageFactory _imageFactory;
-        private readonly AzureBlobClient _client;
+        private readonly ImageFactory _imageFactory;
+        private readonly IBlobClient _client;
 
-        public AzureBlobImageService(AzureBlobImageFactory imageFactory, AzureBlobClient client)
+        public AzureBlobImageService(ImageFactory imageFactory, IBlobClient client)
         {
             _imageFactory = imageFactory;
             _client = client;

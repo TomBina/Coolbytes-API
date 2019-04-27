@@ -1,18 +1,20 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using CoolBytes.Core.Abstractions;
+﻿using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Domain;
-using CoolBytes.Services.Images.Factories;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace CoolBytes.Services.Images
 {
+    [Inject(typeof(IImageService), ServiceLifetime.Scoped, "production")]
     public class LocalImageService : IImageService
     {
         private readonly IConfiguration _configuration;
-        private readonly LocalImageFactory _imageFactory;
+        private readonly ImageFactory _imageFactory;
 
-        public LocalImageService(IConfiguration configuration, LocalImageFactory imageFactory)
+        public LocalImageService(IConfiguration configuration, ImageFactory imageFactory)
         {
             _configuration = configuration;
             _imageFactory = imageFactory;
