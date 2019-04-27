@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CoolBytes.Core.Domain;
-using CoolBytes.WebAPI.Features.Images;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
 
 namespace CoolBytes.WebAPI.Features.Authors.Profiles
 {

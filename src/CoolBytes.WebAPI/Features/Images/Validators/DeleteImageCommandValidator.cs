@@ -1,9 +1,10 @@
 ﻿using CoolBytes.Core.Domain;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.Images.CQ;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoolBytes.WebAPI.Features.Images
+namespace CoolBytes.WebAPI.Features.Images.Validators
 {
     public class DeleteImageCommandValidator : AbstractValidator<DeleteImageCommand>
     {

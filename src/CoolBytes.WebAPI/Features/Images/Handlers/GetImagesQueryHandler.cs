@@ -3,10 +3,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.Images.CQ;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoolBytes.WebAPI.Features.Images
+namespace CoolBytes.WebAPI.Features.Images.Handlers
 {
     public class GetImagesQueryHandler : IRequestHandler<GetImagesQuery, IEnumerable<ImageViewModel>>
     {

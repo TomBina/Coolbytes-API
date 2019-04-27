@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace CoolBytes.WebAPI.Features.Images
+namespace CoolBytes.WebAPI.Features.Images.CQ
 {
     public class DeleteImageCommand : IRequest
     {

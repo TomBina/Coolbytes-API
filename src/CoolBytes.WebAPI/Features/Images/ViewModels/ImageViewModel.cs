@@ -1,4 +1,4 @@
-﻿namespace CoolBytes.WebAPI.Features.Images
+﻿namespace CoolBytes.WebAPI.Features.Images.ViewModels
 {
     public class ImageViewModel
     {

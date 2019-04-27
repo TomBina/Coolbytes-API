@@ -1,6 +1,6 @@
 ﻿using CoolBytes.WebAPI.Features.Authors;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
-using CoolBytes.WebAPI.Features.Images;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
 using System;
 using System.Collections.Generic;
 

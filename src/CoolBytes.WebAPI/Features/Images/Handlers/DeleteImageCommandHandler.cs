@@ -1,10 +1,11 @@
-﻿using CoolBytes.Core.Abstractions;
-using CoolBytes.Data;
-using MediatR;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
+using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.Images.CQ;
+using MediatR;
 
-namespace CoolBytes.WebAPI.Features.Images
+namespace CoolBytes.WebAPI.Features.Images.Handlers
 {
     public class DeleteImageCommandHandler : AsyncRequestHandler<DeleteImageCommand>
     {

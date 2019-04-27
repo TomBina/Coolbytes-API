@@ -1,11 +1,12 @@
-﻿using CoolBytes.WebAPI.Features.Images;
+﻿using CoolBytes.Core.Domain;
+using CoolBytes.WebAPI.Features.Images.CQ;
+using CoolBytes.WebAPI.Features.Images.Handlers;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Domain;
-using MediatR;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Images

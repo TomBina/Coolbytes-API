@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using CoolBytes.WebAPI.Features.Images;
+﻿using CoolBytes.WebAPI.Features.Images.ViewModels;
+using System.Collections.Generic;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {

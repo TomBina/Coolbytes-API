@@ -1,15 +1,17 @@
-﻿using AutoMapper;
-using CoolBytes.Core.Abstractions;
-using CoolBytes.Core.Domain;
-using CoolBytes.Data;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Domain;
+using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.Images.CQ;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 
-namespace CoolBytes.WebAPI.Features.Images
+namespace CoolBytes.WebAPI.Features.Images.Handlers
 {
     public class UploadImagesCommandHandler : IRequestHandler<UploadImagesCommand, IEnumerable<ImageViewModel>>
     {
