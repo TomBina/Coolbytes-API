@@ -58,9 +58,9 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             using (var context = TestContext.CreateNewContext())
             {
-                var imageFactory = TestContext.CreateImageFactory();
+                var imageService = TestContext.CreateImageService();
                 var file = TestContext.CreateFileMock().Object;
-                var image = await imageFactory.Create(file.OpenReadStream(), file.FileName, file.ContentType);
+                var image = await imageService.Save(file.OpenReadStream(), file.FileName, file.ContentType);
 
                 context.Images.Add(image);
                 await context.SaveChangesAsync();

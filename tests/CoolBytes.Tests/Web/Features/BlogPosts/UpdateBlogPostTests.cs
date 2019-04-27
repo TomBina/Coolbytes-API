@@ -84,7 +84,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task UpdateBlogPostCommandHandler_WithFile_UpdatesBlog()
         {
-            var imageFactory = TestContext.CreateImageFactory();
+            var imageFactory = TestContext.CreateImageService();
             var builder = new ExistingBlogPostBuilder(imageFactory);
             var handler = new UpdateBlogPostCommandHandler(Context, builder);
             var fileMock = TestContext.CreateFileMock();

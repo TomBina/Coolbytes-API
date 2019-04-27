@@ -1,13 +1,13 @@
-﻿using CoolBytes.Core.Abstractions;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Attributes;
 using CoolBytes.Core.Domain;
 using CoolBytes.Services.BlobStorage;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.IO;
-using System.Threading.Tasks;
 
-namespace CoolBytes.Services.ImageFactories
+namespace CoolBytes.Services.Images.Factories
 {
     [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "development", "production-azure")]
     public class AzureBlobImageFactory : ImageFactory

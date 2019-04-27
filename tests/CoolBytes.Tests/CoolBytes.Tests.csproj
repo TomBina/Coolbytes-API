@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\CoolBytes.Services\CoolBytes.Services.csproj" />
+    <ProjectReference Include="..\..\src\CoolBytes.Services\CoolBytes.Services.csproj" />
     <ProjectReference Include="..\..\src\CoolBytes.Core\CoolBytes.Core.csproj" />
     <ProjectReference Include="..\..\src\CoolBytes.Data\CoolBytes.Data.csproj" />
     <ProjectReference Include="..\..\src\CoolBytes.WebAPI\CoolBytes.WebAPI.csproj" />

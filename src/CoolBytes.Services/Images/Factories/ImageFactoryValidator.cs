@@ -3,7 +3,7 @@ using System.Linq;
 using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Attributes;
 
-namespace CoolBytes.Services.ImageFactories
+namespace CoolBytes.Services.Images.Factories
 {
     [Inject(typeof(IImageFactoryValidator))]
     public class ImageFactoryValidator : IImageFactoryValidator

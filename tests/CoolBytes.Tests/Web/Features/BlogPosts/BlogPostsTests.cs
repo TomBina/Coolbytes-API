@@ -114,8 +114,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task AddBlogPostCommandHandler_AddsBlog()
         {
-            var imageFactory = TestContext.CreateImageFactory();
-            var builder = new BlogPostBuilder(_authorService, imageFactory);
+            var imageService = TestContext.CreateImageService();
+            var builder = new BlogPostBuilder(_authorService, imageService);
             var addBlogPostCommandHandler = new AddBlogPostCommandHandler(Context, builder);
             var category = await Context.Categories.FirstOrDefaultAsync();
             var addBlogPostCommand = new AddBlogPostCommand()
@@ -135,7 +135,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task AddBlogPostCommandHandler_WithFile_AddsBlog()
         {
-            var imageFactory = TestContext.CreateImageFactory();
+            var imageFactory = TestContext.CreateImageService();
             var builder = new BlogPostBuilder(_authorService, imageFactory);
             var handler = new AddBlogPostCommandHandler(Context, builder);
             var fileMock = TestContext.CreateFileMock();

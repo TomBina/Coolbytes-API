@@ -10,12 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace CoolBytes.Services.BlobStorage
 {
     [Inject(typeof(IBlobClient), ServiceLifetime.Scoped, "development", "azure-production")]
-    public class BlobClient : IBlobClient
+    public class AzureBlobClient : IBlobClient
     {
         private readonly Lazy<CloudBlobClient> _client;
         private readonly string _containerName;
 
-        public BlobClient(IConfiguration configuration, IHostingEnvironment environment)
+        public AzureBlobClient(IConfiguration configuration, IHostingEnvironment environment)
         {
             _containerName = environment.EnvironmentName.ToLower();
             var connectionString = configuration.GetConnectionString("BlobStorage").Replace("{KEY}", configuration["storagekey"]);

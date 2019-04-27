@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoolBytes.Data", "src\CoolB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CoolBytes.WebAPI", "src\CoolBytes.WebAPI\CoolBytes.WebAPI.csproj", "{0E33B8CE-CD39-4BD9-89B5-4889E8D679BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.Services", "CoolBytes.Services\CoolBytes.Services.csproj", "{FB960C7A-5C44-4E58-BA53-0C706F3311FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoolBytes.Services", "src\CoolBytes.Services\CoolBytes.Services.csproj", "{FB960C7A-5C44-4E58-BA53-0C706F3311FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

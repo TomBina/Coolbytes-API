@@ -8,7 +8,8 @@ using Moq;
 using System;
 using System.IO;
 using CoolBytes.Services.Caching;
-using CoolBytes.Services.ImageFactories;
+using CoolBytes.Services.Images;
+using CoolBytes.Services.Images.Factories;
 
 namespace CoolBytes.Tests.Web
 {
@@ -97,7 +98,7 @@ namespace CoolBytes.Tests.Web
             return new MemoryCacheService(cachePolicy, cacheKeyGenerator);
         }
 
-        public LocalImageFactory CreateImageFactory()
+        public LocalImageService CreateImageService()
         {
             var config = new Mock<IConfiguration>();
             config.Setup(c => c["ImagesUploadPath"]).Returns(_tempDirectory);
@@ -105,7 +106,10 @@ namespace CoolBytes.Tests.Web
             var options = new LocalImageFactoryOptions(config.Object);
             var validator = new ImageFactoryValidator();
             var imageFactory = new LocalImageFactory(options, validator);
-            return imageFactory;
+
+            var imageService = new LocalImageService(Configuration, imageFactory);
+
+            return imageService;
         }
 
         public Mock<IFormFile> CreateFileMock()

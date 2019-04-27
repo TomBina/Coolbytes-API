@@ -9,14 +9,13 @@ namespace CoolBytes.Core.Builders
 {
     public class ExistingBlogPostBuilder 
     {
-        private readonly ImageFactory _imageFactory;
-
+        private readonly IImageService _imageService;
         private BlogPost _blogPost;
         private Func<Task<Image>> _image;
 
-        public ExistingBlogPostBuilder(ImageFactory imageFactory)
+        public ExistingBlogPostBuilder(IImageService imageService)
         {
-            _imageFactory = imageFactory;
+            _imageService = imageService;
         }
 
         public ExistingBlogPostBuilder UseBlogPost(BlogPost blogPost)
@@ -41,7 +40,7 @@ namespace CoolBytes.Core.Builders
             _image = async () =>
             {
                 using (var stream = file.OpenStream())
-                    return await _imageFactory.Create(stream, file.FileName, file.ContentType);
+                    return await _imageService.Save(stream, file.FileName, file.ContentType);
             };
 
             return this;

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\CoolBytes.Core\CoolBytes.Core.csproj" />
-    <ProjectReference Include="..\src\CoolBytes.Data\CoolBytes.Data.csproj" />
+    <ProjectReference Include="..\CoolBytes.Core\CoolBytes.Core.csproj" />
+    <ProjectReference Include="..\CoolBytes.Data\CoolBytes.Data.csproj" />
   </ItemGroup>
 </Project>

@@ -1,11 +1,11 @@
-﻿using CoolBytes.Core.Attributes;
-using CoolBytes.Core.Domain;
-using Microsoft.Extensions.DependencyInjection;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Attributes;
+using CoolBytes.Core.Domain;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace CoolBytes.Services.ImageFactories
+namespace CoolBytes.Services.Images.Factories
 {
     [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "production")]
     public class LocalImageFactory : ImageFactory

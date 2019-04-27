@@ -4,7 +4,7 @@ using CoolBytes.Core.Attributes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CoolBytes.Services.ImageFactories
+namespace CoolBytes.Services.Images.Factories
 {
     [Inject(typeof(IImageFactoryOptions), ServiceLifetime.Scoped, "production")]
     public class LocalImageFactoryOptions : IImageFactoryOptions

@@ -10,7 +10,7 @@ namespace CoolBytes.Core.Builders
     public class BlogPostBuilder
     {
         private readonly IAuthorService _authorService;
-        private readonly ImageFactory _imageFactory;
+        private readonly IImageService _imageService;
 
         private BlogPostContent _blogPostContent;
         private Task<Author> _author;
@@ -19,10 +19,10 @@ namespace CoolBytes.Core.Builders
         private IEnumerable<ExternalLink> _links;
         private Category _category;
 
-        public BlogPostBuilder(IAuthorService authorService, ImageFactory imageFactory)
+        public BlogPostBuilder(IAuthorService authorService, IImageService imageService)
         {
             _authorService = authorService;
-            _imageFactory = imageFactory;
+            _imageService = imageService;
         }
 
         public BlogPostBuilder WrittenByCurrentAuthor()
@@ -47,7 +47,7 @@ namespace CoolBytes.Core.Builders
             _image = async () =>
             {
                 using (var stream = file.OpenStream())
-                    return await _imageFactory.Create(stream, file.FileName, file.ContentType);
+                    return await _imageService.Save(stream, file.FileName, file.ContentType);
             };
 
             return this;

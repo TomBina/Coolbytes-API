@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using CoolBytes.Services.ImageFactories;
+using CoolBytes.Services.Images.Factories;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;

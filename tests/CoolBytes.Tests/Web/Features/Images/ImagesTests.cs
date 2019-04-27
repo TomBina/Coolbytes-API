@@ -32,7 +32,7 @@ namespace CoolBytes.Tests.Web.Features.Images
         [Fact]
         public async Task ShouldUploadImages()
         {
-            var imageFactory = TestContext.CreateImageFactory();
+            var imageFactory = TestContext.CreateImageService();
             var handler = new UploadImagesCommandHandler(Context, imageFactory);
             var file1 = TestContext.CreateFileMock().Object;
             var file2 = TestContext.CreateFileMock().Object;
@@ -50,7 +50,7 @@ namespace CoolBytes.Tests.Web.Features.Images
         {
             var image = await AddImage();
 
-            IRequestHandler<DeleteImageCommand> handler = new DeleteImageCommandHandler(Context, TestContext.Configuration);
+            IRequestHandler<DeleteImageCommand> handler = new DeleteImageCommandHandler(Context, TestContext.CreateImageService());
             var message = new DeleteImageCommand() { Id = image.Id };
 
             await handler.Handle(message, CancellationToken.None);
@@ -60,12 +60,12 @@ namespace CoolBytes.Tests.Web.Features.Images
 
         private async Task<Image> AddImage()
         {
-            var imageFactory = TestContext.CreateImageFactory();
+            var imageService = TestContext.CreateImageService();
             var file = TestContext.CreateFileMock().Object;
 
             using (var stream = file.OpenReadStream())
             {
-                var image = await imageFactory.Create(stream, file.FileName, file.ContentType);
+                var image = await imageService.Save(stream, file.FileName, file.ContentType);
                 using (var context = TestContext.CreateNewContext())
                 {
                     context.Images.Add(image);
