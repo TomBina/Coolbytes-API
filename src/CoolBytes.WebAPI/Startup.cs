@@ -1,6 +1,8 @@
-﻿using CoolBytes.Core.Builders;
+﻿using AutoMapper;
+using CoolBytes.Core.Builders;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Extensions;
+using CoolBytes.WebAPI.Handlers;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -43,11 +45,12 @@ namespace CoolBytes.WebAPI
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
+            services.AddAutoMapper(typeof(Program));
             services.AddMediatR(typeof(Startup));
             services.AddSwaggerDocument(_swaggerConfiguration.ConfigureSwagger);
-
             services.ScanServices(_environment.EnvironmentName);
             services.AddMailgun();
+            services.AddTransient(typeof(HandlerContext<>));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

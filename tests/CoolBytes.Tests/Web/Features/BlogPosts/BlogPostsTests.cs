@@ -1,16 +1,18 @@
-﻿using CoolBytes.Core.Builders;
+﻿using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Builders;
+using CoolBytes.Core.Domain;
 using CoolBytes.Core.Utils;
 using CoolBytes.Services;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.Handlers;
+using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Abstractions;
-using CoolBytes.Core.Domain;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -68,7 +70,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(Context, TestContext.CreateStubCacheService());
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>();
+            var blogPostsQueryHandler = new GetBlogPostsQueryHandler(handlerContext);
             var getBlogPostsQuery = new GetBlogPostsQuery();
             var result = await blogPostsQueryHandler.Handle(getBlogPostsQuery, CancellationToken.None);
 

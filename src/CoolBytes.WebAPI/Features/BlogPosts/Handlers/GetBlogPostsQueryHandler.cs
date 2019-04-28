@@ -1,27 +1,29 @@
-﻿using AutoMapper;
+﻿using CoolBytes.Core.Domain;
 using CoolBytes.Data;
+using CoolBytes.Services.Caching;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Domain;
-using CoolBytes.Services.Caching;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class GetBlogPostsQueryHandler : IRequestHandler<GetBlogPostsQuery, IEnumerable<BlogPostSummaryViewModel>>
     {
+        private readonly HandlerContext<IEnumerable<BlogPostSummaryViewModel>> _context;
         private readonly AppDbContext _dbContext;
-        private readonly ICacheService _cacheService;
+        private readonly ICacheService _cache;
 
-        public GetBlogPostsQueryHandler(AppDbContext dbContext, ICacheService cacheService)
+        public GetBlogPostsQueryHandler(HandlerContext<IEnumerable<BlogPostSummaryViewModel>> context)
         {
-            _dbContext = dbContext;
-            _cacheService = cacheService;
+            _context = context;
+            _dbContext = context.DbContext;
+            _cache = context.Cache;
         }
 
         public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsQuery message, CancellationToken cancellationToken)
@@ -30,7 +32,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
             if (message.Tag == null)
             {
-                viewModel = await _cacheService.GetOrAddAsync(() => ViewModelAsync(null));
+                viewModel = await _cache.GetOrAddAsync(() => ViewModelAsync(null));
             }
 
             else
@@ -54,7 +56,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 blogPosts = await QueryBlogPostsWithTag(tag);
             }
 
-            return Mapper.Map<IEnumerable<BlogPostSummaryViewModel>>(blogPosts);
+            return _context.Map(blogPosts);
         }
 
         private Task<List<BlogPost>> QueryBlogPostsWithTag(string tag) =>

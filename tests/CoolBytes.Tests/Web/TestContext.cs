@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using CoolBytes.Services.Caching;
 using CoolBytes.Services.Images;
 using CoolBytes.Services.Images.Factories;
+using CoolBytes.WebAPI.Handlers;
 
 namespace CoolBytes.Tests.Web
 {
@@ -75,6 +77,23 @@ namespace CoolBytes.Tests.Web
 
         public AppDbContext CreateNewContext()
             => new AppDbContext(_options);
+
+        public HandlerContext<T> CreateHandlerContext<T>(IEnumerable<Profile> profiles = null)
+            => new HandlerContext<T>(CreateMapper(profiles), CreateNewContext(), CreateStubCacheService());
+
+        public IMapper CreateMapper(IEnumerable<Profile> profiles)
+        {
+            var mapperConfig = new MapperConfiguration(c =>
+            {
+                if (profiles != null)
+                    c.AddProfiles(profiles);
+                else
+                {
+                    c.AddMaps(typeof(Program).Assembly);
+                }
+            });
+            return mapperConfig.CreateMapper();
+        }
 
         /// <summary>
         /// Create a fake cache.
