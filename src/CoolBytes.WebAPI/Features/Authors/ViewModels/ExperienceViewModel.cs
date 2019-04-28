@@ -1,6 +1,6 @@
 ﻿using CoolBytes.WebAPI.Features.Images.ViewModels;
 
-namespace CoolBytes.WebAPI.Features.Authors
+namespace CoolBytes.WebAPI.Features.Authors.ViewModels
 {
     public class ExperienceViewModel
     {

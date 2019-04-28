@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CoolBytes.Services.KeyVault;
+﻿using CoolBytes.Services.KeyVault;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

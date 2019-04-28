@@ -14,6 +14,7 @@ using System;
 using System.Threading.Tasks;
 using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
+using CoolBytes.WebAPI.Features.Authors.CQ;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors

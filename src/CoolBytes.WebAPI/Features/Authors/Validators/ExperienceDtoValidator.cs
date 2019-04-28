@@ -1,8 +1,9 @@
 ﻿using CoolBytes.Core.Domain;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.Authors.DTO;
 using FluentValidation;
 
-namespace CoolBytes.WebAPI.Features.Authors
+namespace CoolBytes.WebAPI.Features.Authors.Validators
 {
     public class ExperienceDtoValidator : AbstractValidator<ExperienceDto>
     {

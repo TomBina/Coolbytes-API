@@ -1,14 +1,16 @@
-﻿using AutoMapper;
-using CoolBytes.Data;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
+using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.Authors.CQ;
+using CoolBytes.WebAPI.Features.Authors.ViewModels;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace CoolBytes.WebAPI.Features.Authors
+namespace CoolBytes.WebAPI.Features.Authors.Handlers
 {
     public class UpdateAuthorCommandHandler : IRequestHandler<UpdateAuthorCommand, AuthorViewModel>
     {

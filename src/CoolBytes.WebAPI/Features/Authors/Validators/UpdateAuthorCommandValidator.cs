@@ -1,11 +1,12 @@
 ﻿using System;
 using CoolBytes.Core.Abstractions;
 using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.Authors.CQ;
 using FluentValidation;
 using FluentValidation.Validators;
 using Microsoft.EntityFrameworkCore;
 
-namespace CoolBytes.WebAPI.Features.Authors
+namespace CoolBytes.WebAPI.Features.Authors.Validators
 {
     public class UpdateAuthorCommandValidator : AbstractValidator<UpdateAuthorCommand>
     {

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using CoolBytes.Core.Builders;
+﻿using CoolBytes.Core.Builders;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Extensions;
 using FluentValidation.AspNetCore;
@@ -10,8 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NSwag;
-using NSwag.SwaggerGeneration.Processors.Security;
 
 namespace CoolBytes.WebAPI
 {
@@ -20,12 +17,14 @@ namespace CoolBytes.WebAPI
         private readonly IConfiguration _configuration;
         private readonly IHostingEnvironment _environment;
         private readonly ConnectionStringFactory _connectionStringFactory;
+        private readonly SwaggerConfiguration _swaggerConfiguration;
 
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             _configuration = configuration;
             _environment = environment;
             _connectionStringFactory = new ConnectionStringFactory(configuration, environment);
+            _swaggerConfiguration = new SwaggerConfiguration();
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -45,17 +44,7 @@ namespace CoolBytes.WebAPI
                 .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
                 .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
             services.AddMediatR(typeof(Startup));
-            services.AddSwaggerDocument(settings =>
-            {
-                settings.OperationProcessors.Add(new OperationSecurityScopeProcessor("JWT"));
-                settings.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT", new SwaggerSecurityScheme
-                {
-                    Type = SwaggerSecuritySchemeType.ApiKey,
-                    Name = "Authorization",
-                    Description = "Bearer token",
-                    In = SwaggerSecurityApiKeyLocation.Header
-                }));
-            });
+            services.AddSwaggerDocument(_swaggerConfiguration.ConfigureSwagger);
 
             services.ScanServices(_environment.EnvironmentName);
             services.AddMailgun();

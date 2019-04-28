@@ -1,7 +1,7 @@
-﻿using CoolBytes.WebAPI.Features.Images.ViewModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
 
-namespace CoolBytes.WebAPI.Features.Authors
+namespace CoolBytes.WebAPI.Features.Authors.ViewModels
 {
     public class AuthorViewModel
     {

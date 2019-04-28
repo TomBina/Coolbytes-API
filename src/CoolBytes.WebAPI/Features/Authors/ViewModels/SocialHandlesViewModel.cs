@@ -1,4 +1,4 @@
-﻿namespace CoolBytes.WebAPI.Features.Authors
+﻿namespace CoolBytes.WebAPI.Features.Authors.ViewModels
 {
     public class SocialHandlesViewModel
     {

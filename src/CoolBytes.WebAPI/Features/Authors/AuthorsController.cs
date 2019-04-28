@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using CoolBytes.WebAPI.Features.Authors.CQ;
+using CoolBytes.WebAPI.Features.Authors.ViewModels;
 
 namespace CoolBytes.WebAPI.Features.Authors
 {

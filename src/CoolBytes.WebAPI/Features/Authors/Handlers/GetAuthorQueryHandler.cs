@@ -1,11 +1,13 @@
-﻿using AutoMapper;
-using MediatR;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
+using CoolBytes.WebAPI.Features.Authors.CQ;
+using CoolBytes.WebAPI.Features.Authors.ViewModels;
+using MediatR;
 
-namespace CoolBytes.WebAPI.Features.Authors
+namespace CoolBytes.WebAPI.Features.Authors.Handlers
 {
     public class GetAuthorQueryHandler : IRequestHandler<GetAuthorQuery, AuthorViewModel>
     {

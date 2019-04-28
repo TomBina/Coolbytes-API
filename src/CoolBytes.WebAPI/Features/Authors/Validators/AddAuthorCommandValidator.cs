@@ -1,9 +1,10 @@
-﻿using CoolBytes.Data;
+﻿using System;
+using CoolBytes.Data;
+using CoolBytes.WebAPI.Features.Authors.CQ;
 using FluentValidation;
 using FluentValidation.Validators;
-using System;
 
-namespace CoolBytes.WebAPI.Features.Authors
+namespace CoolBytes.WebAPI.Features.Authors.Validators
 {
     public class AddAuthorCommandValidator : AbstractValidator<AddAuthorCommand>
     {

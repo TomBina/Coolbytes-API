@@ -1,7 +1,9 @@
-﻿using MediatR;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CoolBytes.WebAPI.Features.Authors.DTO;
+using CoolBytes.WebAPI.Features.Authors.ViewModels;
+using MediatR;
 
-namespace CoolBytes.WebAPI.Features.Authors
+namespace CoolBytes.WebAPI.Features.Authors.CQ
 {
     public class UpdateAuthorCommand : IRequest<AuthorViewModel>
     {

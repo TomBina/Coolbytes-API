@@ -1,4 +1,4 @@
-﻿namespace CoolBytes.WebAPI.Features.Authors
+﻿namespace CoolBytes.WebAPI.Features.Authors.DTO
 {
     public class ExperienceDto
     {

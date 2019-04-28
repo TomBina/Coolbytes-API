@@ -1,14 +1,16 @@
-﻿using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Domain;
+using CoolBytes.Core.Utils;
 using CoolBytes.Services;
-using CoolBytes.WebAPI.Features.Authors;
+using CoolBytes.WebAPI.Features.Authors.CQ;
+using CoolBytes.WebAPI.Features.Authors.DTO;
+using CoolBytes.WebAPI.Features.Authors.Handlers;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Abstractions;
-using CoolBytes.Core.Domain;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors

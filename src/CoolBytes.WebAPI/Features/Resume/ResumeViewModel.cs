@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using CoolBytes.WebAPI.Features.Authors;
+﻿using CoolBytes.WebAPI.Features.Authors.ViewModels;
 using CoolBytes.WebAPI.Features.ResumeEvents.ViewModels;
+using System.Collections.Generic;
 
 namespace CoolBytes.WebAPI.Features.Resume
 {
