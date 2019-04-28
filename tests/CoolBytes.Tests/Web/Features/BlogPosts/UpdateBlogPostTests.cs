@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
+using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -47,7 +48,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var blog = await Context.BlogPosts.FirstAsync();
             var query = new UpdateBlogPostQuery() { Id = blog.Id };
-            var handler = new UpdateBlogPostQueryHandler(Context);
+            var handler = new UpdateBlogPostQueryHandler(TestContext.CreateHandlerContext<BlogPostUpdateViewModel>());
 
             var result = await handler.Handle(query, CancellationToken.None);
 
@@ -73,7 +74,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 CategoryId = category.Id
             };
             var builder = new ExistingBlogPostBuilder(null);
-            var handler = new UpdateBlogPostCommandHandler(Context, builder);
+            var handler = new UpdateBlogPostCommandHandler(TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(), builder);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -86,7 +87,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var imageFactory = TestContext.CreateImageService();
             var builder = new ExistingBlogPostBuilder(imageFactory);
-            var handler = new UpdateBlogPostCommandHandler(Context, builder);
+            var handler = new UpdateBlogPostCommandHandler(TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(), builder);
             var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;
             var category = new Category("Hello test category", 1);

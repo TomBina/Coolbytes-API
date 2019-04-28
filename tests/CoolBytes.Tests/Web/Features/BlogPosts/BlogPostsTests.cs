@@ -87,7 +87,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 var category = await context.Categories.FirstAsync();
                 query.CategoryId = category.Id;
             }
-            var handler = new GetBlogPostsByCategoryQueryHandler(Context, TestContext.CreateStubCacheService());
+            var handler = new GetBlogPostsByCategoryQueryHandler(TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>());
             var result = await handler.Handle(query, CancellationToken.None);
 
             Assert.NotEmpty(result);
@@ -96,7 +96,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsOverviewQueryHandler_ReturnsBlogs()
         {
-            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(Context, TestContext.CreateStubCacheService());
+            var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(TestContext.CreateHandlerContext<BlogPostsOverviewViewModel>());
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
 
@@ -107,7 +107,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
             var blogPostId = Context.BlogPosts.First().Id;
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(Context, TestContext.CreateStubCacheService());
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(TestContext.CreateHandlerContext<BlogPostViewModel>());
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
 
@@ -119,7 +119,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var imageService = TestContext.CreateImageService();
             var builder = new BlogPostBuilder(_authorService, imageService);
-            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(Context, builder);
+            var addBlogPostCommandHandler = new AddBlogPostCommandHandler(TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(), builder);
             var category = await Context.Categories.FirstOrDefaultAsync();
             var addBlogPostCommand = new AddBlogPostCommand()
             {
@@ -140,7 +140,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var imageFactory = TestContext.CreateImageService();
             var builder = new BlogPostBuilder(_authorService, imageFactory);
-            var handler = new AddBlogPostCommandHandler(Context, builder);
+            var handler = new AddBlogPostCommandHandler(TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(), builder);
             var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;
             var category = await Context.Categories.FirstOrDefaultAsync();

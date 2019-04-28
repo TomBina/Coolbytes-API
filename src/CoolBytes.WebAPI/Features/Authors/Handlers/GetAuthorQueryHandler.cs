@@ -1,20 +1,22 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using CoolBytes.Core.Abstractions;
+﻿using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 using CoolBytes.WebAPI.Features.Authors.CQ;
 using CoolBytes.WebAPI.Features.Authors.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Authors.Handlers
 {
     public class GetAuthorQueryHandler : IRequestHandler<GetAuthorQuery, AuthorViewModel>
     {
+        private readonly HandlerContext<AuthorViewModel> _context;
         private readonly IAuthorService _authorService;
 
-        public GetAuthorQueryHandler(IAuthorService authorService)
+        public GetAuthorQueryHandler(HandlerContext<AuthorViewModel> context, IAuthorService authorService)
         {
+            _context = context;
             _authorService = authorService;
         }
 
@@ -33,6 +35,6 @@ namespace CoolBytes.WebAPI.Features.Authors.Handlers
             return CreateViewModel(author);
         }
 
-        private AuthorViewModel CreateViewModel(Author author) => Mapper.Map<AuthorViewModel>(author);
+        private AuthorViewModel CreateViewModel(Author author) => _context.Map(author);
     }
 }

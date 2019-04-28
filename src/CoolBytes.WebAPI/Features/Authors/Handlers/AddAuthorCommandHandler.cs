@@ -1,24 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using CoolBytes.Core.Abstractions;
+﻿using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Authors.CQ;
 using CoolBytes.WebAPI.Features.Authors.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Authors.Handlers
 {
     public class AddAuthorCommandHandler : IRequestHandler<AddAuthorCommand, AuthorViewModel>
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
+        private readonly HandlerContext<AuthorViewModel> _context;
         private readonly IUserService _userService;
         private readonly IAuthorValidator _authorValidator;
 
-        public AddAuthorCommandHandler(AppDbContext context, IUserService userService, IAuthorValidator authorValidator)
+        public AddAuthorCommandHandler(HandlerContext<AuthorViewModel> context, IUserService userService, IAuthorValidator authorValidator)
         {
+            _dbContext = context.DbContext;
             _context = context;
             _userService = userService;
             _authorValidator = authorValidator;
@@ -54,7 +56,7 @@ namespace CoolBytes.WebAPI.Features.Authors.Handlers
 
             if (message.ImageId != null)
             {
-                var image = await _context.Images.FindAsync(message.ImageId);
+                var image = await _dbContext.Images.FindAsync(message.ImageId);
                 authorProfile.WithImage(image);
             }
 
@@ -67,7 +69,7 @@ namespace CoolBytes.WebAPI.Features.Authors.Handlers
 
             foreach (var experience in message.Experiences)
             {
-                var image = await _context.Images.FindAsync(experience.ImageId);
+                var image = await _dbContext.Images.FindAsync(experience.ImageId);
                 experiences.Add(new Experience(experience.Id, experience.Name, experience.Color, image));
             }
 
@@ -76,11 +78,11 @@ namespace CoolBytes.WebAPI.Features.Authors.Handlers
 
         private async Task SaveAuthor(Author author)
         {
-            _context.Authors.Add(author);
-            await _context.SaveChangesAsync();
+            _dbContext.Authors.Add(author);
+            await _dbContext.SaveChangesAsync();
         }
 
-        private AuthorViewModel CreateViewModel(Author author) 
-            => Mapper.Map<AuthorViewModel>(author);
+        private AuthorViewModel CreateViewModel(Author author)
+            => _context.Map(author);
     }
 }

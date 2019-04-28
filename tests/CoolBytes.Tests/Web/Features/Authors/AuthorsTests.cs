@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.WebAPI.Features.Authors.ViewModels;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
@@ -27,14 +28,14 @@ namespace CoolBytes.Tests.Web.Features.Authors
             userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
             userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
             _userService = userService.Object;
-            _authorService = new AuthorService(_userService, Context);
+            _authorService = new AuthorService(_userService, TestContext.CreateNewContext());
         }
 
         [Fact]
         public async Task GetAuthorQueryHandler_ReturnsAuthor()
         {
             await AddAuthor();
-            var getAuthorQueryHandler = new GetAuthorQueryHandler(_authorService);
+            var getAuthorQueryHandler = new GetAuthorQueryHandler(TestContext.CreateHandlerContext<AuthorViewModel>(), _authorService);
             var message = new GetAuthorQuery() { IncludeProfile = true };
 
             var result = await getAuthorQueryHandler.Handle(message, CancellationToken.None);
@@ -85,7 +86,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             experiences.Add(experienceDto);
 
             var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, _userService, authorValidator);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(), _userService, authorValidator);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me", Experiences = experiences };
 
             var result = await addAuthorCommandHandler.Handle(message, CancellationToken.None);
@@ -99,7 +100,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             await AddAuthor();
 
             var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, _userService, authorValidator);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(), _userService, authorValidator);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
@@ -123,7 +124,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             experiences.Add(experienceDto);
 
             var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test", Experiences = experiences };
-            var handler = new UpdateAuthorCommandHandler(Context, _authorService);
+            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(), _authorService);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -135,7 +136,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             await AddAuthor();
             var image = await AddImage();
-            var handler = new UpdateAuthorCommandHandler(Context, _authorService);
+            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(), _authorService);
 
             var message = new UpdateAuthorCommand()
             {

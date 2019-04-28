@@ -9,17 +9,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.Core.Domain;
+using CoolBytes.WebAPI.Handlers;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class AddBlogPostCommandHandler : IRequestHandler<AddBlogPostCommand, BlogPostSummaryViewModel>
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
+        private readonly HandlerContext<BlogPostSummaryViewModel> _context;
         private readonly BlogPostBuilder _builder;
 
-        public AddBlogPostCommandHandler(AppDbContext context, BlogPostBuilder builder) 
+        public AddBlogPostCommandHandler(HandlerContext<BlogPostSummaryViewModel> context, BlogPostBuilder builder) 
         {
+            _dbContext = context.DbContext;
             _context = context;
             _builder = builder;
         }
@@ -35,7 +38,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
         private async Task<BlogPost> CreateBlogPost(AddBlogPostCommand message)
         {
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == message.CategoryId);
+            var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.Id == message.CategoryId);
             var tags = message.Tags?.Select(s => new BlogPostTag(s)).ToList();
             var externalLinks = message.ExternalLinks?.Select(el => new ExternalLink(el.Name, el.Url)).ToList();
 
@@ -50,15 +53,15 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
         private async Task Save(BlogPost blogPost)
         {
-            _context.BlogPosts.Add(blogPost);
+            _dbContext.BlogPosts.Add(blogPost);
 
             if (blogPost.Image != null)
-                await _context.SaveChangesAsync(() => File.Delete(blogPost.Image.Path));
+                await _dbContext.SaveChangesAsync(() => File.Delete(blogPost.Image.Path));
             else
-                await _context.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
         }
 
         private BlogPostSummaryViewModel ViewModel(BlogPost blogPost) 
-                => Mapper.Map<BlogPostSummaryViewModel>(blogPost);
+                => _context.Map(blogPost);
     }
 }

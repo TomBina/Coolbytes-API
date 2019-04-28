@@ -1,24 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using CoolBytes.Core.Abstractions;
+﻿using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Authors.CQ;
 using CoolBytes.WebAPI.Features.Authors.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Authors.Handlers
 {
     public class UpdateAuthorCommandHandler : IRequestHandler<UpdateAuthorCommand, AuthorViewModel>
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
+        private readonly HandlerContext<AuthorViewModel> _context;
         private readonly IAuthorService _authorService;
 
-        public UpdateAuthorCommandHandler(AppDbContext context, IAuthorService authorService)
+        public UpdateAuthorCommandHandler(HandlerContext<AuthorViewModel> context, IAuthorService authorService)
         {
+            _dbContext = context.DbContext;
             _context = context;
             _authorService = authorService;
         }
@@ -39,7 +41,7 @@ namespace CoolBytes.WebAPI.Features.Authors.Handlers
             var socialHandles = new SocialHandles(message.LinkedIn, message.GitHub);
 
             if (author.AuthorProfile.SocialHandles != null)
-                _context.Entry(author.AuthorProfile.SocialHandles).State = EntityState.Modified;
+                _dbContext.Entry(author.AuthorProfile.SocialHandles).State = EntityState.Modified;
 
             author.AuthorProfile.Update(message.FirstName, message.LastName, message.About)
                                 .WithSocialHandles(socialHandles)
@@ -54,7 +56,7 @@ namespace CoolBytes.WebAPI.Features.Authors.Handlers
 
         private async Task CreateImage(Author author, UpdateAuthorCommand message)
         {
-            var image = await _context.Images.FindAsync(message.ImageId);
+            var image = await _dbContext.Images.FindAsync(message.ImageId);
             author.AuthorProfile.WithImage(image);
         }
 
@@ -64,7 +66,7 @@ namespace CoolBytes.WebAPI.Features.Authors.Handlers
 
             foreach (var experience in message.Experiences)
             {
-                var image = await _context.Images.FindAsync(experience.ImageId);
+                var image = await _dbContext.Images.FindAsync(experience.ImageId);
                 experiences.Add(new Experience(experience.Id, experience.Name, experience.Color, image));
             }
 
@@ -72,9 +74,9 @@ namespace CoolBytes.WebAPI.Features.Authors.Handlers
         }
 
         private async Task SaveAuthor()
-            => await _context.SaveChangesAsync();
+            => await _dbContext.SaveChangesAsync();
 
         private AuthorViewModel CreateViewModel(Author author)
-            => Mapper.Map<AuthorViewModel>(author);
+            => _context.Map(author);
     }
 }
