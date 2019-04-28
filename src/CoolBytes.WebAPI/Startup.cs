@@ -71,7 +71,7 @@ namespace CoolBytes.WebAPI
             if (env.IsDevelopment())
             {
                 app.UseCors("DevPolicy");
-                Mapper.AssertConfigurationIsValid();
+                // TODO: Assert mapper config
             }
             else
             {

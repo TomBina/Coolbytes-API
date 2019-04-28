@@ -60,7 +60,6 @@ namespace CoolBytes.WebAPI
 
         private static void Initialize(string[] args, IConfiguration configuration)
         {
-            Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
             var webHost = BuildWebHost(args, configuration);
             var serviceProvider = webHost.Services;
 
