@@ -14,15 +14,24 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Profiles
                 .ForMember(v => v.Subject, exp => exp.MapFrom(b => b.Content.Subject))
                 .ForMember(v => v.SubjectUrl, exp => exp.MapFrom(b => b.Content.SubjectUrl))
                 .ForMember(v => v.ContentIntro, exp => exp.MapFrom(b => b.Content.ContentIntro))
-                .ForMember(v => v.Image, ResolveImageModelFromBlogPost)
-                .ForMember(v => v.Category, exp => exp.MapFrom(b => b.Category.Name));
+                .ForMember(v => v.Image, exp => exp.Ignore())
+                .ForMember(v => v.Category, exp => exp.MapFrom(b => b.Category.Name))
+                .AfterMap<AfterMapAction>();
+                
         }
-
-        private static void ResolveImageModelFromBlogPost<T>(IMemberConfigurationExpression<BlogPost, T, ImageViewModel> exp)
-        {
-            exp.MapFrom((blogPost, viewModel, image) =>
-                blogPost.Image == null ? null : new ImageViewModel() { UriPath = blogPost.Image.UriPath });
-        }
-
     }
+
+    public class AfterMapAction : IMappingAction<BlogPost, BlogPostSummaryViewModel>
+    {
+        private readonly IImageViewModelFactory _factory;
+
+        public AfterMapAction(IImageViewModelFactory factory)
+        {
+            _factory = factory;
+        }
+
+        public void Process(BlogPost source, BlogPostSummaryViewModel destination)
+            => destination.Image = _factory.Create(source?.Image);
+    }
+
 }

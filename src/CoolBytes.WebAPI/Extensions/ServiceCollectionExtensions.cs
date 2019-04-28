@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Net.Http;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
 
 namespace CoolBytes.WebAPI.Extensions
 {
@@ -47,9 +48,15 @@ namespace CoolBytes.WebAPI.Extensions
             bool Predicate(InjectAttribute o) => o.Environment.Length == 0 || o.Environment.Any(e => e == currentEnvironment);
 
             services.Scan(s =>
+            {
                 s.FromAssemblyOf<ICacheService>()
-                    .AddClasses(c => c.WithAttribute((Func<InjectAttribute, bool>) Predicate))
-                    .UsingAttributes());
+                    .AddClasses(c => c.WithAttribute((Func<InjectAttribute, bool>)Predicate))
+                    .UsingAttributes();
+
+                s.FromAssemblyOf<IImageViewModelFactory>()
+                    .AddClasses(c => c.WithAttribute((Func<InjectAttribute, bool>)Predicate))
+                    .UsingAttributes();
+            });
 
             return services;
         }
