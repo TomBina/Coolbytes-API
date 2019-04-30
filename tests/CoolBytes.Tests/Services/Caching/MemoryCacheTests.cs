@@ -11,7 +11,7 @@ using Xunit;
 
 namespace CoolBytes.Tests.Services.Caching
 {
-    public class MemoryCacheTests : TestBase
+    public class MemoryCacheTests : TestBase<TestContext>
     {
         public int CategoryId { get; set; }
 

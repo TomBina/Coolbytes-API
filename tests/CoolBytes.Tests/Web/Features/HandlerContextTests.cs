@@ -3,7 +3,7 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features
 {
-    public class HandlerContextTests : TestBase
+    public class HandlerContextTests : TestBase<TestContext>
     {
         public HandlerContextTests(TestContext testContext) : base(testContext)
         {

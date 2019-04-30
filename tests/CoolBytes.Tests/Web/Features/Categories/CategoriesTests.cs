@@ -9,7 +9,7 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Categories
 {
-    public class CategoriesTests : TestBase
+    public class CategoriesTests : TestBase<TestContext>
     {
         public CategoriesTests(TestContext testContext) : base(testContext)
         {

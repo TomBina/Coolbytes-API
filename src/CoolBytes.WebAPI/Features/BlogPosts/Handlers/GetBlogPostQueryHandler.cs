@@ -17,11 +17,13 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class GetBlogPostQueryHandler : IRequestHandler<GetBlogPostQuery, Result<BlogPostViewModel>>
     {
+        private readonly HandlerContext<BlogPostViewModel> _context;
         private readonly AppDbContext _dbContext;
         private readonly ICacheService _cacheService;
 
         public GetBlogPostQueryHandler(HandlerContext<BlogPostViewModel> context)
         {
+            _context = context;
             _dbContext = context.DbContext;
             _cacheService = context.Cache;
         }
@@ -43,7 +45,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             if (blogPost == null)
                 return null;
 
-            var builder = new BlogPostViewModelBuilder();
+            var builder = new BlogPostViewModelBuilder(_context.Mapper);
             var links = await GetRelatedLinks(blogPostId);
 
             if (links != null && links.Count > 0)

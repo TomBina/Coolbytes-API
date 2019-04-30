@@ -12,16 +12,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 using CoolBytes.WebAPI.Features.Authors.CQ;
+using CoolBytes.WebAPI.Handlers;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
 {
     public class AuthorsControllerTests : IClassFixture<TestContext>
     {
-        private readonly IServiceProvider _serviceProviderBuilder;
+        private readonly IServiceProvider _serviceProvider;
 
         public AuthorsControllerTests()
         {            
@@ -31,6 +33,8 @@ namespace CoolBytes.Tests.Web.Features.Authors
             serviceCollection.AddScoped<ImageFactory>(sp => null);
             serviceCollection.AddScoped<IConfiguration>(sp => null);
             serviceCollection.AddScoped<ICacheService>(sp => new StubCacheService());
+            serviceCollection.AddTransient(typeof(HandlerContext<>));
+            serviceCollection.AddAutoMapper(typeof(Startup));
 
             var userService = new Mock<IUserService>();
             var user = new User("test");
@@ -39,13 +43,13 @@ namespace CoolBytes.Tests.Web.Features.Authors
             serviceCollection.AddSingleton(userService.Object);
 
             serviceCollection.AddMediatR(typeof(Startup));
-            _serviceProviderBuilder = serviceCollection.BuildServiceProvider();
+            _serviceProvider = serviceCollection.BuildServiceProvider();
         }
 
         [Fact]
         public async Task AddAuthor_ReturnsAuthor()
         {
-            var controller = new AuthorsController(_serviceProviderBuilder.GetService<IMediator>());
+            var controller = new AuthorsController(_serviceProvider.GetService<IMediator>());
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             var result = await controller.Add(message);
@@ -56,7 +60,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         [Fact]
         public async Task AddAuthor_AddingSecondTime_ReturnsBadRequest()
         {
-            var controller = new AuthorsController(_serviceProviderBuilder.GetService<IMediator>());
+            var controller = new AuthorsController(_serviceProvider.GetService<IMediator>());
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             await controller.Add(message);

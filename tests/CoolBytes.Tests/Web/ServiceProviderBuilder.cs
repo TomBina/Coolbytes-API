@@ -1,25 +1,25 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System;
 
 namespace CoolBytes.Tests.Web
 {
     public class ServiceProviderBuilder
     {
-        private readonly Mock<IServiceProvider> _mock;
+        private ServiceCollection _services;
 
         public ServiceProviderBuilder()
         {
-            _mock = new Mock<IServiceProvider>();
+            _services = new ServiceCollection();
         }
 
-        public ServiceProviderBuilder Add<T>(object implementation)
+        public ServiceProviderBuilder Add(Action<IServiceCollection> services)
         {
-            _mock.Setup(sp => sp.GetService(It.Is<Type>(t => t == typeof(T)))).Returns(implementation);
+            services(_services);
 
             return this;
         }
 
         public IServiceProvider Build()
-            => _mock.Object;
+            => _services.BuildServiceProvider();
     }
 }

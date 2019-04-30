@@ -29,6 +29,10 @@ namespace CoolBytes.Core.Builders
         {
             _author = _authorService.GetAuthor();
 
+            if (_author == null)
+            {
+                throw new InvalidOperationException("No author found");
+            }
             return this;
         }
 

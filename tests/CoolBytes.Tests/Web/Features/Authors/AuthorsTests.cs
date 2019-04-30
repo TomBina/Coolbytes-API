@@ -16,7 +16,7 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
 {
-    public class AuthorsTests : TestBase
+    public class AuthorsTests : TestBase<TestContext>
     {
         private readonly IUserService _userService;
         private readonly AuthorService _authorService;

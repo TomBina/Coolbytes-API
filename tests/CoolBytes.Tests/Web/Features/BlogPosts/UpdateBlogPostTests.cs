@@ -8,14 +8,18 @@ using Moq;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
+using CoolBytes.WebAPI.Features.BlogPosts.Profiles;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
 {
-    public class UpdateBlogPostTests : TestBase
+    public class UpdateBlogPostTests : TestBase<TestContext>
     {
         public UpdateBlogPostTests(TestContext testContext) : base(testContext)
         {
@@ -41,6 +45,17 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
                 userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
             }
+        }
+
+        private IMapper CreateMapper()
+        {
+            var sp = TestContext.ServiceProviderBuilder.Add(s =>
+                s.AddTransient<IImageViewModelFactory, AzureBlobImageViewModelFactory>()
+                    .AddTransient<CustomResolver, CustomResolver>()).Build();
+            var profiles = new[] { new BlogPostSummaryViewModelProfile() };
+            var mapper = TestContext.CreateMapper(profiles, sp);
+
+            return mapper;
         }
 
         [Fact]
@@ -74,7 +89,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 CategoryId = category.Id
             };
             var builder = new ExistingBlogPostBuilder(null);
-            var handler = new UpdateBlogPostCommandHandler(TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(), builder);
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(CreateMapper());
+            var handler = new UpdateBlogPostCommandHandler(handlerContext, builder);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -87,7 +103,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var imageFactory = TestContext.CreateImageService();
             var builder = new ExistingBlogPostBuilder(imageFactory);
-            var handler = new UpdateBlogPostCommandHandler(TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(), builder);
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(CreateMapper());
+            var handler = new UpdateBlogPostCommandHandler(handlerContext, builder);
             var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;
             var category = new Category("Hello test category", 1);

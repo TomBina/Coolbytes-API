@@ -17,7 +17,7 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.ResumeEvents
 {
-    public class ResumeEventsTests : TestBase
+    public class ResumeEventsTests : TestBase<TestContext>
     {
         private IUserService _userService;
         private AuthorService _authorService;

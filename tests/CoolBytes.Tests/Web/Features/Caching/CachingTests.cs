@@ -7,7 +7,7 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Caching
 {
-    public class CachingTests : TestBase
+    public class CachingTests : TestBase<TestContext>
     {
         public CachingTests(TestContext testContext) : base(testContext)
         {

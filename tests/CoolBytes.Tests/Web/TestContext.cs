@@ -26,30 +26,13 @@ namespace CoolBytes.Tests.Web
         private readonly string _tempDirectory = Path.Combine(Environment.CurrentDirectory, $"dir{Random.Next()}");
         private DbContextOptions<AppDbContext> _options;
 
-        private static bool _initialized;
-        private static readonly object Mutex = new object();
-
         public ServiceProviderBuilder ServiceProviderBuilder
             => new ServiceProviderBuilder();
 
         public TestContext()
         {
-            InitAutoMapper();
             InitDb();
             InitConfiguration();
-        }
-
-        private static void InitAutoMapper()
-        {
-            lock (Mutex)
-            {
-                if (_initialized)
-                    return;
-
-                Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
-                _initialized = true;
-
-            }
         }
 
         private void InitDb()
@@ -78,13 +61,16 @@ namespace CoolBytes.Tests.Web
         public AppDbContext CreateNewContext()
             => new AppDbContext(_options);
 
-        public HandlerContext<T> CreateHandlerContext<T>(IEnumerable<Profile> profiles = null)
-            => new HandlerContext<T>(CreateMapper(profiles), CreateNewContext(), CreateStubCacheService());
+        public HandlerContext<T> CreateHandlerContext<T>(IMapper mapper = null)
+            => new HandlerContext<T>(mapper ?? CreateMapper(), CreateNewContext(), CreateStubCacheService());
 
-        public IMapper CreateMapper(IEnumerable<Profile> profiles)
+        public IMapper CreateMapper(IEnumerable<Profile> profiles = null, IServiceProvider serviceLocator = null)
         {
             var mapperConfig = new MapperConfiguration(c =>
             {
+                if (serviceLocator != null)
+                    c.ConstructServicesUsing(serviceLocator.GetService);
+
                 if (profiles != null)
                     c.AddProfiles(profiles);
                 else

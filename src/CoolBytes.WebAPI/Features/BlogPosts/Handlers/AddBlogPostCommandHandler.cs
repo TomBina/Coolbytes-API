@@ -1,16 +1,15 @@
-﻿using AutoMapper;
-using CoolBytes.Core.Builders;
+﻿using CoolBytes.Core.Builders;
+using CoolBytes.Core.Domain;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Domain;
-using CoolBytes.WebAPI.Handlers;
-using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
@@ -54,6 +53,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         private async Task Save(BlogPost blogPost)
         {
             _dbContext.BlogPosts.Add(blogPost);
+            _dbContext.Entry(blogPost.Author).State = EntityState.Unchanged;
 
             if (blogPost.Image != null)
                 await _dbContext.SaveChangesAsync(() => File.Delete(blogPost.Image.Path));
