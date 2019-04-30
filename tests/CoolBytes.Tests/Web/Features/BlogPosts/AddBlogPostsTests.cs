@@ -38,7 +38,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 var user = new User("Test");
 
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorValidator = new AuthorValidator(Context);
+                var authorValidator = new AuthorValidator(RequestDbContext);
                 var author = await Author.Create(user, authorProfile, authorValidator);
                 var blogPostContent = new BlogPostContent("Testsubject", "Testintro", "Testcontent");
                 var category = new Category("Testcategory", 1);
@@ -51,7 +51,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
                 userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
                 _userService = userService.Object;
-                _authorService = new AuthorService(_userService, Context);
+                _authorService = new AuthorService(_userService, RequestDbContext);
             }
         }
 
@@ -60,9 +60,9 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var imageService = TestContext.CreateImageService();
             var builder = new BlogPostBuilder(_authorService, imageService);
-            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(Context, CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(RequestDbContext, CreateMapper());
             var addBlogPostCommandHandler = new AddBlogPostCommandHandler(handlerContext, builder);
-            var category = await Context.Categories.FirstOrDefaultAsync();
+            var category = await RequestDbContext.Categories.FirstOrDefaultAsync();
             var addBlogPostCommand = new AddBlogPostCommand()
             {
                 Subject = "Test",
@@ -83,11 +83,11 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var mapper = CreateMapper();
             var imageFactory = TestContext.CreateImageService();
             var builder = new BlogPostBuilder(_authorService, imageFactory);
-            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(Context, mapper);
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(RequestDbContext, mapper);
             var handler = new AddBlogPostCommandHandler(handlerContext, builder);
             var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;
-            var category = await Context.Categories.FirstOrDefaultAsync();
+            var category = await RequestDbContext.Categories.FirstOrDefaultAsync();
             var message = new AddBlogPostCommand()
             {
                 Subject = "Test",
@@ -115,13 +115,13 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task DeleteBlogPostCommandHandler_DeletesBlog()
         {
-            var blogPost = Context.BlogPosts.First();
+            var blogPost = RequestDbContext.BlogPosts.First();
             var deleteBlogPostCommand = new DeleteBlogPostCommand() { Id = blogPost.Id };
-            IRequestHandler<DeleteBlogPostCommand> deleteBlogPostCommandHandler = new DeleteBlogPostCommandHandler(Context);
+            IRequestHandler<DeleteBlogPostCommand> deleteBlogPostCommandHandler = new DeleteBlogPostCommandHandler(RequestDbContext);
 
             await deleteBlogPostCommandHandler.Handle(deleteBlogPostCommand, CancellationToken.None);
 
-            Assert.Null(await Context.BlogPosts.FindAsync(blogPost.Id));
+            Assert.Null(await RequestDbContext.BlogPosts.FindAsync(blogPost.Id));
         }
     }
 }

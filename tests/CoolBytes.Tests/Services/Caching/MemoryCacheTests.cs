@@ -39,10 +39,10 @@ namespace CoolBytes.Tests.Services.Caching
 
             Assert.Equal("Test", foundCategory.Name);
 
-            var category = await Context.Categories.FirstAsync(c => c.Id == CategoryId);
+            var category = await RequestDbContext.Categories.FirstAsync(c => c.Id == CategoryId);
             category.UpdateName("Test again");
-            Context.Categories.Update(category);
-            await Context.SaveChangesAsync();
+            RequestDbContext.Categories.Update(category);
+            await RequestDbContext.SaveChangesAsync();
 
             foundCategory = await memoryCache.GetOrAddAsync(() => CategoryFactory());
 
@@ -61,10 +61,10 @@ namespace CoolBytes.Tests.Services.Caching
             var foundCategory = await memoryCache.GetOrAddAsync(() => CategoryFactory());
             Assert.Equal("Test", foundCategory.Name);
 
-            var category = await Context.Categories.FirstAsync(c => c.Id == CategoryId);
+            var category = await RequestDbContext.Categories.FirstAsync(c => c.Id == CategoryId);
             category.UpdateName("Test again");
-            Context.Categories.Update(category);
-            await Context.SaveChangesAsync();
+            RequestDbContext.Categories.Update(category);
+            await RequestDbContext.SaveChangesAsync();
 
             foundCategory = await memoryCache.GetOrAddAsync(() => CategoryFactory());
 
@@ -83,10 +83,10 @@ namespace CoolBytes.Tests.Services.Caching
             var foundCategory = await memoryCache.GetOrAddAsync(() => CategoryFactory());
             Assert.Equal("Test", foundCategory.Name);
 
-            var category = await Context.Categories.FirstAsync(c => c.Id == CategoryId);
+            var category = await RequestDbContext.Categories.FirstAsync(c => c.Id == CategoryId);
             category.UpdateName("Test again");
-            Context.Categories.Update(category);
-            await Context.SaveChangesAsync();
+            RequestDbContext.Categories.Update(category);
+            await RequestDbContext.SaveChangesAsync();
 
             foundCategory = await memoryCache.GetOrAddAsync(() => CategoryFactory());
 

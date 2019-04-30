@@ -37,7 +37,7 @@ namespace CoolBytes.Tests.Web.Features.Images
         {
             await AddImage();
 
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(Context, CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(RequestDbContext, CreateMapper());
             var handler = new GetImagesQueryHandler(handlerContext);
             var message = new GetImagesQuery();
 
@@ -50,7 +50,7 @@ namespace CoolBytes.Tests.Web.Features.Images
         public async Task ShouldUploadImages()
         {
             var imageFactory = TestContext.CreateImageService();
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(Context, CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(RequestDbContext, CreateMapper());
             var handler = new UploadImagesCommandHandler(handlerContext, imageFactory);
             var file1 = TestContext.CreateFileMock().Object;
             var file2 = TestContext.CreateFileMock().Object;
@@ -60,7 +60,7 @@ namespace CoolBytes.Tests.Web.Features.Images
             var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.NotNull(result);
-            Assert.Equal(2, Context.Images.Count());
+            Assert.Equal(2, RequestDbContext.Images.Count());
         }
 
         [Fact]
@@ -68,12 +68,12 @@ namespace CoolBytes.Tests.Web.Features.Images
         {
             var image = await AddImage();
 
-            IRequestHandler<DeleteImageCommand> handler = new DeleteImageCommandHandler(Context, TestContext.CreateImageService());
+            IRequestHandler<DeleteImageCommand> handler = new DeleteImageCommandHandler(RequestDbContext, TestContext.CreateImageService());
             var message = new DeleteImageCommand() { Id = image.Id };
 
             await handler.Handle(message, CancellationToken.None);
 
-            Assert.Equal(null, await Context.Images.FindAsync(image.Id));
+            Assert.Equal(null, await RequestDbContext.Images.FindAsync(image.Id));
         }
 
         private async Task<Image> AddImage()
@@ -95,10 +95,10 @@ namespace CoolBytes.Tests.Web.Features.Images
 
         public override async Task DisposeAsync()
         {
-            Context.Images.RemoveRange(Context.Images.ToArray());
-            await Context.SaveChangesAsync();
+            RequestDbContext.Images.RemoveRange(RequestDbContext.Images.ToArray());
+            await RequestDbContext.SaveChangesAsync();
 
-            Context.Dispose();
+            RequestDbContext.Dispose();
         }
     }
 }

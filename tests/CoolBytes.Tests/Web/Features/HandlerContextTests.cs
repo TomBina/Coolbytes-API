@@ -14,7 +14,7 @@ namespace CoolBytes.Tests.Web.Features
         {
             var mapper = TestContext.CreateMapper(new[] { new TestViewModelProfile() });
             var cacheService = TestContext.CreateStubCacheService();
-            var context = new HandlerContext<TestViewModel>(mapper, Context, cacheService);
+            var context = new HandlerContext<TestViewModel>(mapper, RequestDbContext, cacheService);
 
             var testModel = new TestModel() { FirstName = "Test", LastName = "Test" };
             var testViewModel = context.Map(testModel);

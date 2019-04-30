@@ -34,7 +34,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 var user = new User("Test");
 
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorValidator = new AuthorValidator(Context);
+                var authorValidator = new AuthorValidator(RequestDbContext);
                 var author = await Author.Create(user, authorProfile, authorValidator);
 
                 context.Authors.Add(author);
@@ -45,7 +45,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
                 userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
                 _userService = userService.Object;
-                _authorService = new AuthorService(_userService, Context);
+                _authorService = new AuthorService(_userService, RequestDbContext);
             }
         }
 
@@ -55,7 +55,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var resumeEvents = await SeedData();
             var authorId = resumeEvents.First().AuthorId;
             var message = new GetResumeEventsQuery() { AuthorId = authorId };
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ResumeEventViewModel>>(Context);
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ResumeEventViewModel>>(RequestDbContext);
             var handler = new GetResumeEventsQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -70,7 +70,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var resumeEvent = resumeEvents.First();
 
             var message = new GetResumeEventQuery() { Id = resumeEvent.Id };
-            var handlerContext = TestContext.CreateHandlerContext<ResumeEventViewModel>(Context);
+            var handlerContext = TestContext.CreateHandlerContext<ResumeEventViewModel>(RequestDbContext);
             var handler = new GetResumeEventQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -91,7 +91,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 Name = "Test",
                 Message = "test"
             };
-            var handlerContext = TestContext.CreateHandlerContext<ResumeEventViewModel>(Context);
+            var handlerContext = TestContext.CreateHandlerContext<ResumeEventViewModel>(RequestDbContext);
             var handler = new AddResumeEventCommandHandler(handlerContext, _authorService);
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -117,7 +117,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 Name = resumeEvent.Name
 
             };
-            var handler = new UpdateResumeEventHandler(TestContext.CreateHandlerContext<ResumeEventViewModel>(Context));
+            var handler = new UpdateResumeEventHandler(TestContext.CreateHandlerContext<ResumeEventViewModel>(RequestDbContext));
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -130,10 +130,10 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var resumeEvents = await SeedData();
             var currentCount = resumeEvents.Count;
             var message = new DeleteResumeEventCommand { Id = resumeEvents.First().Id };
-            IRequestHandler<DeleteResumeEventCommand> handler = new DeleteResumeEventCommandHandler(Context);
+            IRequestHandler<DeleteResumeEventCommand> handler = new DeleteResumeEventCommandHandler(RequestDbContext);
 
             await handler.Handle(message, CancellationToken.None);
-            var newCount = (await Context.ResumeEvents.ToListAsync()).Count;
+            var newCount = (await RequestDbContext.ResumeEvents.ToListAsync()).Count;
             Assert.Equal(currentCount - 1, newCount);
         }
 
@@ -160,11 +160,11 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
 
         public override async Task DisposeAsync()
         {
-            var resumeEvents = await Context.ResumeEvents.ToArrayAsync();
-            Context.ResumeEvents.RemoveRange(resumeEvents);
-            await Context.SaveChangesAsync();
+            var resumeEvents = await RequestDbContext.ResumeEvents.ToArrayAsync();
+            RequestDbContext.ResumeEvents.RemoveRange(resumeEvents);
+            await RequestDbContext.SaveChangesAsync();
 
-            Context.Dispose();
+            RequestDbContext.Dispose();
         }
     }
 }

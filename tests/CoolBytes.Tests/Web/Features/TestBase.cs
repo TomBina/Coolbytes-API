@@ -9,13 +9,13 @@ namespace CoolBytes.Tests.Web.Features
     /// </summary>
     public abstract class TestBase<T> : IClassFixture<T>, IAsyncLifetime where T : TestContext
     {
-        protected readonly AppDbContext Context;
+        protected readonly AppDbContext RequestDbContext;
         protected readonly T TestContext;
 
         protected TestBase(T testContext)
         {
             TestContext = testContext;
-            Context = testContext.CreateNewContext();
+            RequestDbContext = testContext.CreateNewContext();
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace CoolBytes.Tests.Web.Features
         /// <returns></returns>
         public virtual Task DisposeAsync()
         {
-            Context?.Dispose();
+            RequestDbContext?.Dispose();
 
             return Task.CompletedTask;
         }

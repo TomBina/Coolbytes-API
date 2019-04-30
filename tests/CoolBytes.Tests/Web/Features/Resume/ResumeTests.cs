@@ -27,7 +27,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
                 var user = new User("Test");
 
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorValidator = new AuthorValidator(Context);
+                var authorValidator = new AuthorValidator(RequestDbContext);
                 var author = await Author.Create(user, authorProfile, authorValidator);
 
                 await context.SaveChangesAsync();
@@ -47,7 +47,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
                 userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
                 userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
                 _userService = userService.Object;
-                _authorService = new AuthorService(_userService, Context);
+                _authorService = new AuthorService(_userService, RequestDbContext);
             }
         }
 
@@ -59,7 +59,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
             {
                 AuthorId = author.Id
             };
-            var handler = new GetResumeQueryHandler(TestContext.CreateHandlerContext<ResumeViewModel>(Context), _authorService, TestContext.CreateStubCacheService());
+            var handler = new GetResumeQueryHandler(TestContext.CreateHandlerContext<ResumeViewModel>(RequestDbContext), _authorService, TestContext.CreateStubCacheService());
 
             var result = await handler.Handle(message, CancellationToken.None);
 

@@ -35,7 +35,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         public async Task GetAuthorQueryHandler_ReturnsAuthor()
         {
             await AddAuthor();
-            var getAuthorQueryHandler = new GetAuthorQueryHandler(TestContext.CreateHandlerContext<AuthorViewModel>(Context), _authorService);
+            var getAuthorQueryHandler = new GetAuthorQueryHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext), _authorService);
             var message = new GetAuthorQuery() { IncludeProfile = true };
 
             var result = await getAuthorQueryHandler.Handle(message, CancellationToken.None);
@@ -85,8 +85,8 @@ namespace CoolBytes.Tests.Web.Features.Authors
             };
             experiences.Add(experienceDto);
 
-            var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(Context), _userService, authorValidator);
+            var authorValidator = new AuthorValidator(RequestDbContext);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext), _userService, authorValidator);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me", Experiences = experiences };
 
             var result = await addAuthorCommandHandler.Handle(message, CancellationToken.None);
@@ -99,8 +99,8 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             await AddAuthor();
 
-            var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(Context), _userService, authorValidator);
+            var authorValidator = new AuthorValidator(RequestDbContext);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext), _userService, authorValidator);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
@@ -124,7 +124,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             experiences.Add(experienceDto);
 
             var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test", Experiences = experiences };
-            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(Context), _authorService);
+            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext), _authorService);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -136,7 +136,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             await AddAuthor();
             var image = await AddImage();
-            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(Context), _authorService);
+            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext), _authorService);
 
             var message = new UpdateAuthorCommand()
             {
@@ -153,11 +153,11 @@ namespace CoolBytes.Tests.Web.Features.Authors
 
         public override async Task DisposeAsync()
         {
-            Context.Users.RemoveRange(Context.Users.ToArray());
-            Context.Authors.RemoveRange(Context.Authors.ToArray());
+            RequestDbContext.Users.RemoveRange(RequestDbContext.Users.ToArray());
+            RequestDbContext.Authors.RemoveRange(RequestDbContext.Authors.ToArray());
 
-            await Context.SaveChangesAsync();
-            Context.Dispose();
+            await RequestDbContext.SaveChangesAsync();
+            RequestDbContext.Dispose();
         }
     }
 }

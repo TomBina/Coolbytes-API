@@ -30,7 +30,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 var user = new User("Test");
 
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorValidator = new AuthorValidator(Context);
+                var authorValidator = new AuthorValidator(RequestDbContext);
                 var author = await Author.Create(user, authorProfile, authorValidator);
                 var blogPostContent = new BlogPostContent("Testsubject", "Testintro", "Testcontent");
                 var category = new Category("Testcategory", 1);
@@ -55,7 +55,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>(Context, CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>(RequestDbContext, CreateMapper());
             var blogPostsQueryHandler = new GetBlogPostsQueryHandler(handlerContext);
             var getBlogPostsQuery = new GetBlogPostsQuery();
 
@@ -73,7 +73,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 var category = await context.Categories.FirstAsync();
                 query.CategoryId = category.Id;
             }
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>(Context, CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>(RequestDbContext, CreateMapper());
             var handler = new GetBlogPostsByCategoryQueryHandler(handlerContext);
 
             var result = await handler.Handle(query, CancellationToken.None);
@@ -84,7 +84,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsOverviewQueryHandler_ReturnsBlogs()
         {
-            var handlerContext = TestContext.CreateHandlerContext<BlogPostsOverviewViewModel>(Context, CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostsOverviewViewModel>(RequestDbContext, CreateMapper());
             var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(handlerContext);
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
@@ -95,8 +95,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
-            var blogPostId = Context.BlogPosts.First().Id;
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(TestContext.CreateHandlerContext<BlogPostViewModel>(Context));
+            var blogPostId = RequestDbContext.BlogPosts.First().Id;
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(TestContext.CreateHandlerContext<BlogPostViewModel>(RequestDbContext));
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
 

@@ -33,7 +33,7 @@ namespace CoolBytes.Tests.Web.Features.Categories
         public async Task GetAllCategoriesHandler_Returns_Categories()
         {
             var message = new GetAllCategoriesQuery();
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<CategoryViewModel>>(Context);
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<CategoryViewModel>>(RequestDbContext);
             var handler = new GetAllCategoriesQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -46,7 +46,7 @@ namespace CoolBytes.Tests.Web.Features.Categories
         {
             var category = await GetRandomCategory();
             var message = new GetCategoryQuery() { Id = category.Id };
-            var handlerContext = TestContext.CreateHandlerContext<CategoryViewModel>(Context);
+            var handlerContext = TestContext.CreateHandlerContext<CategoryViewModel>(RequestDbContext);
             var handler = new GetCategoryQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -69,7 +69,7 @@ namespace CoolBytes.Tests.Web.Features.Categories
         public async Task AddCategoryHandler_Adds_Category()
         {
             var message = new AddCategoryCommand() { Name = "Test category" };
-            var handler = new AddCategoryCommandHandler(Context);
+            var handler = new AddCategoryCommandHandler(RequestDbContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -81,7 +81,7 @@ namespace CoolBytes.Tests.Web.Features.Categories
         {
             var category = await GetRandomCategory();
             var message = new UpdateCategoryCommand() { Id = category.Id, Name = "New name" };
-            var handler = new UpdateCategoryCommandHandler(Context);
+            var handler = new UpdateCategoryCommandHandler(RequestDbContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -93,7 +93,7 @@ namespace CoolBytes.Tests.Web.Features.Categories
         {
             var category = await GetRandomCategory();
             var message = new DeleteCategoryCommand() { Id = category.Id };
-            var handler = new DeleteCategoryCommandHandler(Context);
+            var handler = new DeleteCategoryCommandHandler(RequestDbContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
