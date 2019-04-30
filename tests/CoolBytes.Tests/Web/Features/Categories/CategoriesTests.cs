@@ -33,7 +33,7 @@ namespace CoolBytes.Tests.Web.Features.Categories
         public async Task GetAllCategoriesHandler_Returns_Categories()
         {
             var message = new GetAllCategoriesQuery();
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<CategoryViewModel>>();
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<CategoryViewModel>>(Context);
             var handler = new GetAllCategoriesQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -46,7 +46,7 @@ namespace CoolBytes.Tests.Web.Features.Categories
         {
             var category = await GetRandomCategory();
             var message = new GetCategoryQuery() { Id = category.Id };
-            var handlerContext = TestContext.CreateHandlerContext<CategoryViewModel>();
+            var handlerContext = TestContext.CreateHandlerContext<CategoryViewModel>(Context);
             var handler = new GetCategoryQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);

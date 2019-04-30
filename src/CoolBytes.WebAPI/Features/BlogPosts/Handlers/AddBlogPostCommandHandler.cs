@@ -53,7 +53,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         private async Task Save(BlogPost blogPost)
         {
             _dbContext.BlogPosts.Add(blogPost);
-            _dbContext.Entry(blogPost.Author).State = EntityState.Unchanged;
 
             if (blogPost.Image != null)
                 await _dbContext.SaveChangesAsync(() => File.Delete(blogPost.Image.Path));

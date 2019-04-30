@@ -37,7 +37,7 @@ namespace CoolBytes.Tests.Web.Features.Images
         {
             await AddImage();
 
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(Context, CreateMapper());
             var handler = new GetImagesQueryHandler(handlerContext);
             var message = new GetImagesQuery();
 
@@ -50,7 +50,7 @@ namespace CoolBytes.Tests.Web.Features.Images
         public async Task ShouldUploadImages()
         {
             var imageFactory = TestContext.CreateImageService();
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(Context, CreateMapper());
             var handler = new UploadImagesCommandHandler(handlerContext, imageFactory);
             var file1 = TestContext.CreateFileMock().Object;
             var file2 = TestContext.CreateFileMock().Object;

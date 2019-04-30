@@ -60,7 +60,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var imageService = TestContext.CreateImageService();
             var builder = new BlogPostBuilder(_authorService, imageService);
-            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(Context, CreateMapper());
             var addBlogPostCommandHandler = new AddBlogPostCommandHandler(handlerContext, builder);
             var category = await Context.Categories.FirstOrDefaultAsync();
             var addBlogPostCommand = new AddBlogPostCommand()
@@ -83,7 +83,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             var mapper = CreateMapper();
             var imageFactory = TestContext.CreateImageService();
             var builder = new BlogPostBuilder(_authorService, imageFactory);
-            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(mapper);
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(Context, mapper);
             var handler = new AddBlogPostCommandHandler(handlerContext, builder);
             var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;

@@ -61,8 +61,8 @@ namespace CoolBytes.Tests.Web
         public AppDbContext CreateNewContext()
             => new AppDbContext(_options);
 
-        public HandlerContext<T> CreateHandlerContext<T>(IMapper mapper = null)
-            => new HandlerContext<T>(mapper ?? CreateMapper(), CreateNewContext(), CreateStubCacheService());
+        public HandlerContext<T> CreateHandlerContext<T>(AppDbContext context, IMapper mapper = null)
+            => new HandlerContext<T>(mapper ?? CreateMapper(), context, CreateStubCacheService());
 
         public IMapper CreateMapper(IEnumerable<Profile> profiles = null, IServiceProvider serviceLocator = null)
         {

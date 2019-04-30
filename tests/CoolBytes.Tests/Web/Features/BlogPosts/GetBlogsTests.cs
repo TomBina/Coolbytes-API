@@ -55,7 +55,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsQueryHandler_ReturnsBlogs()
         {
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>(CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>(Context, CreateMapper());
             var blogPostsQueryHandler = new GetBlogPostsQueryHandler(handlerContext);
             var getBlogPostsQuery = new GetBlogPostsQuery();
 
@@ -73,7 +73,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 var category = await context.Categories.FirstAsync();
                 query.CategoryId = category.Id;
             }
-            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>(CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<BlogPostSummaryViewModel>>(Context, CreateMapper());
             var handler = new GetBlogPostsByCategoryQueryHandler(handlerContext);
 
             var result = await handler.Handle(query, CancellationToken.None);
@@ -84,7 +84,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task GetBlogPostsOverviewQueryHandler_ReturnsBlogs()
         {
-            var handlerContext = TestContext.CreateHandlerContext<BlogPostsOverviewViewModel>(CreateMapper());
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostsOverviewViewModel>(Context, CreateMapper());
             var blogPostsQueryHandler = new GetBlogPostsOverviewQueryHandler(handlerContext);
 
             var result = await blogPostsQueryHandler.Handle(new GetBlogPostsOverviewQuery(), CancellationToken.None);
@@ -96,7 +96,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         public async Task GetBlogPostQueryHandler_ReturnsBlog()
         {
             var blogPostId = Context.BlogPosts.First().Id;
-            var blogPostQueryHandler = new GetBlogPostQueryHandler(TestContext.CreateHandlerContext<BlogPostViewModel>());
+            var blogPostQueryHandler = new GetBlogPostQueryHandler(TestContext.CreateHandlerContext<BlogPostViewModel>(Context));
 
             var result = await blogPostQueryHandler.Handle(new GetBlogPostQuery() { Id = blogPostId }, CancellationToken.None);
 

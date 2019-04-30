@@ -7,7 +7,6 @@ using CoolBytes.WebAPI.Handlers;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
 {
@@ -45,7 +44,6 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
         private async Task Save(ResumeEvent resumeEvent)
         {
             _dbContext.ResumeEvents.Add(resumeEvent);
-            _dbContext.Entry(resumeEvent.Author).State = EntityState.Unchanged;
 
             await _dbContext.SaveChangesAsync();
         }

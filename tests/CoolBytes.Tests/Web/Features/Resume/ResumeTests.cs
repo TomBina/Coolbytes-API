@@ -59,7 +59,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
             {
                 AuthorId = author.Id
             };
-            var handler = new GetResumeQueryHandler(TestContext.CreateHandlerContext<ResumeViewModel>(), _authorService, TestContext.CreateStubCacheService());
+            var handler = new GetResumeQueryHandler(TestContext.CreateHandlerContext<ResumeViewModel>(Context), _authorService, TestContext.CreateStubCacheService());
 
             var result = await handler.Handle(message, CancellationToken.None);
 
