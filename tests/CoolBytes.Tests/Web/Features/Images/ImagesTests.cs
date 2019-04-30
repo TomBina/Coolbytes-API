@@ -1,8 +1,13 @@
-﻿using CoolBytes.Core.Domain;
+﻿using AutoMapper;
+using CoolBytes.Core.Domain;
 using CoolBytes.WebAPI.Features.Images.CQ;
 using CoolBytes.WebAPI.Features.Images.Handlers;
+using CoolBytes.WebAPI.Features.Images.Profiles;
+using CoolBytes.WebAPI.Features.Images.Profiles.Resolvers;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -17,24 +22,36 @@ namespace CoolBytes.Tests.Web.Features.Images
         {
         }
 
+        private IMapper CreateMapper()
+        {
+            var sp = TestContext.ServiceProviderBuilder.Add(s =>
+                s.AddTransient<IImageViewModelFactory, LocalImageViewModelFactory>()
+                    .AddTransient<ImageViewModelResolver>()).Build();
+            var profiles = new Profile[] { new ImageViewModelProfile() };
+            var mapper = TestContext.CreateMapper(profiles, sp);
+            return mapper;
+        }
+
         [Fact]
         public async Task ShouldGetAllImages()
         {
             await AddImage();
 
-            var handler = new GetImagesQueryHandler(Context);
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(CreateMapper());
+            var handler = new GetImagesQueryHandler(handlerContext);
             var message = new GetImagesQuery();
 
             var result = await handler.Handle(message, CancellationToken.None);
 
-            Assert.Equal(1, result.Count());
+            Assert.NotEmpty(result);
         }
 
         [Fact]
         public async Task ShouldUploadImages()
         {
             var imageFactory = TestContext.CreateImageService();
-            var handler = new UploadImagesCommandHandler(Context, imageFactory);
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ImageViewModel>>(CreateMapper());
+            var handler = new UploadImagesCommandHandler(handlerContext, imageFactory);
             var file1 = TestContext.CreateFileMock().Object;
             var file2 = TestContext.CreateFileMock().Object;
             var files = new List<IFormFile>() { file1, file2 };

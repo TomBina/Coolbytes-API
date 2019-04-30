@@ -1,6 +1,6 @@
 ﻿using CoolBytes.Core.Utils;
+using CoolBytes.WebAPI.Features.Caching;
 using CoolBytes.WebAPI.Features.Categories.CQ;
-using CoolBytes.WebAPI.Features.Categories.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;

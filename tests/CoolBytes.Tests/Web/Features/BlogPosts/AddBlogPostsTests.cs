@@ -14,6 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoolBytes.WebAPI.Features.BlogPosts.Profiles;
+using CoolBytes.WebAPI.Features.Images.Profiles;
+using CoolBytes.WebAPI.Features.Images.Profiles.Resolvers;
 using CoolBytes.WebAPI.Features.Images.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -104,8 +106,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var sp = TestContext.ServiceProviderBuilder.Add(s =>
                 s.AddTransient<IImageViewModelFactory, LocalImageViewModelFactory>()
-                    .AddTransient<CustomResolver, CustomResolver>()).Build();
-            var profiles = new[] {new BlogPostSummaryViewModelProfile()};
+                    .AddTransient<ImageViewModelResolver>()).Build();
+            var profiles = new Profile[] { new BlogPostSummaryViewModelProfile(), new ImageViewModelProfile() };
             var mapper = TestContext.CreateMapper(profiles, sp);
             return mapper;
         }

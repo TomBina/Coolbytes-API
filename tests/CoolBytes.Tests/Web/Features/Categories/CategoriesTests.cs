@@ -1,10 +1,12 @@
-﻿using CoolBytes.Core.Utils;
+﻿using System.Collections.Generic;
+using CoolBytes.Core.Utils;
 using CoolBytes.WebAPI.Features.Categories.CQ;
 using CoolBytes.WebAPI.Features.Categories.Handlers;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.Core.Domain;
+using CoolBytes.WebAPI.Features.Categories.ViewModels;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Categories
@@ -31,7 +33,8 @@ namespace CoolBytes.Tests.Web.Features.Categories
         public async Task GetAllCategoriesHandler_Returns_Categories()
         {
             var message = new GetAllCategoriesQuery();
-            var handler = new GetAllCategoriesQueryHandler(Context);
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<CategoryViewModel>>();
+            var handler = new GetAllCategoriesQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -43,7 +46,8 @@ namespace CoolBytes.Tests.Web.Features.Categories
         {
             var category = await GetRandomCategory();
             var message = new GetCategoryQuery() { Id = category.Id };
-            var handler = new GetCategoryQueryHandler(Context);
+            var handlerContext = TestContext.CreateHandlerContext<CategoryViewModel>();
+            var handler = new GetCategoryQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 

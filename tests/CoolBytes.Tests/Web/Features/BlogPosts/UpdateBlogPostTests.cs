@@ -13,6 +13,7 @@ using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 using CoolBytes.WebAPI.Features.BlogPosts.Profiles;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using CoolBytes.WebAPI.Features.Images.Profiles.Resolvers;
 using CoolBytes.WebAPI.Features.Images.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -51,7 +52,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var sp = TestContext.ServiceProviderBuilder.Add(s =>
                 s.AddTransient<IImageViewModelFactory, AzureBlobImageViewModelFactory>()
-                    .AddTransient<CustomResolver, CustomResolver>()).Build();
+                    .AddTransient<ImageViewModelResolver>()).Build();
             var profiles = new[] { new BlogPostSummaryViewModelProfile() };
             var mapper = TestContext.CreateMapper(profiles, sp);
 

@@ -1,11 +1,11 @@
-﻿using CoolBytes.Core.Utils;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using CoolBytes.Core.Utils;
+using CoolBytes.Services.Caching;
 using CoolBytes.WebAPI.Features.Categories.CQ;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using CoolBytes.Services.Caching;
 
-namespace CoolBytes.WebAPI.Features.Categories.Handlers
+namespace CoolBytes.WebAPI.Features.Caching
 {
     public class InvalidateCacheCommandHandler : IRequestHandler<InvalidateCacheCommand, Result>
     {

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CoolBytes.Core.Domain;
+using CoolBytes.WebAPI.Features.Images.Profiles.Resolvers;
 using CoolBytes.WebAPI.Features.Images.ViewModels;
 
 namespace CoolBytes.WebAPI.Features.Images.Profiles
@@ -8,7 +9,7 @@ namespace CoolBytes.WebAPI.Features.Images.Profiles
     {
         public ImageViewModelProfile()
         {
-            CreateMap<Image, ImageViewModel>().ForMember(v => v.UriPath, exp => exp.MapFrom(p => p.UriPath));
+            CreateMap<Image, ImageViewModel>().ForMember(i => i.UriPath, exp => exp.MapFrom<ImageViewModelResolver>());
         }
     }
 }

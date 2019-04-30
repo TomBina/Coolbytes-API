@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.WebAPI.Features.Images.Profiles.Resolvers;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
@@ -44,7 +45,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         {
             var sp = TestContext.ServiceProviderBuilder.Add(s =>
                 s.AddTransient<IImageViewModelFactory, AzureBlobImageViewModelFactory>()
-                    .AddTransient<CustomResolver, CustomResolver>()).Build();
+                    .AddTransient<ImageViewModelResolver>()).Build();
             var profiles = new[] { new BlogPostSummaryViewModelProfile() };
             var mapper = TestContext.CreateMapper(profiles, sp);
 

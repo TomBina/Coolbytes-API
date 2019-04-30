@@ -1,28 +1,30 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using CoolBytes.Data;
+﻿using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Images.CQ;
 using CoolBytes.WebAPI.Features.Images.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Images.Handlers
 {
     public class GetImagesQueryHandler : IRequestHandler<GetImagesQuery, IEnumerable<ImageViewModel>>
     {
-        private readonly AppDbContext _context;
+        private readonly HandlerContext<IEnumerable<ImageViewModel>> _context;
+        private readonly AppDbContext _dbContext;
 
-        public GetImagesQueryHandler(AppDbContext context)
+        public GetImagesQueryHandler(HandlerContext<IEnumerable<ImageViewModel>> context)
         {
             _context = context;
+            _dbContext = context.DbContext;
         }
 
         public async Task<IEnumerable<ImageViewModel>> Handle(GetImagesQuery message, CancellationToken cancellationToken)
         {
-            var images = await _context.Images.ToListAsync();
-            var viewModel = Mapper.Map<IEnumerable<ImageViewModel>>(images);
+            var images = await _dbContext.Images.ToListAsync();
+            var viewModel = _context.Map(images);
 
             return viewModel;
         }

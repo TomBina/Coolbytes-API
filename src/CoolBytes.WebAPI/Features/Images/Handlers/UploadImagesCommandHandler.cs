@@ -8,6 +8,7 @@ using CoolBytes.Core.Domain;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Images.CQ;
 using CoolBytes.WebAPI.Features.Images.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 
@@ -15,11 +16,13 @@ namespace CoolBytes.WebAPI.Features.Images.Handlers
 {
     public class UploadImagesCommandHandler : IRequestHandler<UploadImagesCommand, IEnumerable<ImageViewModel>>
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
+        private readonly HandlerContext<IEnumerable<ImageViewModel>> _context;
         private readonly IImageService _imageService;
 
-        public UploadImagesCommandHandler(AppDbContext context, IImageService imageService)
+        public UploadImagesCommandHandler(HandlerContext<IEnumerable<ImageViewModel>> context, IImageService imageService)
         {
+            _dbContext = context.DbContext;
             _context = context;
             _imageService = imageService;
         }
@@ -49,10 +52,10 @@ namespace CoolBytes.WebAPI.Features.Images.Handlers
         }
         private async Task SaveImage(Image image)
         {
-            _context.Images.Add(image);
-            await _context.SaveChangesAsync(() => File.Delete(image.Path));
+            _dbContext.Images.Add(image);
+            await _dbContext.SaveChangesAsync(() => File.Delete(image.Path));
         }
 
-        private ImageViewModel CreateViewModel(Image image) => Mapper.Map<ImageViewModel>(image);
+        private ImageViewModel CreateViewModel(Image image) => _context.Mapper.Map<ImageViewModel>(image);
     }
 }
