@@ -6,14 +6,14 @@ namespace CoolBytes.WebAPI.Features.Images.Profiles.Resolvers
 {
     public class ImageViewModelResolver : IValueResolver<Image, ImageViewModel, string>
     {
-        private readonly IImageViewModelFactory _factory;
+        private readonly IImageViewModelUrlResolver _urlResolver;
 
-        public ImageViewModelResolver(IImageViewModelFactory factory)
+        public ImageViewModelResolver(IImageViewModelUrlResolver urlResolver)
         {
-            _factory = factory;
+            _urlResolver = urlResolver;
         }
 
         public string Resolve(Image source, ImageViewModel destination, string destMember, ResolutionContext context) 
-            => _factory.Create(source).UriPath;
+            => _urlResolver.Create(source);
     }
 }

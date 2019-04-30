@@ -4,13 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CoolBytes.WebAPI.Features.Images.ViewModels
 {
-    [Inject(typeof(IImageViewModelFactory), ServiceLifetime.Scoped, "development", "production-azure")]
-    public class AzureBlobImageViewModelFactory : IImageViewModelFactory
+    [Inject(typeof(IImageViewModelUrlResolver), ServiceLifetime.Scoped, "development", "production-azure")]
+    public class AzureBlobImageViewModelUrlResolver : IImageViewModelUrlResolver
     {
-        public ImageViewModel Create(Image image)
+        public string Create(Image image)
         {
             if (image == null)
-                return new ImageViewModel();
+                return null;
 
             var currentUri = image.UriPath;
             if (currentUri.Contains("/images"))
@@ -18,7 +18,7 @@ namespace CoolBytes.WebAPI.Features.Images.ViewModels
                 currentUri = currentUri.Split('/')[2];
             }
 
-            return new ImageViewModel() { Id = image.Id, UriPath = currentUri };
+            return currentUri;
         }
     }
 }

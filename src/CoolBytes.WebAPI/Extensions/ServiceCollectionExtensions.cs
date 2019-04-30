@@ -53,7 +53,7 @@ namespace CoolBytes.WebAPI.Extensions
                     .AddClasses(c => c.WithAttribute((Func<InjectAttribute, bool>)Predicate))
                     .UsingAttributes();
 
-                s.FromAssemblyOf<IImageViewModelFactory>()
+                s.FromAssemblyOf<IImageViewModelUrlResolver>()
                     .AddClasses(c => c.WithAttribute((Func<InjectAttribute, bool>)Predicate))
                     .UsingAttributes();
             });

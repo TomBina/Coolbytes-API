@@ -44,7 +44,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         private IMapper CreateMapper()
         {
             var sp = TestContext.ServiceProviderBuilder.Add(s =>
-                s.AddTransient<IImageViewModelFactory, AzureBlobImageViewModelFactory>()
+                s.AddTransient<IImageViewModelUrlResolver, AzureBlobImageViewModelUrlResolver>()
                     .AddTransient<ImageViewModelResolver>()).Build();
             var profiles = new[] { new BlogPostSummaryViewModelProfile() };
             var mapper = TestContext.CreateMapper(profiles, sp);

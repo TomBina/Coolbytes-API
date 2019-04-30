@@ -2,8 +2,8 @@
 
 namespace CoolBytes.WebAPI.Features.Images.ViewModels
 {
-    public interface IImageViewModelFactory
+    public interface IImageViewModelUrlResolver
     {
-        ImageViewModel Create(Image image);
+        string Create(Image image);
     }
 }

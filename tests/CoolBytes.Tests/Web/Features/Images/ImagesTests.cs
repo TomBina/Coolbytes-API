@@ -25,7 +25,7 @@ namespace CoolBytes.Tests.Web.Features.Images
         private IMapper CreateMapper()
         {
             var sp = TestContext.ServiceProviderBuilder.Add(s =>
-                s.AddTransient<IImageViewModelFactory, LocalImageViewModelFactory>()
+                s.AddTransient<IImageViewModelUrlResolver, LocalImageViewModelUrlResolver>()
                     .AddTransient<ImageViewModelResolver>()).Build();
             var profiles = new Profile[] { new ImageViewModelProfile() };
             var mapper = TestContext.CreateMapper(profiles, sp);
