@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using CoolBytes.Core.Abstractions;
+﻿using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Images.CQ;
@@ -11,6 +6,10 @@ using CoolBytes.WebAPI.Features.Images.ViewModels;
 using CoolBytes.WebAPI.Handlers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.Images.Handlers
 {

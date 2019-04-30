@@ -1,7 +1,11 @@
-﻿using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Domain;
+using CoolBytes.Core.Utils;
+using CoolBytes.Services;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
 using CoolBytes.WebAPI.Features.ResumeEvents.DTO;
 using CoolBytes.WebAPI.Features.ResumeEvents.Handlers;
+using CoolBytes.WebAPI.Features.ResumeEvents.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -10,9 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Abstractions;
-using CoolBytes.Core.Domain;
-using CoolBytes.Services;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.ResumeEvents
@@ -54,7 +55,8 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var resumeEvents = await SeedData();
             var authorId = resumeEvents.First().AuthorId;
             var message = new GetResumeEventsQuery() { AuthorId = authorId };
-            var handler = new GetResumeEventsQueryHandler(Context);
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ResumeEventViewModel>>();
+            var handler = new GetResumeEventsQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -68,7 +70,8 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var resumeEvent = resumeEvents.First();
 
             var message = new GetResumeEventQuery() { Id = resumeEvent.Id };
-            var handler = new GetResumeEventQueryHandler(Context);
+            var handlerContext = TestContext.CreateHandlerContext<ResumeEventViewModel>();
+            var handler = new GetResumeEventQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -88,7 +91,8 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 Name = "Test",
                 Message = "test"
             };
-            var handler = new AddResumeEventCommandHandler(Context, _authorService);
+            var handlerContext = TestContext.CreateHandlerContext<ResumeEventViewModel>();
+            var handler = new AddResumeEventCommandHandler(handlerContext, _authorService);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -113,7 +117,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 Name = resumeEvent.Name
 
             };
-            var handler = new UpdateResumeEventHandler(Context);
+            var handler = new UpdateResumeEventHandler(TestContext.CreateHandlerContext<ResumeEventViewModel>());
 
             var result = await handler.Handle(message, CancellationToken.None);
 

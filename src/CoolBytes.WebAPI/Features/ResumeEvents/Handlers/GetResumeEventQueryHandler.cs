@@ -1,27 +1,29 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using CoolBytes.Data;
+﻿using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
 using CoolBytes.WebAPI.Features.ResumeEvents.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
 {
     public class GetResumeEventQueryHandler : IRequestHandler<GetResumeEventQuery, ResumeEventViewModel>
     {
-        private readonly AppDbContext _context;
+        private readonly HandlerContext<ResumeEventViewModel> _context;
+        private readonly AppDbContext _dbContext;
 
-        public GetResumeEventQueryHandler(AppDbContext context)
+        public GetResumeEventQueryHandler(HandlerContext<ResumeEventViewModel> context)
         {
             _context = context;
+            _dbContext = context.DbContext;
         }
 
         public async Task<ResumeEventViewModel> Handle(GetResumeEventQuery message, CancellationToken cancellationToken)
         {
-            var resumeEvent = await _context.ResumeEvents.FindAsync(message.Id);
+            var resumeEvent = await _dbContext.ResumeEvents.FindAsync(message.Id);
 
-            return Mapper.Map<ResumeEventViewModel>(resumeEvent);
+            return _context.Map(resumeEvent);
         }
     }
 }

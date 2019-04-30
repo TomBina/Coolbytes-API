@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using CoolBytes.Data;
+﻿using CoolBytes.Data;
 using CoolBytes.Services;
 using CoolBytes.Services.Caching;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -12,12 +12,14 @@ namespace CoolBytes.WebAPI.Features.Resume
 {
     public class GetResumeQueryHandler : IRequestHandler<GetResumeQuery, ResumeViewModel>
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
+        private readonly HandlerContext<ResumeViewModel> _context;
         private readonly IAuthorSearchService _authorSearchService;
         private readonly ICacheService _cacheService;
 
-        public GetResumeQueryHandler(AppDbContext context, IAuthorSearchService authorSearchService, ICacheService cacheService)
+        public GetResumeQueryHandler(HandlerContext<ResumeViewModel> context, IAuthorSearchService authorSearchService, ICacheService cacheService)
         {
+            _dbContext = context.DbContext;
             _context = context;
             _authorSearchService = authorSearchService;
             _cacheService = cacheService;
@@ -34,13 +36,13 @@ namespace CoolBytes.WebAPI.Features.Resume
         {
             var resume = await CreateResumeAsync(message.AuthorId);
 
-            return Mapper.Map<ResumeViewModel>(resume);
+            return _context.Map(resume);
         }
 
         private async Task<Core.Domain.Resume> CreateResumeAsync(int authorId)
         {
             var author = await _authorSearchService.GetAuthorWithProfile(authorId);
-            var resumeEvents = await _context.ResumeEvents.Where(r => r.AuthorId == authorId).ToListAsync();
+            var resumeEvents = await _dbContext.ResumeEvents.Where(r => r.AuthorId == authorId).ToListAsync();
 
             var resume = new Core.Domain.Resume(author, resumeEvents);
             return resume;
