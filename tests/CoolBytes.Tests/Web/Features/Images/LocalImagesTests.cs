@@ -16,9 +16,9 @@ using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Images
 {
-    public class ImagesTests : TestBase<TestContext>
+    public class LocalImagesTests : TestBase<TestContext>
     {
-        public ImagesTests(TestContext testContext) : base(testContext)
+        public LocalImagesTests(TestContext testContext) : base(testContext)
         {
         }
 

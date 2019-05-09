@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CoolBytes.WebAPI.Features.Images.ViewModels
 {
-    [Inject(typeof(IImageViewModelUrlResolver), ServiceLifetime.Scoped, "production")]
+    [Inject(typeof(IImageViewModelUrlResolver), ServiceLifetime.Scoped, "production-onprem")]
     public class LocalImageViewModelUrlResolver : IImageViewModelUrlResolver
     {
         public string Create(Image image)

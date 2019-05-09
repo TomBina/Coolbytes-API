@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CoolBytes.Services.BlobStorage
 {
-    [Inject(typeof(IBlobClient), ServiceLifetime.Scoped, "development", "azure-production")]
+    [Inject(typeof(IBlobClient), ServiceLifetime.Scoped, "development", "production-azure")]
     public class AzureBlobClient : IBlobClient
     {
         private readonly Lazy<CloudBlobClient> _client;

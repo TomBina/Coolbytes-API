@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CoolBytes.Services.Images
 {
-    [Inject(typeof(IImageService), ServiceLifetime.Scoped, "production")]
+    [Inject(typeof(IImageService), ServiceLifetime.Scoped, "production-onprem")]
     public class LocalImageService : IImageService
     {
         private readonly IConfiguration _configuration;

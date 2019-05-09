@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CoolBytes.Services.Images.Factories
 {
-    [Inject(typeof(IImageFactoryOptions), ServiceLifetime.Scoped, "production")]
+    [Inject(typeof(IImageFactoryOptions), ServiceLifetime.Scoped, "production-onprem")]
     public class LocalImageFactoryOptions : IImageFactoryOptions
     {
         public string UploadPath { get; }

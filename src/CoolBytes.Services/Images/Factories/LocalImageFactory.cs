@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CoolBytes.Services.Images.Factories
 {
-    [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "production")]
+    [Inject(typeof(ImageFactory), ServiceLifetime.Scoped, "production-onprem")]
     public class LocalImageFactory : ImageFactory
     {
         private readonly IImageFactoryOptions _options;
