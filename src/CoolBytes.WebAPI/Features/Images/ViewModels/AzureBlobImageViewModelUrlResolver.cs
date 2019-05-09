@@ -15,7 +15,7 @@ namespace CoolBytes.WebAPI.Features.Images.ViewModels
             var currentUri = image.UriPath;
             if (currentUri.Contains("/images"))
             {
-                currentUri = currentUri.Split('/')[2];
+                currentUri = currentUri.Split('/')[3];
             }
 
             return currentUri;
