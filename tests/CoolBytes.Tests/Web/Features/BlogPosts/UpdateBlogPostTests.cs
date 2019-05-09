@@ -1,5 +1,4 @@
 ﻿using CoolBytes.Core.Builders;
-using CoolBytes.Core.Interfaces;
 using CoolBytes.Core.Utils;
 using CoolBytes.Services;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
@@ -9,12 +8,19 @@ using Moq;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
+using CoolBytes.WebAPI.Features.BlogPosts.Profiles;
+using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using CoolBytes.WebAPI.Features.Images.Profiles.Resolvers;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.BlogPosts
 {
-    public class UpdateBlogPostTests : TestBase
+    public class UpdateBlogPostTests : TestBase<TestContext>
     {
         public UpdateBlogPostTests(TestContext testContext) : base(testContext)
         {
@@ -27,7 +33,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 var user = new User("Test");
 
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorValidator = new AuthorValidator(Context);
+                var authorValidator = new AuthorValidator(RequestDbContext);
                 var author = await Author.Create(user, authorProfile, authorValidator);
                 var blogPostContent = new BlogPostContent("Testsubject", "Testintro", "Testcontent");
                 var category = new Category("Testcategory", 1);
@@ -42,12 +48,23 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
             }
         }
 
+        private IMapper CreateMapper()
+        {
+            var sp = TestContext.ServiceProviderBuilder.Add(s =>
+                s.AddTransient<IImageViewModelUrlResolver, AzureBlobImageViewModelUrlResolver>()
+                    .AddTransient<ImageViewModelResolver>()).Build();
+            var profiles = new[] { new BlogPostSummaryViewModelProfile() };
+            var mapper = TestContext.CreateMapper(profiles, sp);
+
+            return mapper;
+        }
+
         [Fact]
         public async Task UpdateBlogPostQueryHandler_ReturnsBlogAsync()
         {
-            var blog = await Context.BlogPosts.FirstAsync();
+            var blog = await RequestDbContext.BlogPosts.FirstAsync();
             var query = new UpdateBlogPostQuery() { Id = blog.Id };
-            var handler = new UpdateBlogPostQueryHandler(Context);
+            var handler = new UpdateBlogPostQueryHandler(TestContext.CreateHandlerContext<BlogPostUpdateViewModel>(RequestDbContext));
 
             var result = await handler.Handle(query, CancellationToken.None);
 
@@ -63,7 +80,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 context.Categories.Add(category);
                 await context.SaveChangesAsync();
             }
-            var blogPost = Context.BlogPosts.AsNoTracking().First();
+            var blogPost = RequestDbContext.BlogPosts.AsNoTracking().First();
             var message = new UpdateBlogPostCommand()
             {
                 Id = blogPost.Id,
@@ -73,7 +90,8 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 CategoryId = category.Id
             };
             var builder = new ExistingBlogPostBuilder(null);
-            var handler = new UpdateBlogPostCommandHandler(Context, builder);
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(RequestDbContext, CreateMapper());
+            var handler = new UpdateBlogPostCommandHandler(handlerContext, builder);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -84,9 +102,10 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
         [Fact]
         public async Task UpdateBlogPostCommandHandler_WithFile_UpdatesBlog()
         {
-            var imageFactory = TestContext.CreateImageFactory();
+            var imageFactory = TestContext.CreateImageService();
             var builder = new ExistingBlogPostBuilder(imageFactory);
-            var handler = new UpdateBlogPostCommandHandler(Context, builder);
+            var handlerContext = TestContext.CreateHandlerContext<BlogPostSummaryViewModel>(RequestDbContext, CreateMapper());
+            var handler = new UpdateBlogPostCommandHandler(handlerContext, builder);
             var fileMock = TestContext.CreateFileMock();
             var file = fileMock.Object;
             var category = new Category("Hello test category", 1);
@@ -96,7 +115,7 @@ namespace CoolBytes.Tests.Web.Features.BlogPosts
                 await context.SaveChangesAsync();
             }
 
-            var blogPost = Context.BlogPosts.AsNoTracking().First();
+            var blogPost = RequestDbContext.BlogPosts.AsNoTracking().First();
             var message = new UpdateBlogPostCommand()
             {
                 Id = blogPost.Id,

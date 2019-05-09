@@ -1,22 +1,24 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using CoolBytes.Core.Domain;
+﻿using CoolBytes.Core.Domain;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
 using CoolBytes.WebAPI.Features.ResumeEvents.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
 {
     public class UpdateResumeEventHandler : IRequestHandler<UpdateResumeEventCommand, ResumeEventViewModel>
     {
-        private readonly AppDbContext _context;
+        private readonly HandlerContext<ResumeEventViewModel> _context;
+        private readonly AppDbContext _dbContext;
 
-        public UpdateResumeEventHandler(AppDbContext context)
+        public UpdateResumeEventHandler(HandlerContext<ResumeEventViewModel> context)
         {
             _context = context;
+            _dbContext = context.DbContext;
         }
 
         public async Task<ResumeEventViewModel> Handle(UpdateResumeEventCommand message, CancellationToken cancellationToken)
@@ -31,13 +33,13 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
         }
 
         private async Task Save() 
-            => await _context.SaveChangesAsync();
+            => await _dbContext.SaveChangesAsync();
 
         private ResumeEvent GetResumeEvent(UpdateResumeEventCommand message) 
-            => _context.ResumeEvents.FirstOrDefault(r => r.Id == message.Id);
+            => _dbContext.ResumeEvents.FirstOrDefault(r => r.Id == message.Id);
 
-        private static ResumeEventViewModel ViewModel(ResumeEvent resumeEvent) 
-            => Mapper.Map<ResumeEventViewModel>(resumeEvent);
+        private ResumeEventViewModel ViewModel(ResumeEvent resumeEvent) 
+            => _context.Map(resumeEvent);
 
         private static void Update(UpdateResumeEventCommand message, ResumeEvent resumeEvent)
         {

@@ -1,8 +1,8 @@
-﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 
 namespace CoolBytes.Core.Builders
@@ -10,7 +10,7 @@ namespace CoolBytes.Core.Builders
     public class BlogPostBuilder
     {
         private readonly IAuthorService _authorService;
-        private readonly IImageFactory _imageFactory;
+        private readonly IImageService _imageService;
 
         private BlogPostContent _blogPostContent;
         private Task<Author> _author;
@@ -19,16 +19,20 @@ namespace CoolBytes.Core.Builders
         private IEnumerable<ExternalLink> _links;
         private Category _category;
 
-        public BlogPostBuilder(IAuthorService authorService, IImageFactory imageFactory)
+        public BlogPostBuilder(IAuthorService authorService, IImageService imageService)
         {
             _authorService = authorService;
-            _imageFactory = imageFactory;
+            _imageService = imageService;
         }
 
         public BlogPostBuilder WrittenByCurrentAuthor()
         {
             _author = _authorService.GetAuthor();
 
+            if (_author == null)
+            {
+                throw new InvalidOperationException("No author found");
+            }
             return this;
         }
 
@@ -47,7 +51,7 @@ namespace CoolBytes.Core.Builders
             _image = async () =>
             {
                 using (var stream = file.OpenStream())
-                    return await _imageFactory.Create(stream, file.FileName, file.ContentType);
+                    return await _imageService.Save(stream, file.FileName, file.ContentType);
             };
 
             return this;

@@ -1,4 +1,4 @@
-﻿using CoolBytes.WebAPI.Features.Images;
+﻿using CoolBytes.WebAPI.Features.Images.ViewModels;
 using System;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels

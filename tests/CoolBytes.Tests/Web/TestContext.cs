@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CoolBytes.Core.Factories;
 using CoolBytes.Data;
 using CoolBytes.WebAPI;
 using Microsoft.AspNetCore.Http;
@@ -7,8 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using CoolBytes.Services.Caching;
+using CoolBytes.Services.Images;
+using CoolBytes.Services.Images.Factories;
+using CoolBytes.WebAPI.Handlers;
 
 namespace CoolBytes.Tests.Web
 {
@@ -23,30 +26,13 @@ namespace CoolBytes.Tests.Web
         private readonly string _tempDirectory = Path.Combine(Environment.CurrentDirectory, $"dir{Random.Next()}");
         private DbContextOptions<AppDbContext> _options;
 
-        private static bool _initialized;
-        private static readonly object Mutex = new object();
-
         public ServiceProviderBuilder ServiceProviderBuilder
             => new ServiceProviderBuilder();
 
         public TestContext()
         {
-            InitAutoMapper();
             InitDb();
             InitConfiguration();
-        }
-
-        private static void InitAutoMapper()
-        {
-            lock (Mutex)
-            {
-                if (_initialized)
-                    return;
-
-                Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
-                _initialized = true;
-
-            }
         }
 
         private void InitDb()
@@ -57,9 +43,6 @@ namespace CoolBytes.Tests.Web
         private void InitConfiguration()
         {
             var configuration = new Mock<IConfiguration>();
-            configuration.Setup(c => c["ImagesUri:Scheme"]).Returns("testdata");
-            configuration.Setup(c => c["ImagesUri:Host"]).Returns("testserver.com");
-            configuration.Setup(c => c["ImagesUri:Port"]).Returns("80");
             configuration.Setup(c => c["ImagesUploadPath"]).Returns(_tempDirectory);
             Configuration = configuration.Object;
         }
@@ -77,6 +60,26 @@ namespace CoolBytes.Tests.Web
 
         public AppDbContext CreateNewContext()
             => new AppDbContext(_options);
+
+        public HandlerContext<T> CreateHandlerContext<T>(AppDbContext context, IMapper mapper = null)
+            => new HandlerContext<T>(mapper ?? CreateMapper(), context, CreateStubCacheService());
+
+        public IMapper CreateMapper(IEnumerable<Profile> profiles = null, IServiceProvider serviceLocator = null)
+        {
+            var mapperConfig = new MapperConfiguration(c =>
+            {
+                if (serviceLocator != null)
+                    c.ConstructServicesUsing(serviceLocator.GetService);
+
+                if (profiles != null)
+                    c.AddProfiles(profiles);
+                else
+                {
+                    c.AddMaps(typeof(Program).Assembly);
+                }
+            });
+            return mapperConfig.CreateMapper();
+        }
 
         /// <summary>
         /// Create a fake cache.
@@ -100,12 +103,18 @@ namespace CoolBytes.Tests.Web
             return new MemoryCacheService(cachePolicy, cacheKeyGenerator);
         }
 
-        public ImageFactory CreateImageFactory()
+        public LocalImageService CreateImageService()
         {
-            var options = new ImageFactoryOptions(_tempDirectory);
+            var config = new Mock<IConfiguration>();
+            config.Setup(c => c["ImagesUploadPath"]).Returns(_tempDirectory);
+
+            var options = new LocalImageFactoryOptions(config.Object);
             var validator = new ImageFactoryValidator();
-            var imageFactory = new ImageFactory(options, validator);
-            return imageFactory;
+            var imageFactory = new LocalImageFactory(options, validator);
+
+            var imageService = new LocalImageService(Configuration, imageFactory);
+
+            return imageService;
         }
 
         public Mock<IFormFile> CreateFileMock()

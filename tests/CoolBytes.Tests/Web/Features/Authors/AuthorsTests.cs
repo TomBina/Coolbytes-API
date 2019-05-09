@@ -1,19 +1,28 @@
-﻿using CoolBytes.Core.Interfaces;
+﻿using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Domain;
 using CoolBytes.Core.Utils;
 using CoolBytes.Services;
-using CoolBytes.WebAPI.Features.Authors;
+using CoolBytes.WebAPI.Features.Authors.CQ;
+using CoolBytes.WebAPI.Features.Authors.DTO;
+using CoolBytes.WebAPI.Features.Authors.Handlers;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Domain;
+using AutoMapper;
+using CoolBytes.WebAPI.Features.Authors.Profiles;
+using CoolBytes.WebAPI.Features.Authors.ViewModels;
+using CoolBytes.WebAPI.Features.Images.Profiles;
+using CoolBytes.WebAPI.Features.Images.Profiles.Resolvers;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Authors
 {
-    public class AuthorsTests : TestBase
+    public class AuthorsTests : TestBase<TestContext>
     {
         private readonly IUserService _userService;
         private readonly AuthorService _authorService;
@@ -25,14 +34,14 @@ namespace CoolBytes.Tests.Web.Features.Authors
             userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
             userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
             _userService = userService.Object;
-            _authorService = new AuthorService(_userService, Context);
+            _authorService = new AuthorService(_userService, TestContext.CreateNewContext());
         }
 
         [Fact]
         public async Task GetAuthorQueryHandler_ReturnsAuthor()
         {
             await AddAuthor();
-            var getAuthorQueryHandler = new GetAuthorQueryHandler(_authorService);
+            var getAuthorQueryHandler = new GetAuthorQueryHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext), _authorService);
             var message = new GetAuthorQuery() { IncludeProfile = true };
 
             var result = await getAuthorQueryHandler.Handle(message, CancellationToken.None);
@@ -58,15 +67,25 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             using (var context = TestContext.CreateNewContext())
             {
-                var imageFactory = TestContext.CreateImageFactory();
+                var imageService = TestContext.CreateImageService();
                 var file = TestContext.CreateFileMock().Object;
-                var image = await imageFactory.Create(file.OpenReadStream(), file.FileName, file.ContentType);
+                var image = await imageService.Save(file.OpenReadStream(), file.FileName, file.ContentType);
 
                 context.Images.Add(image);
                 await context.SaveChangesAsync();
 
                 return image;
             }
+        }
+
+        private IMapper CreateMapper()
+        {
+            var sp = TestContext.ServiceProviderBuilder.Add(s =>
+                s.AddTransient<IImageViewModelUrlResolver, LocalImageViewModelUrlResolver>()
+                    .AddTransient<ImageViewModelResolver>()).Build();
+            var profiles = new Profile[] { new ImageViewModelProfile(), new AuthorViewModelProfile() };
+            var mapper = TestContext.CreateMapper(profiles, sp);
+            return mapper;
         }
 
         [Fact]
@@ -82,8 +101,8 @@ namespace CoolBytes.Tests.Web.Features.Authors
             };
             experiences.Add(experienceDto);
 
-            var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, _userService, authorValidator);
+            var authorValidator = new AuthorValidator(RequestDbContext);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext, CreateMapper()), _userService, authorValidator);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me", Experiences = experiences };
 
             var result = await addAuthorCommandHandler.Handle(message, CancellationToken.None);
@@ -96,8 +115,8 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             await AddAuthor();
 
-            var authorValidator = new AuthorValidator(Context);
-            var addAuthorCommandHandler = new AddAuthorCommandHandler(Context, _userService, authorValidator);
+            var authorValidator = new AuthorValidator(RequestDbContext);
+            var addAuthorCommandHandler = new AddAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext, CreateMapper()), _userService, authorValidator);
             var message = new AddAuthorCommand() { FirstName = "Tom", LastName = "Bina", About = "About me" };
 
             await Assert.ThrowsAsync<InvalidOperationException>(async () =>
@@ -121,7 +140,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             experiences.Add(experienceDto);
 
             var message = new UpdateAuthorCommand() { FirstName = "Test", LastName = "Test", About = "Test", Experiences = experiences };
-            var handler = new UpdateAuthorCommandHandler(Context, _authorService);
+            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext, CreateMapper()), _authorService);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -133,7 +152,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             await AddAuthor();
             var image = await AddImage();
-            var handler = new UpdateAuthorCommandHandler(Context, _authorService);
+            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext), _authorService);
 
             var message = new UpdateAuthorCommand()
             {
@@ -150,11 +169,11 @@ namespace CoolBytes.Tests.Web.Features.Authors
 
         public override async Task DisposeAsync()
         {
-            Context.Users.RemoveRange(Context.Users.ToArray());
-            Context.Authors.RemoveRange(Context.Authors.ToArray());
+            RequestDbContext.Users.RemoveRange(RequestDbContext.Users.ToArray());
+            RequestDbContext.Authors.RemoveRange(RequestDbContext.Authors.ToArray());
 
-            await Context.SaveChangesAsync();
-            Context.Dispose();
+            await RequestDbContext.SaveChangesAsync();
+            RequestDbContext.Dispose();
         }
     }
 }

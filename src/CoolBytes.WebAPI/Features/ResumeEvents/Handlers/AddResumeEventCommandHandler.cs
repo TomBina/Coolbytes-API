@@ -1,22 +1,24 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
-using CoolBytes.Core.Interfaces;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
 using CoolBytes.WebAPI.Features.ResumeEvents.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
 {
     public class AddResumeEventCommandHandler : IRequestHandler<AddResumeEventCommand, ResumeEventViewModel>
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _dbContext;
+        private readonly HandlerContext<ResumeEventViewModel> _context;
         private readonly IAuthorService _authorService;
 
-        public AddResumeEventCommandHandler(AppDbContext context, IAuthorService authorService)
+        public AddResumeEventCommandHandler(HandlerContext<ResumeEventViewModel> context, IAuthorService authorService)
         {
+            _dbContext = context.DbContext;
             _context = context;
             _authorService = authorService;
         }
@@ -41,13 +43,14 @@ namespace CoolBytes.WebAPI.Features.ResumeEvents.Handlers
 
         private async Task Save(ResumeEvent resumeEvent)
         {
-            _context.ResumeEvents.Add(resumeEvent);
-            await _context.SaveChangesAsync();
+            _dbContext.ResumeEvents.Add(resumeEvent);
+
+            await _dbContext.SaveChangesAsync();
         }
 
-        private static ResumeEventViewModel ViewModel(ResumeEvent resumeEvent)
+        private ResumeEventViewModel ViewModel(ResumeEvent resumeEvent)
         {
-            return Mapper.Map<ResumeEventViewModel>(resumeEvent);
+            return _context.Map(resumeEvent);
         }
     }
 }

@@ -1,8 +1,11 @@
-﻿using CoolBytes.Core.Interfaces;
+﻿using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Domain;
 using CoolBytes.Core.Utils;
+using CoolBytes.Services;
 using CoolBytes.WebAPI.Features.ResumeEvents.CQ;
 using CoolBytes.WebAPI.Features.ResumeEvents.DTO;
 using CoolBytes.WebAPI.Features.ResumeEvents.Handlers;
+using CoolBytes.WebAPI.Features.ResumeEvents.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -11,13 +14,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CoolBytes.Core.Domain;
-using CoolBytes.Services;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.ResumeEvents
 {
-    public class ResumeEventsTests : TestBase
+    public class ResumeEventsTests : TestBase<TestContext>
     {
         private IUserService _userService;
         private AuthorService _authorService;
@@ -33,7 +34,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 var user = new User("Test");
 
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorValidator = new AuthorValidator(Context);
+                var authorValidator = new AuthorValidator(RequestDbContext);
                 var author = await Author.Create(user, authorProfile, authorValidator);
 
                 context.Authors.Add(author);
@@ -44,7 +45,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
                 userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
                 _userService = userService.Object;
-                _authorService = new AuthorService(_userService, Context);
+                _authorService = new AuthorService(_userService, RequestDbContext);
             }
         }
 
@@ -54,7 +55,8 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var resumeEvents = await SeedData();
             var authorId = resumeEvents.First().AuthorId;
             var message = new GetResumeEventsQuery() { AuthorId = authorId };
-            var handler = new GetResumeEventsQueryHandler(Context);
+            var handlerContext = TestContext.CreateHandlerContext<IEnumerable<ResumeEventViewModel>>(RequestDbContext);
+            var handler = new GetResumeEventsQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -68,7 +70,8 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var resumeEvent = resumeEvents.First();
 
             var message = new GetResumeEventQuery() { Id = resumeEvent.Id };
-            var handler = new GetResumeEventQueryHandler(Context);
+            var handlerContext = TestContext.CreateHandlerContext<ResumeEventViewModel>(RequestDbContext);
+            var handler = new GetResumeEventQueryHandler(handlerContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -88,7 +91,8 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 Name = "Test",
                 Message = "test"
             };
-            var handler = new AddResumeEventCommandHandler(Context, _authorService);
+            var handlerContext = TestContext.CreateHandlerContext<ResumeEventViewModel>(RequestDbContext);
+            var handler = new AddResumeEventCommandHandler(handlerContext, _authorService);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -113,7 +117,7 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
                 Name = resumeEvent.Name
 
             };
-            var handler = new UpdateResumeEventHandler(Context);
+            var handler = new UpdateResumeEventHandler(TestContext.CreateHandlerContext<ResumeEventViewModel>(RequestDbContext));
 
             var result = await handler.Handle(message, CancellationToken.None);
 
@@ -126,10 +130,10 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
             var resumeEvents = await SeedData();
             var currentCount = resumeEvents.Count;
             var message = new DeleteResumeEventCommand { Id = resumeEvents.First().Id };
-            IRequestHandler<DeleteResumeEventCommand> handler = new DeleteResumeEventCommandHandler(Context);
+            IRequestHandler<DeleteResumeEventCommand> handler = new DeleteResumeEventCommandHandler(RequestDbContext);
 
             await handler.Handle(message, CancellationToken.None);
-            var newCount = (await Context.ResumeEvents.ToListAsync()).Count;
+            var newCount = (await RequestDbContext.ResumeEvents.ToListAsync()).Count;
             Assert.Equal(currentCount - 1, newCount);
         }
 
@@ -156,11 +160,11 @@ namespace CoolBytes.Tests.Web.Features.ResumeEvents
 
         public override async Task DisposeAsync()
         {
-            var resumeEvents = await Context.ResumeEvents.ToArrayAsync();
-            Context.ResumeEvents.RemoveRange(resumeEvents);
-            await Context.SaveChangesAsync();
+            var resumeEvents = await RequestDbContext.ResumeEvents.ToArrayAsync();
+            RequestDbContext.ResumeEvents.RemoveRange(resumeEvents);
+            await RequestDbContext.SaveChangesAsync();
 
-            Context.Dispose();
+            RequestDbContext.Dispose();
         }
     }
 }

@@ -8,14 +8,20 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
 {
     public class BlogPostViewModelBuilder
     {
+        private readonly IMapper _mapper;
         private BlogPostViewModel _model;
+
+        public BlogPostViewModelBuilder(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
 
         public BlogPostViewModelBuilder FromBlog(BlogPost blogPost)
         {
             if (blogPost == null)
                 throw new ArgumentNullException();
 
-            _model = Mapper.Map<BlogPostViewModel>(blogPost);
+            _model = _mapper.Map<BlogPostViewModel>(blogPost);
 
             return this;
         }

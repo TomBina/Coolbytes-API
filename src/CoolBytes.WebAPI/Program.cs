@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using CoolBytes.Services.KeyVault;
+﻿using CoolBytes.Services.KeyVault;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
 using System;
@@ -40,7 +40,6 @@ namespace CoolBytes.WebAPI
                                 .ReadFrom.Configuration(configuration)
                                 .Enrich.FromLogContext()
                                 .WriteTo.Console()
-                                .WriteTo.MongoDB(configuration.GetConnectionString("MongoDb"))
                                 .WriteTo.ApplicationInsights(configuration["coolbytesinstrumentationkey"], new EventTelemetryConverter())
                                 .CreateLogger();
 
@@ -60,12 +59,14 @@ namespace CoolBytes.WebAPI
 
         private static void Initialize(string[] args, IConfiguration configuration)
         {
-            Mapper.Initialize(c => c.AddProfiles(typeof(Program).Assembly));
-            Log.Information("Init db");
-            DbSetup.InitDb(configuration);
+            var webHost = BuildWebHost(args, configuration);
+            var serviceProvider = webHost.Services;
 
+            Log.Information("Init db");
+            DbSetup.InitDb(configuration, serviceProvider.GetService<IHostingEnvironment>());
             Log.Information("Starting web host");
-            BuildWebHost(args, configuration).Run();
+
+            webHost.Run();
         }
 
         private static IWebHost BuildWebHost(string[] args, IConfiguration configuration) =>

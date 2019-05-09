@@ -1,13 +1,15 @@
-﻿using CoolBytes.Services.Mailer;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System.Net.Http;
-using CoolBytes.Core.Attributes;
-using CoolBytes.Core.Interfaces;
+﻿using CoolBytes.Core.Attributes;
 using CoolBytes.Services.Caching;
+using CoolBytes.Services.Mailer;
 using CoolBytes.WebAPI.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Net.Http;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
 
 namespace CoolBytes.WebAPI.Extensions
 {
@@ -40,19 +42,21 @@ namespace CoolBytes.WebAPI.Extensions
             return services;
         }
 
-        public static IServiceCollection ScanServices(this IServiceCollection services)
+        public static IServiceCollection ScanServices(this IServiceCollection services, string currentEnvironment)
         {
-            services.Scan(s =>
-                s.FromAssemblyOf<ICacheService>()
-                    .AddClasses(c => c.WithAttribute<ScopedAttribute>())
-                    .AsImplementedInterfaces()
-                    .WithScopedLifetime());
+            currentEnvironment = currentEnvironment.ToLower();
+            bool Predicate(InjectAttribute o) => o.Environment.Length == 0 || o.Environment.Any(e => e == currentEnvironment);
 
             services.Scan(s =>
-                s.FromAssemblyOf<IImageFactory>()
-                    .AddClasses(c => c.WithAttribute<ScopedAttribute>())
-                    .AsImplementedInterfaces()
-                    .WithScopedLifetime());
+            {
+                s.FromAssemblyOf<ICacheService>()
+                    .AddClasses(c => c.WithAttribute((Func<InjectAttribute, bool>)Predicate))
+                    .UsingAttributes();
+
+                s.FromAssemblyOf<IImageViewModelUrlResolver>()
+                    .AddClasses(c => c.WithAttribute((Func<InjectAttribute, bool>)Predicate))
+                    .UsingAttributes();
+            });
 
             return services;
         }

@@ -1,7 +1,7 @@
-﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.WebAPI.Features.BlogPosts.CQ;
+﻿using CoolBytes.WebAPI.Features.BlogPosts.CQ;
 using FluentValidation;
 using System.Linq;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Data;
 using Microsoft.EntityFrameworkCore;
 

@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoolBytes.WebAPI.Extensions;
+using CoolBytes.WebAPI.Features.Images.CQ;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -11,18 +11,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using CoolBytes.Core.Domain;
 using CoolBytes.Services.Caching;
+using CoolBytes.WebAPI.Handlers;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 {
     public class GetBlogPostQueryHandler : IRequestHandler<GetBlogPostQuery, Result<BlogPostViewModel>>
     {
-        private readonly AppDbContext _context;
+        private readonly HandlerContext<BlogPostViewModel> _context;
+        private readonly AppDbContext _dbContext;
         private readonly ICacheService _cacheService;
 
-        public GetBlogPostQueryHandler(AppDbContext context, ICacheService cacheService)
+        public GetBlogPostQueryHandler(HandlerContext<BlogPostViewModel> context)
         {
             _context = context;
-            _cacheService = cacheService;
+            _dbContext = context.DbContext;
+            _cacheService = context.Cache;
         }
 
         public async Task<Result<BlogPostViewModel>> Handle(GetBlogPostQuery message, CancellationToken cancellationToken)
@@ -42,7 +45,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             if (blogPost == null)
                 return null;
 
-            var builder = new BlogPostViewModelBuilder();
+            var builder = new BlogPostViewModelBuilder(_context.Mapper);
             var links = await GetRelatedLinks(blogPostId);
 
             if (links != null && links.Count > 0)
@@ -52,7 +55,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         }
 
         private async Task<BlogPost> GetBlogPost(int id) 
-            => await _context.BlogPosts.AsNoTracking()
+            => await _dbContext.BlogPosts.AsNoTracking()
                                        .Include(b => b.Author.AuthorProfile)
                                        .ThenInclude(ap => ap.Image)
                                        .Include(b => b.Tags)
@@ -62,7 +65,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                                        .FirstOrDefaultAsync(b => b.Id == id);
 
         private async Task<List<BlogPostLinkDto>> GetRelatedLinks(int id) 
-            => await _context.BlogPosts.AsNoTracking()
+            => await _dbContext.BlogPosts.AsNoTracking()
                                        .Where(b => b.Id != id)
                                        .OrderByDescending(b => b.Id)
                                        .Take(10)

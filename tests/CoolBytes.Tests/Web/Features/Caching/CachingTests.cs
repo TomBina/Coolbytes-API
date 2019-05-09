@@ -1,13 +1,13 @@
 ﻿using CoolBytes.Core.Utils;
+using CoolBytes.WebAPI.Features.Caching;
 using CoolBytes.WebAPI.Features.Categories.CQ;
-using CoolBytes.WebAPI.Features.Categories.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Caching
 {
-    public class CachingTests : TestBase
+    public class CachingTests : TestBase<TestContext>
     {
         public CachingTests(TestContext testContext) : base(testContext)
         {

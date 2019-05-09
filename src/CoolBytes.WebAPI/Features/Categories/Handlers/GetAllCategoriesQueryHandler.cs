@@ -1,8 +1,8 @@
-﻿using AutoMapper;
-using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Utils;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Categories.CQ;
 using CoolBytes.WebAPI.Features.Categories.ViewModels;
+using CoolBytes.WebAPI.Handlers;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -14,21 +14,23 @@ namespace CoolBytes.WebAPI.Features.Categories.Handlers
 {
     public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, Result<IEnumerable<CategoryViewModel>>>
     {
-        private readonly AppDbContext _context;
+        private readonly HandlerContext<IEnumerable<CategoryViewModel>> _context;
+        private readonly AppDbContext _dbContext;
 
-        public GetAllCategoriesQueryHandler(AppDbContext context)
+        public GetAllCategoriesQueryHandler(HandlerContext<IEnumerable<CategoryViewModel>> context)
         {
             _context = context;
+            _dbContext = context.DbContext;
         }
 
         public async Task<Result<IEnumerable<CategoryViewModel>>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var categories = await _context.Categories.OrderBy(c => c.SortOrder).ToListAsync(cancellationToken: cancellationToken);
+            var categories = await _dbContext.Categories.OrderBy(c => c.SortOrder).ToListAsync(cancellationToken: cancellationToken);
 
             if (!categories.Any())
                 return Result<IEnumerable<CategoryViewModel>>.NotFoundResult();
 
-            return Mapper.Map<IEnumerable<CategoryViewModel>>(categories).ToSuccessResult();
+            return _context.Map(categories).ToSuccessResult();
         }
     }
 }

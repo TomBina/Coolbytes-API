@@ -1,17 +1,17 @@
-﻿using CoolBytes.Core.Interfaces;
-using CoolBytes.Core.Utils;
+﻿using CoolBytes.Core.Utils;
 using CoolBytes.Services;
 using CoolBytes.WebAPI.Features.Resume;
 using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Domain;
 using Xunit;
 
 namespace CoolBytes.Tests.Web.Features.Resume
 {
-    public class ResumeTests : TestBase
+    public class ResumeTests : TestBase<TestContext>
     {
         private IUserService _userService;
         private AuthorService _authorService;
@@ -27,7 +27,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
                 var user = new User("Test");
 
                 var authorProfile = new AuthorProfile("Tom", "Bina", "About me");
-                var authorValidator = new AuthorValidator(Context);
+                var authorValidator = new AuthorValidator(RequestDbContext);
                 var author = await Author.Create(user, authorProfile, authorValidator);
 
                 await context.SaveChangesAsync();
@@ -47,7 +47,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
                 userService.Setup(exp => exp.GetOrCreateCurrentUserAsync()).ReturnsAsync(user);
                 userService.Setup(exp => exp.TryGetCurrentUserAsync()).ReturnsAsync(user.ToSuccessResult());
                 _userService = userService.Object;
-                _authorService = new AuthorService(_userService, Context);
+                _authorService = new AuthorService(_userService, RequestDbContext);
             }
         }
 
@@ -59,7 +59,7 @@ namespace CoolBytes.Tests.Web.Features.Resume
             {
                 AuthorId = author.Id
             };
-            var handler = new GetResumeQueryHandler(Context, _authorService, TestContext.CreateStubCacheService());
+            var handler = new GetResumeQueryHandler(TestContext.CreateHandlerContext<ResumeViewModel>(RequestDbContext), _authorService, TestContext.CreateStubCacheService());
 
             var result = await handler.Handle(message, CancellationToken.None);
 
