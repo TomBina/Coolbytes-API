@@ -152,7 +152,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
         {
             await AddAuthor();
             var image = await AddImage();
-            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext), _authorService);
+            var handler = new UpdateAuthorCommandHandler(TestContext.CreateHandlerContext<AuthorViewModel>(RequestDbContext, CreateMapper()), _authorService);
 
             var message = new UpdateAuthorCommand()
             {

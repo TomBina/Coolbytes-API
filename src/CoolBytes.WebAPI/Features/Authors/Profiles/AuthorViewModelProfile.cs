@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using CoolBytes.Core.Domain;
 using CoolBytes.WebAPI.Features.Authors.ViewModels;
-using CoolBytes.WebAPI.Features.Images.ViewModels;
 
 namespace CoolBytes.WebAPI.Features.Authors.Profiles
 {
@@ -16,25 +15,7 @@ namespace CoolBytes.WebAPI.Features.Authors.Profiles
                 .ForMember(v => v.Experiences, exp => exp.MapFrom(a => a.AuthorProfile.Experiences))
                 .ForMember(v => v.ResumeUri, exp => exp.MapFrom(a => a.AuthorProfile.ResumeUri))
                 .ForMember(v => v.SocialHandles, exp => exp.MapFrom(a => a.AuthorProfile.SocialHandles))
-                .ForMember(v => v.Image,
-                    exp => exp.MapFrom((author, viewModel, image) =>
-                    {
-                        if (author.AuthorProfile != null)
-                        {
-                            return author.AuthorProfile.Image == null
-                                ? null
-                                : new ImageViewModel()
-                                {
-                                    Id = author.AuthorProfile.Image.Id,
-                                    UriPath = author.AuthorProfile.Image.UriPath
-                                };
-                        }
-                        else
-                        {
-                            return null;
-                        }
-                    }));
-
+                .ForMember(v => v.Image, exp => exp.MapFrom(a => a.AuthorProfile.Image));
         }
     }
 }
