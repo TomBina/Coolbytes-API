@@ -16,7 +16,6 @@ namespace CoolBytes.WebAPI.Features.Authors.Profiles
                 .ForMember(v => v.ResumeUri, exp => exp.MapFrom(a => a.AuthorProfile.ResumeUri))
                 .ForMember(v => v.SocialHandles, exp => exp.MapFrom(a => a.AuthorProfile.SocialHandles))
                 .ForMember(v => v.Image, exp => exp.MapFrom(a => a.AuthorProfile.Image));
-
         }
     }
 }
