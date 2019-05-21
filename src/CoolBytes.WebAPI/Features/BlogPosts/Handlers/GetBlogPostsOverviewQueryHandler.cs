@@ -43,6 +43,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         private Task<List<CategoryBlogPostsViewModel>> QueryBlogPosts() =>
             _dbContext.BlogPosts
                 .AsNoTracking()
+                .Include(b => b.Content)
                 .Include(b => b.Category)
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)
@@ -52,9 +53,11 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .Select(b => new CategoryBlogPostsViewModel()
                 {
                     CategoryId = b.Key,
-                    Category = b.FirstOrDefault().Category.Name,
+                    Category = b.First().Category.Name,
+                    SortOrder = b.First().Category.SortOrder,
                     BlogPosts = _context.Mapper.Map<List<BlogPostSummaryViewModel>>(b.AsEnumerable())
                 })
+                .OrderBy(c => c.SortOrder)
                 .ToListAsync();
     }
 }
