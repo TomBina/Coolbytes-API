@@ -6,6 +6,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
     {
         public int CategoryId { get; set; }
         public string Category { get; set; }
+        public int SortOrder { get; set; }
         public List<BlogPostSummaryViewModel> BlogPosts { get; set; }
     }
 }
