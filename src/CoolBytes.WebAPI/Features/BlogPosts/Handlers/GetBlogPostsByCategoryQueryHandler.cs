@@ -28,7 +28,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
         public async Task<IEnumerable<BlogPostSummaryViewModel>> Handle(GetBlogPostsByCategoryQuery request, CancellationToken cancellationToken)
         {
-            var blogs = await _cacheService.GetOrAddAsync(() => BlogPostsFactoryAsync(request.CategoryId));
+            var blogs = await _cacheService.GetOrAddAsync(() => BlogPostsFactoryAsync(request.CategoryId), request.CategoryId);
 
             return _context.Map(blogs);
         }
