@@ -8,6 +8,7 @@ namespace CoolBytes.WebAPI.Features.Categories.Validators
         public UpdateCategoryCommandValidator()
         {
             RuleFor(c => c.Name).NotEmpty();
+            RuleFor(c => c.Description).NotEmpty();
         }
     }
 }
