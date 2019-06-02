@@ -114,6 +114,7 @@ namespace CoolBytes.Data
                 {
                     entity.Property(e => e.Name).HasMaxLength(50).IsRequired();
                     entity.HasIndex(e => e.Name).IsUnique();
+                    entity.Property(e => e.Description).HasMaxLength(1000).HasDefaultValue(string.Empty).IsRequired();
                     entity.HasMany<BlogPost>().WithOne(b => b.Category).OnDelete(DeleteBehavior.Restrict);
                 });
         }

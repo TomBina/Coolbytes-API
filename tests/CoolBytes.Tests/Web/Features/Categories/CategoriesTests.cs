@@ -22,8 +22,8 @@ namespace CoolBytes.Tests.Web.Features.Categories
         {
             using (var context = TestContext.CreateNewContext())
             {
-                context.Categories.Add(new Category("Default category", 1));
-                context.Categories.Add(new Category("Another category", 2));
+                context.Categories.Add(new Category("Default category", 1, "Test description"));
+                context.Categories.Add(new Category("Another category", 2, "Test description"));
 
                 await context.SaveChangesAsync();
             }
@@ -68,7 +68,7 @@ namespace CoolBytes.Tests.Web.Features.Categories
         [Fact]
         public async Task AddCategoryHandler_Adds_Category()
         {
-            var message = new AddCategoryCommand() { Name = "Test category" };
+            var message = new AddCategoryCommand() { Name = "Test category", Description = "Some description" };
             var handler = new AddCategoryCommandHandler(RequestDbContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
@@ -80,12 +80,19 @@ namespace CoolBytes.Tests.Web.Features.Categories
         public async Task UpdateCategoryHandler_Updates_Category()
         {
             var category = await GetRandomCategory();
-            var message = new UpdateCategoryCommand() { Id = category.Id, Name = "New name" };
+            var message = new UpdateCategoryCommand() { Id = category.Id, Name = "New name", Description = "New description" };
             var handler = new UpdateCategoryCommandHandler(RequestDbContext);
 
             var result = await handler.Handle(message, CancellationToken.None);
 
             Assert.IsType<SuccessResult>(result);
+
+            using (var context = TestContext.CreateNewContext())
+            {
+                var updatedCategory = await context.Categories.FindAsync(category.Id);
+                Assert.Equal("New name", updatedCategory.Name);
+                Assert.Equal("New description", updatedCategory.Description);
+            }
         }
 
         [Fact]

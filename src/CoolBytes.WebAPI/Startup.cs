@@ -3,11 +3,9 @@ using CoolBytes.Core.Builders;
 using CoolBytes.Data;
 using CoolBytes.WebAPI.Extensions;
 using CoolBytes.WebAPI.Handlers;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,16 +33,13 @@ namespace CoolBytes.WebAPI
             services.AddHttpContextAccessor();
             services.AddTransient<BlogPostBuilder>();
             services.AddTransient<ExistingBlogPostBuilder>();
-            services.AddSecurity(_configuration);
+            services.AddSecurity(_configuration, _environment);
             services.AddDbContextPool<AppDbContext>(o =>
             {
                 var connectionString = _connectionStringFactory.Create();
                 o.UseSqlServer(connectionString);
             });
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
-                .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
+            services.AddConfiguredMvc(_environment);
             services.AddAutoMapper(typeof(Program));
             services.AddMediatR(typeof(Startup));
             services.AddSwaggerDocument(_swaggerConfiguration.ConfigureSwagger);
@@ -55,11 +50,6 @@ namespace CoolBytes.WebAPI
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseAuthentication();
-            app.UseStaticFiles();
-            app.UseSwagger();
-            app.UseSwaggerUi3();
-
             if (env.IsDevelopment())
             {
                 app.UseCors("DevPolicy");
@@ -70,6 +60,9 @@ namespace CoolBytes.WebAPI
                 app.UseCors("ProductionPolicy");
             }
 
+            app.UseStaticFiles();
+            app.UseSwagger();
+            app.UseSwaggerUi3();
             app.UseMvcWithDefaultRoute();
         }
     }

@@ -6,5 +6,6 @@ namespace CoolBytes.WebAPI.Features.Categories.CQ
     public class AddCategoryCommand : IRequest<Result>
     {
         public string Name { get; set; }
+        public string Description { get; set; }
     }
 }
