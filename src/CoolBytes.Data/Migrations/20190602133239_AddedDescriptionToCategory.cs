@@ -9,7 +9,9 @@ namespace CoolBytes.Data.Migrations
             migrationBuilder.AddColumn<string>(
                 name: "Description",
                 table: "Categories",
-                nullable: true);
+                maxLength: 1000,
+                nullable: false,
+                defaultValue: "");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

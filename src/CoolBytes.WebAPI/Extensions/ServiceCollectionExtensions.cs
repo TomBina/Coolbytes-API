@@ -10,12 +10,17 @@ using System;
 using System.Linq;
 using System.Net.Http;
 using CoolBytes.WebAPI.Features.Images.ViewModels;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace CoolBytes.WebAPI.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddSecurity(this IServiceCollection services, IConfiguration config,
+            IHostingEnvironment environment)
         {
             services.AddCors(o =>
             {
@@ -57,6 +62,25 @@ namespace CoolBytes.WebAPI.Extensions
                     .AddClasses(c => c.WithAttribute((Func<InjectAttribute, bool>)Predicate))
                     .UsingAttributes();
             });
+
+            return services;
+        }
+
+        public static IServiceCollection AddConfiguredMvc(this IServiceCollection services,
+            IHostingEnvironment environment)
+        {
+            void MvcOptions(MvcOptions options)
+            {
+                if (environment.IsDevelopment())
+                    options.Filters.Add(new AllowAnonymousFilter());
+            }
+
+            var mvcBuilder = services.AddMvc(MvcOptions);
+
+            mvcBuilder
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(o => o.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore)
+                .AddFluentValidation(config => config.RegisterValidatorsFromAssembly(typeof(Startup).Assembly));
 
             return services;
         }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CoolBytes.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190602132056_AddedDescriptionToCategory")]
+    [Migration("20190602133239_AddedDescriptionToCategory")]
     partial class AddedDescriptionToCategory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,7 +122,11 @@ namespace CoolBytes.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(1000)
+                        .HasDefaultValue("");
 
                     b.Property<string>("Name")
                         .IsRequired()
