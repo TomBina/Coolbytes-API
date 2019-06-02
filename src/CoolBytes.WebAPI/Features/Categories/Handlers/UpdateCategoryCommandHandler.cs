@@ -25,6 +25,8 @@ namespace CoolBytes.WebAPI.Features.Categories.Handlers
                 return Result.NotFoundResult();
 
             category.UpdateName(request.Name);
+            category.UpdateDescription(request.Description);
+
             await _context.SaveChangesAsync(cancellationToken);
 
             return Result.SuccessResult();

@@ -26,6 +26,11 @@ namespace CoolBytes.Core.Domain
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
+        public void UpdateDescription(string description)
+        {
+            Description = description ?? throw new ArgumentNullException(nameof(description));
+        }
+
         public void SetSortOrder(int sortOrder)
         {
             if (sortOrder <= 0) throw new ArgumentOutOfRangeException(nameof(sortOrder));
