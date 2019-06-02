@@ -2,18 +2,17 @@
 using CoolBytes.Services.Caching;
 using CoolBytes.Services.Mailer;
 using CoolBytes.WebAPI.Authorization;
+using CoolBytes.WebAPI.Features.Images.ViewModels;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Net.Http;
-using CoolBytes.WebAPI.Features.Images.ViewModels;
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace CoolBytes.WebAPI.Extensions
 {
@@ -28,6 +27,7 @@ namespace CoolBytes.WebAPI.Extensions
                 o.AddPolicy("DevPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().Build());
             });
 
+            
             services.AddAuthentication(o =>
             {
                 o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -41,7 +41,10 @@ namespace CoolBytes.WebAPI.Extensions
             services.AddAuthorization(o =>
             {
                 o.AddPolicy("admin",
-                    policy => policy.Requirements.Add(new HasScopeRequirement("admin", config["Auth0:Domain"])));
+                    policy =>
+                    {
+                        policy.Requirements.Add(new HasScopeRequirement("admin", config["Auth0:Domain"], environment));
+                    });
             });
 
             return services;
@@ -66,16 +69,9 @@ namespace CoolBytes.WebAPI.Extensions
             return services;
         }
 
-        public static IServiceCollection AddConfiguredMvc(this IServiceCollection services,
-            IHostingEnvironment environment)
+        public static IServiceCollection AddConfiguredMvc(this IServiceCollection services)
         {
-            void MvcOptions(MvcOptions options)
-            {
-                if (environment.IsDevelopment())
-                    options.Filters.Add(new AllowAnonymousFilter());
-            }
-
-            var mvcBuilder = services.AddMvc(MvcOptions);
+            var mvcBuilder = services.AddMvc();
 
             mvcBuilder
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
