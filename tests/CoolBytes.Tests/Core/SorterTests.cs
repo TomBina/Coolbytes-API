@@ -10,8 +10,8 @@ namespace CoolBytes.Tests.Core
         public void Should_Sort_Collection_Correctly()
         {
             var sortables = new List<Category>();
-            var category = new Category(id: 1, name: "Test", sortOrder: 1);
-            var anotherCategory = new Category(id: 2, name: "Test 2", sortOrder: 2);
+            var category = new Category(id: 1, name: "Test", sortOrder: 1, description:"Test");
+            var anotherCategory = new Category(id: 2, name: "Test 2", sortOrder: 2, description:"Test");
             sortables.AddRange(new[] { category, anotherCategory });
             var newSortOrder = new[] { 2, 1 };
             var sorter = new Sorter<Category>();
