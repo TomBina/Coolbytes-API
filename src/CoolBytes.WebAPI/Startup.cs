@@ -39,7 +39,7 @@ namespace CoolBytes.WebAPI
                 var connectionString = _connectionStringFactory.Create();
                 o.UseSqlServer(connectionString);
             });
-            services.AddConfiguredMvc(_environment);
+            services.AddConfiguredMvc();
             services.AddAutoMapper(typeof(Program));
             services.AddMediatR(typeof(Startup));
             services.AddSwaggerDocument(_swaggerConfiguration.ConfigureSwagger);
@@ -60,6 +60,7 @@ namespace CoolBytes.WebAPI
                 app.UseCors("ProductionPolicy");
             }
 
+            app.UseAuthentication();
             app.UseStaticFiles();
             app.UseSwagger();
             app.UseSwaggerUi3();
