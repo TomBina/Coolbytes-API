@@ -54,6 +54,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 {
                     CategoryId = b.Key,
                     Category = b.First().Category.Name,
+                    Description = b.First().Category.Description,
                     SortOrder = b.First().Category.SortOrder,
                     BlogPosts = _context.Mapper.Map<List<BlogPostSummaryViewModel>>(b.AsEnumerable())
                 })
