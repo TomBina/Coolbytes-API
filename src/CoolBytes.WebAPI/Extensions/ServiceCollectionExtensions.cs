@@ -24,7 +24,7 @@ namespace CoolBytes.WebAPI.Extensions
             services.AddCors(o =>
             {
                 o.AddPolicy("ProductionPolicy", builder => 
-                    builder.WithOrigins("http://coolbytes.io", "http://www.coolbytes.io", "http://localhost:4000",
+                    builder.WithOrigins("https://www.coolbytes.io", "http://localhost:4000",
                         "http://staging.coolbytes.io").AllowAnyMethod().AllowAnyHeader().Build());
                 o.AddPolicy("DevPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().Build());
             });
