@@ -76,17 +76,18 @@ namespace CoolBytes.Services.Mailer
 
         private async Task<IMailReport> Send(HttpRequestMessage httpMessage)
         {
+            var requestContent = await httpMessage.Content.ReadAsStringAsync();
             _logger.LogInformation("Sending message to socket endpoint {endPoint}.", httpMessage.RequestUri);
 
             HttpResponseMessage response;
             try
             {
-                var httpClient = _httpClientFactory.CreateClient(); 
+                var httpClient = _httpClientFactory.CreateClient();
                 response = await httpClient.SendAsync(httpMessage, CancellationToken.None);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Sending message failed.");
+                _logger.LogError(ex, "Sending message failed. Request content {requestContent}", requestContent);
                 throw;
             }
 
@@ -94,13 +95,10 @@ namespace CoolBytes.Services.Mailer
             {
                 return await Deserialize(response);
             }
-            else
-            {
-                var responseText = await response.Content.ReadAsStringAsync();
-                _logger.LogError("Unexpected response, status code {statusCode}, body {responseText}.", response.StatusCode, responseText);
 
-                return new MailReport(isSend: false);
-            }
+            var responseContent = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Unexpected response, status code {statusCode}, response content {responseContent}, request content {requestContent}.", response.StatusCode, responseContent, requestContent);
+            return new MailReport(isSend: false);
         }
 
         private async Task<IMailReport> Deserialize(HttpResponseMessage response)
