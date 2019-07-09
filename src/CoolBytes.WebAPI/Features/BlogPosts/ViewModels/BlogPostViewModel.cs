@@ -19,7 +19,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
         public ImageViewModel Image { get; set; }
         public AuthorViewModel Author { get; set; }
         public IEnumerable<ExternalLinkDto> ExternalLinks { get; set; }
-        public IEnumerable<BlogPostLinkDto> RelatedLinks { get; set; }
         public int CategoryId { get; set; }
         public string Category { get; set; }
     }
