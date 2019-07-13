@@ -68,7 +68,7 @@ namespace CoolBytes.Data
                     var blogPostContentEntity = entity.OwnsOne(b => b.Content);
                     blogPostContentEntity.Property(e => e.Subject).HasMaxLength(100).IsRequired();
                     blogPostContentEntity.Property(e => e.ContentIntro).HasMaxLength(120).IsRequired();
-                    blogPostContentEntity.Property(e => e.Content).HasMaxLength(8000).IsRequired();
+                    blogPostContentEntity.Property(e => e.Content).HasColumnType("text").HasMaxLength(8000).IsRequired();
                     blogPostContentEntity.Property(e => e.SubjectUrl).HasMaxLength(100).IsRequired();
 
                     entity.HasMany(b => b.Tags).WithOne(bt => bt.BlogPost).IsRequired()
