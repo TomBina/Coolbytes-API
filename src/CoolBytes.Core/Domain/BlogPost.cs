@@ -16,11 +16,13 @@ namespace CoolBytes.Core.Domain
         public UpdatableCollection<ExternalLink> ExternalLinks { get; private set; }
         public Category Category { get; private set; }
         public int CategoryId { get; private set; }
+        public UpdatableCollection<MetaTag> MetaTags { get; private set; }
 
         private BlogPost()
         {
             Tags = new BlogPostTagCollection();
             ExternalLinks = new ExternalLinkCollection();
+            MetaTags = new MetaTagCollection();
         }
 
         public BlogPost(BlogPostContent content, Author author, Category category)
@@ -30,6 +32,7 @@ namespace CoolBytes.Core.Domain
             Author = author ?? throw new ArgumentNullException(nameof(author));
             Tags = new BlogPostTagCollection();
             ExternalLinks = new ExternalLinkCollection();
+            MetaTags = new MetaTagCollection();
             Category = category ?? throw new ArgumentNullException(nameof(category));
         }
 

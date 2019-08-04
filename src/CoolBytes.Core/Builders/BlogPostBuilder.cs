@@ -18,6 +18,7 @@ namespace CoolBytes.Core.Builders
         private IEnumerable<BlogPostTag> _tags;
         private IEnumerable<ExternalLink> _links;
         private Category _category;
+        private IEnumerable<MetaTag> _metaTags;
 
         public BlogPostBuilder(IAuthorService authorService, IImageService imageService)
         {
@@ -77,6 +78,11 @@ namespace CoolBytes.Core.Builders
 
             return this;
         }
+        public BlogPostBuilder WithMetaTags(IEnumerable<MetaTag> metaTags)
+        {
+            _metaTags = metaTags;
+            return this;
+        }
 
         public async Task<BlogPost> Build()
         {
@@ -86,7 +92,7 @@ namespace CoolBytes.Core.Builders
             await When.NotNull(_image, async () => blogPost.SetImage(await _image()) );
             When.NotNull(_tags, () => blogPost.Tags.AddRange(_tags));
             When.NotNull(_links, () => blogPost.ExternalLinks.AddRange(_links));
-            
+            When.NotNull(_metaTags, () => blogPost.MetaTags.AddRange(_metaTags));
             return blogPost;
         }
     }
