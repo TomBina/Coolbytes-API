@@ -1,13 +1,9 @@
 ﻿using CoolBytes.WebAPI.Extensions;
 using CoolBytes.WebAPI.Features.BlogPosts.CQ;
-using CoolBytes.WebAPI.Features.BlogPosts.DTO;
-using CoolBytes.WebAPI.Features.BlogPosts.Validators;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -79,34 +75,9 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         [HttpPost]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<BlogPostSummaryViewModel>> Add([FromForm] AddBlogPostCommand command, [FromForm] string externalLinks)
+        public async Task<ActionResult<BlogPostSummaryViewModel>> Add([FromForm] AddBlogPostCommand command)
         {
-            var links = ValidateExternalLinks(externalLinks);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            command.ExternalLinks = links;
-
             return await _mediator.Send(command);
-        }
-
-        private IEnumerable<ExternalLinkDto> ValidateExternalLinks(string externalLinks)
-        {
-            if (externalLinks == null || externalLinks == "[]")
-                return null;
-
-            var settings = new JsonSerializerSettings();
-            settings.Error = (sender, args) => ModelState.AddModelError(nameof(externalLinks), "Invalid json");
-            var links = JsonConvert.DeserializeObject<List<ExternalLinkDto>>(externalLinks, settings);
-
-            var validator = new ExternalLinkDtoValidator();
-            var errors = links.Select(l => validator.Validate(l)).Where(r => !r.IsValid);
-
-            foreach (var error in errors)
-                error.AddToModelState(ModelState, nameof(externalLinks));
-
-            return links;
         }
 
         [Authorize("admin")]
@@ -124,17 +95,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         [HttpPut("update")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<BlogPostSummaryViewModel>> Update([FromForm] UpdateBlogPostCommand command, [FromForm] string externalLinks)
-        {
-            var links = ValidateExternalLinks(externalLinks);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            command.ExternalLinks = links;
-
-            return await _mediator.Send(command);
-        }
+        public async Task<ActionResult<BlogPostSummaryViewModel>> Update([FromForm] UpdateBlogPostCommand command, [FromForm] string externalLinks) 
+            => await _mediator.Send(command);
 
         [Authorize("admin")]
         [HttpDelete("{id}")]

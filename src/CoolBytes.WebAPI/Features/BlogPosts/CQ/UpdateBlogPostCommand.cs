@@ -3,11 +3,14 @@ using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Builders;
 using CoolBytes.WebAPI.Features.BlogPosts.DTO;
 using CoolBytes.WebAPI.Features.BlogPosts.ViewModels;
+using CoolBytes.WebAPI.ModelBinders;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.CQ
 {
+    [ModelBinder(typeof(FormDataModelBinder), Name = "json")]
     public class UpdateBlogPostCommand : IRequest<BlogPostSummaryViewModel>, IBlogPostContent
     {
         private IFormFile _file;
