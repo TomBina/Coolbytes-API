@@ -95,7 +95,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
         [HttpPut("update")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<ActionResult<BlogPostSummaryViewModel>> Update([FromForm] UpdateBlogPostCommand command, [FromForm] string externalLinks) 
+        public async Task<ActionResult<BlogPostSummaryViewModel>> Update([FromForm] UpdateBlogPostCommand command) 
             => await _mediator.Send(command);
 
         [Authorize("admin")]

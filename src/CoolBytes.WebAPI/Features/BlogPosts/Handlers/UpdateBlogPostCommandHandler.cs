@@ -44,6 +44,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                                          .Include(b => b.Tags)
                                          .Include(b => b.ExternalLinks)
                                          .Include(b => b.Category)
+                                         .Include(b => b.MetaTags)
                                          .SingleOrDefaultAsync(b => b.Id == blogPostId);
 
             _currentImageId = blogPost.ImageId;
