@@ -9,7 +9,7 @@ namespace CoolBytes.Core.Collections
     {
         public override void Update(IEnumerable<ExternalLink> items)
         {
-            var itemsRemoved = Items.Except(items, ExternalLink.NameComparer).ToArray();
+            var itemsRemoved = Items.Except(items, ExternalLink.NameUrlComparer).ToArray();
 
             RemoveRange(itemsRemoved);
             AddRange(items);

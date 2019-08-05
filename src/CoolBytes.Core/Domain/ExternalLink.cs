@@ -5,7 +5,7 @@ namespace CoolBytes.Core.Domain
 {
     public class ExternalLink
     {
-        private sealed class NameEqualityComparer : IEqualityComparer<ExternalLink>
+        private sealed class NameUrlEqualityComparer : IEqualityComparer<ExternalLink>
         {
             public bool Equals(ExternalLink x, ExternalLink y)
             {
@@ -13,16 +13,19 @@ namespace CoolBytes.Core.Domain
                 if (ReferenceEquals(x, null)) return false;
                 if (ReferenceEquals(y, null)) return false;
                 if (x.GetType() != y.GetType()) return false;
-                return string.Equals(x.Name, y.Name);
+                return string.Equals(x.Name, y.Name, StringComparison.CurrentCultureIgnoreCase) && string.Equals(x.Url, y.Url, StringComparison.CurrentCultureIgnoreCase);
             }
 
             public int GetHashCode(ExternalLink obj)
             {
-                return obj.Name.GetHashCode();
+                unchecked
+                {
+                    return (StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj.Name) * 397) ^ StringComparer.CurrentCultureIgnoreCase.GetHashCode(obj.Url);
+                }
             }
         }
 
-        public static IEqualityComparer<ExternalLink> NameComparer { get; } = new NameEqualityComparer();
+        public static IEqualityComparer<ExternalLink> NameUrlComparer { get; } = new NameUrlEqualityComparer();
 
         public int Id { get; private set; }
         public string Name { get; private set; }
