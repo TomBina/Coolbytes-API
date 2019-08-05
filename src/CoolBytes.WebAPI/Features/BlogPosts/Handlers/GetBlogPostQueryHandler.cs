@@ -53,6 +53,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                                        .Include(b => b.Image)
                                        .Include(b => b.ExternalLinks)
                                        .Include(b => b.Category)
+                                       .Include(b => b.MetaTags)
                                        .FirstOrDefaultAsync(b => b.Id == id);
     }
 }

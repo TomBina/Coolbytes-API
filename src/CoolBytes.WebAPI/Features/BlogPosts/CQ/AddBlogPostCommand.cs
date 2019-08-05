@@ -33,6 +33,8 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.CQ
                 ImageFile = imageFile;
             }
         }
+
+        public IEnumerable<MetaTagDto> MetaTags { get; set; }
         public IEnumerable<ExternalLinkDto> ExternalLinks { get; set; }
         public int CategoryId { get; set; }
     }

@@ -14,8 +14,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Profiles
                 .ForMember(v => v.Image, ResolveImageModelFromBlogPost)
                 .ForMember(v => v.Subject, exp => exp.MapFrom(b => b.Content.Subject))
                 .ForMember(v => v.ContentIntro, exp => exp.MapFrom(b => b.Content.ContentIntro))
-                .ForMember(v => v.Content, exp => exp.MapFrom(b => b.Content.Content))
-                .ForMember(v => v.ExternalLinks, exp => exp.MapFrom(b => b.ExternalLinks));
+                .ForMember(v => v.Content, exp => exp.MapFrom(b => b.Content.Content));
         }
 
         private static void ResolveImageModelFromBlogPost<T>(IMemberConfigurationExpression<BlogPost, T, ImageViewModel> exp)

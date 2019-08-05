@@ -56,6 +56,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             var tags = message.Tags?.Select(s => new BlogPostTag(s)).ToList() ?? new List<BlogPostTag>();
             var externalLinks = message.ExternalLinks?.Select(el => new ExternalLink(el.Name, el.Url)).ToList() ?? new List<ExternalLink>();
             var category = await _dbContext.Categories.FirstAsync(c => c.Id == message.CategoryId);
+            var metaTags = message.MetaTags?.Select(m => new MetaTag(m.Name, m.Value));
 
             await _builder.UseBlogPost(blogPost)
                           .WithContent(message)
@@ -63,6 +64,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                           .WithTags(tags)
                           .WithExternalLinks(externalLinks)
                           .WithCategory(category)
+                          .WithMetaTags(metaTags)
                           .Build();
         }
 
