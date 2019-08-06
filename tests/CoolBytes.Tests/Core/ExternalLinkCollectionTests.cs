@@ -56,7 +56,7 @@ namespace CoolBytes.Tests.Core
             SetId(currentItem, 1);
             _collection.Add(currentItem);
 
-            var newItem = new[] { new ExternalLink("Test", "http://www.test.com") };
+            var newItem = new[] { new ExternalLink("Test", "http://test.com") };
             SetId(newItem.First(), 2);
 
             _collection.Update(newItem);

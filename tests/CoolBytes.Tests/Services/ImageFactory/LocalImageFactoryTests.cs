@@ -28,7 +28,7 @@ namespace CoolBytes.Tests.Services.ImageFactory
         {
             var imageFactory = new LocalImageFactory(_localImageFactoryOptions, _imageFactoryValidator);
 
-            using (var fileStream = File.OpenRead("assets/testimage.png"))
+            using (var fileStream = File.OpenRead("Assets/testimage.png"))
             {
                 var image = await imageFactory.Create(fileStream, "testimage.png", "image/png");
 
@@ -41,7 +41,7 @@ namespace CoolBytes.Tests.Services.ImageFactory
         {
             var imageFactory = new LocalImageFactory(_localImageFactoryOptions, _imageFactoryValidator);
 
-            using (var fileStream = File.Open("assets/iisexpress.exe", FileMode.Open))
+            using (var fileStream = File.Open("Assets/iisexpress.exe", FileMode.Open))
             {
                 await Assert.ThrowsAsync<ArgumentException>(async () => await imageFactory.Create(fileStream, "iisexpress.exe", "application/octet-stream"));
             }
