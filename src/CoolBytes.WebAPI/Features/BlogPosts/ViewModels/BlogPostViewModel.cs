@@ -21,5 +21,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
         public IEnumerable<ExternalLinkDto> ExternalLinks { get; set; }
         public int CategoryId { get; set; }
         public string Category { get; set; }
+        public IEnumerable<MetaTagDto> MetaTags { get; set; }
     }
 }
