@@ -6,15 +6,15 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 
-namespace CoolBytes.Tests.Core
+namespace CoolBytes.Tests.Services.ImageFactory
 {
-    public class ImageFactoryTests : IDisposable
+    public class LocalImageFactoryTests : IDisposable
     {
         private readonly string _uploadPath = Environment.CurrentDirectory + "/uploads";
         private readonly LocalImageFactoryOptions _localImageFactoryOptions;
         private readonly ImageFactoryValidator _imageFactoryValidator;
 
-        public ImageFactoryTests()
+        public LocalImageFactoryTests()
         {
             var config = new Mock<IConfiguration>();
             config.Setup(c => c["ImagesUploadPath"]).Returns(_uploadPath);
@@ -24,11 +24,11 @@ namespace CoolBytes.Tests.Core
         }
 
         [Fact]
-        public async Task ImageFactory_Valid_CreatesImage()
+        public async Task LocalImageFactory_Valid_CreatesImage()
         {
             var imageFactory = new LocalImageFactory(_localImageFactoryOptions, _imageFactoryValidator);
 
-            using (var fileStream = File.OpenRead("assets/testimage.png"))
+            using (var fileStream = File.OpenRead("Assets/testimage.png"))
             {
                 var image = await imageFactory.Create(fileStream, "testimage.png", "image/png");
 
@@ -37,18 +37,18 @@ namespace CoolBytes.Tests.Core
         }
 
         [Fact]
-        public async Task ImageFactory_InvalidContentType_ThrowsException()
+        public async Task LocalImageFactory_InvalidContentType_ThrowsException()
         {
             var imageFactory = new LocalImageFactory(_localImageFactoryOptions, _imageFactoryValidator);
 
-            using (var fileStream = File.Open("assets/iisexpress.exe", FileMode.Open))
+            using (var fileStream = File.Open("Assets/iisexpress.exe", FileMode.Open))
             {
                 await Assert.ThrowsAsync<ArgumentException>(async () => await imageFactory.Create(fileStream, "iisexpress.exe", "application/octet-stream"));
             }
         }
 
         [Fact]
-        public async Task ImageFactory_Empty_ThrowsException()
+        public async Task LocalImageFactory_Empty_ThrowsException()
         {
             var imageFactory = new LocalImageFactory(_localImageFactoryOptions, _imageFactoryValidator);
 

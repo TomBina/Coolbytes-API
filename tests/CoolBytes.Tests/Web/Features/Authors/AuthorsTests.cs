@@ -83,7 +83,7 @@ namespace CoolBytes.Tests.Web.Features.Authors
             var sp = TestContext.ServiceProviderBuilder.Add(s =>
                 s.AddTransient<IImageViewModelUrlResolver, LocalImageViewModelUrlResolver>()
                     .AddTransient<ImageViewModelResolver>()).Build();
-            var profiles = new Profile[] { new ImageViewModelProfile(), new AuthorViewModelProfile() };
+            var profiles = new Profile[] { new ImageViewModelProfile(), new AuthorViewModelProfile(), new SocialHandlesViewModelProfile(), new ExperienceViewModelProfile() };
             var mapper = TestContext.CreateMapper(profiles, sp);
             return mapper;
         }

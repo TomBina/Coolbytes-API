@@ -22,7 +22,12 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
 
         public async Task<BlogPostUpdateViewModel> Handle(UpdateBlogPostQuery query, CancellationToken cancellationToken)
         {
-            var blogPost = await _dbContext.BlogPosts.Include(b => b.Tags).Include(b => b.Image).Include(b => b.ExternalLinks).FirstOrDefaultAsync(b => b.Id == query.Id);
+            var blogPost = await _dbContext.BlogPosts.Include(b => b.Tags)
+                                                     .Include(b => b.Image)
+                                                     .Include(b => b.ExternalLinks)
+                                                     .Include(b => b.MetaTags)
+                                                     .FirstOrDefaultAsync(b => b.Id == query.Id);
+
             return _context.Map(blogPost);
         }
     }

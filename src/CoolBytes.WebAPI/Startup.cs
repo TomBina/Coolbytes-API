@@ -48,12 +48,12 @@ namespace CoolBytes.WebAPI
             services.AddTransient(typeof(HandlerContext<>));
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IMapper mapper)
         {
             if (env.IsDevelopment())
             {
                 app.UseCors("DevPolicy");
-                // TODO: Assert mapper config
+                mapper.ConfigurationProvider.AssertConfigurationIsValid();
             }
             else
             {

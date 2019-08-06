@@ -10,7 +10,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Profiles
         {
             CreateMap<BlogPost, BlogPostViewModel>()
                 .ForMember(v => v.Updated, exp => exp.MapFrom(b => b.Content.Updated))
-                .ForMember(v => v.ExternalLinks, exp => exp.MapFrom(b => b.ExternalLinks))
                 .ForMember(v => v.Subject, exp => exp.MapFrom(b => b.Content.Subject))
                 .ForMember(v => v.SubjectUrl, exp => exp.MapFrom(b => b.Content.SubjectUrl))
                 .ForMember(v => v.ContentIntro, exp => exp.MapFrom(b => b.Content.ContentIntro))

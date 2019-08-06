@@ -7,7 +7,7 @@ using CoolBytes.Core.Domain;
 
 namespace CoolBytes.Core.Builders
 {
-    public class ExistingBlogPostBuilder 
+    public class ExistingBlogPostBuilder
     {
         private readonly IImageService _imageService;
         private BlogPost _blogPost;
@@ -49,7 +49,7 @@ namespace CoolBytes.Core.Builders
         public ExistingBlogPostBuilder WithTags(IEnumerable<BlogPostTag> tags)
         {
             When.NotNull(tags, () => _blogPost.Tags.Update(tags));
-            
+
             return this;
         }
 
@@ -66,11 +66,17 @@ namespace CoolBytes.Core.Builders
 
             return this;
         }
+        public ExistingBlogPostBuilder WithMetaTags(IEnumerable<MetaTag> metaTags)
+        {
+            When.NotNull(metaTags, () => _blogPost.MetaTags.Update(metaTags));
+
+            return this;
+        }
 
         public async Task<BlogPost> Build()
         {
             await When.NotNull(_image, async () => _blogPost.SetImage(await _image()));
-            
+
             return _blogPost;
         }
     }

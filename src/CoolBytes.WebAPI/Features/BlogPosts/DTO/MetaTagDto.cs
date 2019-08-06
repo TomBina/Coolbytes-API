@@ -3,10 +3,10 @@ using CoolBytes.Core.Domain;
 
 namespace CoolBytes.WebAPI.Features.BlogPosts.DTO
 {
-    [AutoMap(typeof(BlogPostTag))]
-    public class BlogPostTagDto
+    [AutoMap(typeof(MetaTag))]
+    public class MetaTagDto
     {
-        public int Id { get; set; }
         public string Name { get; set; }
+        public string Value { get; set; }
     }
 }

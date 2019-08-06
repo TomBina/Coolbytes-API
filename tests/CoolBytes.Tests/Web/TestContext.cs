@@ -122,7 +122,7 @@ namespace CoolBytes.Tests.Web
             var mock = new Mock<IFormFile>();
             mock.Setup(e => e.FileName).Returns("testimage.png");
             mock.Setup(e => e.ContentType).Returns("image/png");
-            mock.Setup(e => e.OpenReadStream()).Returns(() => File.OpenRead("assets/testimage.png"));
+            mock.Setup(e => e.OpenReadStream()).Returns(() => File.OpenRead("Assets/testimage.png"));
             return mock;
         }
 
