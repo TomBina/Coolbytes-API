@@ -23,7 +23,7 @@ namespace CoolBytes.WebAPI.Features.Categories.Handlers
             var highestSortOrder = await _context.Categories.MaxAsync(c => c.SortOrder);
             var sortOrder = ++highestSortOrder;
 
-            var category = new Category(request.Name, sortOrder, request.Description, isCourse: true);
+            var category = new Category(request.Name, sortOrder, request.Description, request.IsCourse);
             _context.Categories.Add(category);
 
             await _context.SaveChangesAsync(cancellationToken);
