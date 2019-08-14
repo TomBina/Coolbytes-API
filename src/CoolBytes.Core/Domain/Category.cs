@@ -9,16 +9,18 @@ namespace CoolBytes.Core.Domain
         public string Name { get; private set; }
         public int SortOrder { get; private set; }
         public string Description { get; private set; }
+        public bool IsCourse { get; private set; }
 
-        public Category(int id, string name, int sortOrder, string description) : this(name, sortOrder, description) 
+        public Category(int id, string name, int sortOrder, string description, bool isCourse = false) : this(name, sortOrder, description, isCourse) 
             => Id = id;
 
-        public Category(string name, int sortOrder, string description)
+        public Category(string name, int sortOrder, string description, bool isCourse = false)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
             if (sortOrder <= 0) throw new ArgumentOutOfRangeException(nameof(sortOrder));
             SortOrder = sortOrder;
             Description = description ?? throw new ArgumentNullException(nameof(description));
+            IsCourse = isCourse;
         }
 
         public void UpdateName(string name)
@@ -36,5 +38,8 @@ namespace CoolBytes.Core.Domain
             if (sortOrder <= 0) throw new ArgumentOutOfRangeException(nameof(sortOrder));
             SortOrder = sortOrder;
         }
+
+        public void UpdateIsCourse(bool isCourse) 
+            => IsCourse = isCourse;
     }
 }

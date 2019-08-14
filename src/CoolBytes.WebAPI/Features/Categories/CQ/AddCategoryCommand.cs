@@ -7,5 +7,6 @@ namespace CoolBytes.WebAPI.Features.Categories.CQ
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public bool IsCourse { get; set; }
     }
 }

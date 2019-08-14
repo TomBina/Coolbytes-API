@@ -26,6 +26,7 @@ namespace CoolBytes.WebAPI.Features.Categories.Handlers
 
             category.UpdateName(request.Name);
             category.UpdateDescription(request.Description);
+            category.UpdateIsCourse(request.IsCourse);
 
             await _context.SaveChangesAsync(cancellationToken);
 
