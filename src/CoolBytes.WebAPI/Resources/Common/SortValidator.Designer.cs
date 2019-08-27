@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CoolBytes.WebAPI.Resources.Features.Categories.Validators {
+namespace CoolBytes.WebAPI.Resources.Common {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace CoolBytes.WebAPI.Resources.Features.Categories.Validators {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class SortCategoriesCommandValidator {
+    public class SortValidator {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal SortCategoriesCommandValidator() {
+        internal SortValidator() {
         }
         
         /// <summary>
@@ -39,8 +39,7 @@ namespace CoolBytes.WebAPI.Resources.Features.Categories.Validators {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CoolBytes.WebAPI.Resources.Features.Categories.Validators.SortCategoriesCommandVa" +
-                            "lidator", typeof(SortCategoriesCommandValidator).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CoolBytes.WebAPI.Resources.Common.SortValidator", typeof(SortValidator).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -62,7 +61,7 @@ namespace CoolBytes.WebAPI.Resources.Features.Categories.Validators {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to All categoryids must exists..
+        ///   Looks up a localized string similar to All ids must exists..
         /// </summary>
         public static string AllIdsMustExistError {
             get {
@@ -71,7 +70,7 @@ namespace CoolBytes.WebAPI.Resources.Features.Categories.Validators {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Categoryids must be unique..
+        ///   Looks up a localized string similar to All ids must be unique..
         /// </summary>
         public static string IdsMustBeUniqueError {
             get {

@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AllIdsMustExistError" xml:space="preserve">
-    <value>All categoryids must exists.</value>
+    <value>All ids must exists.</value>
   </data>
   <data name="IdsMustBeUniqueError" xml:space="preserve">
-    <value>Categoryids must be unique.</value>
+    <value>All ids must be unique.</value>
   </data>
   <data name="SortOrderLengthError" xml:space="preserve">
     <value>NewSortOrder should have same length as current SortOrder.</value>
