@@ -40,25 +40,29 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
             return viewmodel;
         }
 
-        private Task<List<CategoryBlogPostsViewModel>> QueryBlogPosts() =>
-            _dbContext.BlogPosts
+        private async Task<List<CategoryBlogPostsViewModel>> QueryBlogPosts()
+        {
+            var blogPosts = await _dbContext.BlogPosts
                 .AsNoTracking()
                 .Include(b => b.Content)
                 .Include(b => b.Category)
                 .Include(b => b.Author)
                 .Include(b => b.Author.AuthorProfile)
                 .Include(b => b.Image)
-                .OrderByDescending(b => b.Id)
                 .GroupBy(b => b.CategoryId)
-                .Select(b => new CategoryBlogPostsViewModel()
-                {
-                    CategoryId = b.Key,
-                    Category = b.First().Category.Name,
-                    Description = b.First().Category.Description,
-                    SortOrder = b.First().Category.SortOrder,
-                    BlogPosts = _context.Mapper.Map<List<BlogPostSummaryViewModel>>(b.AsEnumerable())
-                })
-                .OrderBy(c => c.SortOrder)
-                .ToListAsync();
+                .ToDictionaryAsync(b => b.Key, blogs => blogs.AsEnumerable().OrderBy(blog => blog.SortOrder));
+
+
+            return blogPosts.Select(b => new CategoryBlogPostsViewModel()
+             {
+                 CategoryId = b.Key,
+                 Category = b.Value.First().Category.Name,
+                 Description = b.Value.First().Category.Description,
+                 SortOrder = b.Value.First().Category.SortOrder,
+                 BlogPosts = _context.Mapper.Map<List<BlogPostSummaryViewModel>>(b.Value)
+             })
+            .OrderBy(c => c.SortOrder)
+            .ToList();
+        }
     }
 }

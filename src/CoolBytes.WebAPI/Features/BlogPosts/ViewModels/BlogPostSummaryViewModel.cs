@@ -13,5 +13,6 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.ViewModels
         public ImageViewModel Image { get; set; }
         public string AuthorName { get; set; }
         public string Category { get; set; }
+        public int CategoryId { get; set; }
     }
 }

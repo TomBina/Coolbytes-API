@@ -44,16 +44,16 @@
     <None Remove="wwwroot\images\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Resources\Features\Categories\Validators\SortCategoriesCommandValidator.Designer.cs">
+    <Compile Update="Resources\Common\SortValidator.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>SortCategoriesCommandValidator.resx</DependentUpon>
+      <DependentUpon>SortValidator.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Resources\Features\Categories\Validators\SortCategoriesCommandValidator.resx">
+    <EmbeddedResource Update="Resources\Common\SortValidator.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>SortCategoriesCommandValidator.Designer.cs</LastGenOutput>
+      <LastGenOutput>SortValidator.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

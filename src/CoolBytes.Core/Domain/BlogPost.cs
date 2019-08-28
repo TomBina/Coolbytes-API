@@ -1,9 +1,10 @@
 ﻿using System;
+using CoolBytes.Core.Abstractions;
 using CoolBytes.Core.Collections;
 
 namespace CoolBytes.Core.Domain
 {
-    public class BlogPost
+    public class BlogPost : ISortable
     {
         public int Id { get; private set; }
         public DateTime Date { get; internal set; }
@@ -17,6 +18,7 @@ namespace CoolBytes.Core.Domain
         public Category Category { get; private set; }
         public int CategoryId { get; private set; }
         public UpdatableCollection<MetaTag> MetaTags { get; private set; }
+        public int SortOrder { get; private set; }
 
         private BlogPost()
         {
@@ -45,6 +47,12 @@ namespace CoolBytes.Core.Domain
         {
             if (category?.Id != Category.Id)
                 Category = category;
+        }
+
+        public void SetSortOrder(int sortOrder)
+        {
+            if (sortOrder <= 0) throw new ArgumentOutOfRangeException(nameof(sortOrder));
+            SortOrder = sortOrder;
         }
     }
 }

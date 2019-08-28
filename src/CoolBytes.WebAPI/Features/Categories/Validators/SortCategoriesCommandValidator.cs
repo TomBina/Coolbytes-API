@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using CoolBytes.Data;
+﻿using CoolBytes.Data;
 using CoolBytes.WebAPI.Features.Categories.CQ;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
+using CoolBytes.Core.Domain;
+using CoolBytes.Core.Utils;
+using CoolBytes.WebAPI.Common;
 
 namespace CoolBytes.WebAPI.Features.Categories.Validators
 {
@@ -12,28 +13,12 @@ namespace CoolBytes.WebAPI.Features.Categories.Validators
         {
             RuleFor(r => r.NewSortOrder).CustomAsync(async (newSortOrder, validationContext, cancellationToken) =>
             {
-                var newSortOrderCount = newSortOrder.Count();
-                var allUnique = newSortOrderCount == newSortOrder.Distinct().Count();
+                var sortValidator = new SortValidator<Category>(context);
+                var result = await sortValidator.Validate(newSortOrder);
 
-                if (!allUnique)
+                if (result is ErrorResult error)
                 {
-                    validationContext.AddFailure(Resources.Features.Categories.Validators.SortCategoriesCommandValidator.IdsMustBeUniqueError);
-                    return;
-                }
-
-                var categoryIds = (await context.Categories.Select(c => c.Id).ToListAsync()).ToHashSet();
-
-                if (newSortOrder.Count != categoryIds.Count)
-                {
-                    validationContext.AddFailure(Resources.Features.Categories.Validators.SortCategoriesCommandValidator.SortOrderLengthError);
-                    return;
-                }
-
-                var allExist = newSortOrder.All(i => categoryIds.Contains(i));
-
-                if (!allExist)
-                {
-                    validationContext.AddFailure(Resources.Features.Categories.Validators.SortCategoriesCommandValidator.AllIdsMustExistError);
+                    validationContext.AddFailure(error.ErrorMessage);
                 }
             });
         }

@@ -99,6 +99,20 @@ namespace CoolBytes.WebAPI.Features.BlogPosts
             => await _mediator.Send(command);
 
         [Authorize("admin")]
+        [HttpPut("sort")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<ActionResult> Sort(SortBlogsCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (!result)
+                return BadRequest();
+
+            return Ok();
+        }
+
+        [Authorize("admin")]
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         public async Task<ActionResult> Delete(int id)
