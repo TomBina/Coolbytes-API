@@ -51,7 +51,7 @@ namespace CoolBytes.Tests.Core
             {
                 new MetaTag("description", "test description")
             };
-            var post = await builder.UseBlogPost(blogPost).WithMetaTags(tags).Build();
+            await builder.UseBlogPost(blogPost).WithMetaTags(tags).Build();
 
             Assert.Single(blogPost.MetaTags);
         }

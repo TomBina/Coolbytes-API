@@ -1,13 +1,12 @@
-﻿using System;
-using CoolBytes.Core.Abstractions;
+﻿using CoolBytes.Core.Abstractions;
+using CoolBytes.Core.Utils;
 using CoolBytes.Data;
-using FluentValidation.Validators;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CoolBytes.Core.Utils;
 
 namespace CoolBytes.WebAPI.Common
 {
@@ -36,14 +35,14 @@ namespace CoolBytes.WebAPI.Common
 
             if (newSortOrder.Count != ids.Count)
             {
-                Result.ErrorResult(Resources.Common.SortValidator.SortOrderLengthError);
+                return Result.ErrorResult(Resources.Common.SortValidator.SortOrderLengthError);
             }
 
             var allExist = newSortOrder.All(i => ids.Contains(i));
 
             if (!allExist)
             {
-                Result.ErrorResult(Resources.Common.SortValidator.AllIdsMustExistError);
+                return Result.ErrorResult(Resources.Common.SortValidator.AllIdsMustExistError);
             }
 
             return Result.SuccessResult();
