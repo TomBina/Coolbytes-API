@@ -38,6 +38,9 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                                        .Include(b => b.Author)
                                        .Include(b => b.Author.AuthorProfile)
                                        .Include(b => b.Image)
-                                       .Include(b => b.Category).Where(b => b.CategoryId == categoryId).ToListAsync();
+                                       .Include(b => b.Category)
+                                       .Where(b => b.CategoryId == categoryId)
+                                       .OrderBy(b => b.SortOrder)
+                                       .ToListAsync();
     }
 }

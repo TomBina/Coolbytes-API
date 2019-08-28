@@ -50,11 +50,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
                 .Include(b => b.Author.AuthorProfile)
                 .Include(b => b.Image)
                 .GroupBy(b => b.CategoryId)
-                .ToDictionaryAsync(b => b.Key, blogs =>
-                {
-                    var isCourse = blogs.First().Category.IsCourse;
-                    return isCourse ? blogs.AsEnumerable().OrderBy(blog => blog.Id) : blogs.AsEnumerable().OrderByDescending(blog => blog.Id);
-                });
+                .ToDictionaryAsync(b => b.Key, blogs => blogs.AsEnumerable().OrderBy(blog => blog.SortOrder));
 
 
             return blogPosts.Select(b => new CategoryBlogPostsViewModel()
