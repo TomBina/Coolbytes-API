@@ -2,6 +2,7 @@
 using CoolBytes.WebAPI.Features.Categories.CQ;
 using FluentValidation;
 using CoolBytes.Core.Domain;
+using CoolBytes.Core.Utils;
 using CoolBytes.WebAPI.Common;
 
 namespace CoolBytes.WebAPI.Features.Categories.Validators
@@ -13,7 +14,12 @@ namespace CoolBytes.WebAPI.Features.Categories.Validators
             RuleFor(r => r.NewSortOrder).CustomAsync(async (newSortOrder, validationContext, cancellationToken) =>
             {
                 var sortValidator = new SortValidator<Category>(context);
-                await sortValidator.Validate(newSortOrder);
+                var result = await sortValidator.Validate(newSortOrder);
+
+                if (result is ErrorResult error)
+                {
+                    validationContext.AddFailure(error.ErrorMessage);
+                }
             });
         }
     }

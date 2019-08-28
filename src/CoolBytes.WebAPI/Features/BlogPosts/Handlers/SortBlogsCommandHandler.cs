@@ -18,6 +18,7 @@ namespace CoolBytes.WebAPI.Features.BlogPosts.Handlers
         {
             _dbContext = dbContext;
         }
+
         public async Task<Result> Handle(SortBlogsCommand request, CancellationToken cancellationToken)
         {
             var allBlogs = await _dbContext.BlogPosts.Where(b => b.CategoryId == request.CategoryId).ToListAsync(cancellationToken: cancellationToken);
